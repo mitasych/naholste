@@ -1,9 +1,9 @@
-static/images
+static/images/*
 .project
 .pydevproject
 django.wsgi
 README
 settings.py
 *.pyc
-media/
+media/*
 
