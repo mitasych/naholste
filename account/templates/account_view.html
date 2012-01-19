@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+	<div class="main"><h1>Просмотр пользователя</h1></div>
+	<div class="container_24">
+		<div class="wrapper">
+			<h3>{{ user_profile.user }}</h3>
+
+			<table>
+				{% if user_profile.avatar %}
+				<tr>
+					<td>
+						Аватар:
+					</td>
+					<td>
+						<img src="/media/avatar/{{ user_profile.avatar }}" alt="" />
+					</td>
+				</tr>
+				{% endif %}
+				<tr>
+					<td>
+						Пол:
+					</td>
+					<td>
+						{{ user_profile.gender|default:"Не указан" }}
+					</td>
+				</tr>
+				<tr>
+					<td>
+						О пользователе:
+					</td>
+					<td>
+						{{ user_profile.about|default:"" }}
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+{% endblock %}

@@ -1,0 +1,10 @@
+<div class="container_24">
+	<div class="wrapper">
+		Сейчас на сайте:
+		{% for online_user in online_users %}
+			{% if online_user.username != 'AnonymousUser' %}
+				<a href="/account/view/{{ online_user.username }}"> {{ online_user.username }}</a>
+			{% endif %}
+		{% endfor %}
+	</div>
+</div>

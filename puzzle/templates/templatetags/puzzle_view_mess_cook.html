@@ -1,0 +1,9 @@
+{% if view_cook %}
+	<script type="text/javascript">
+		$(document).ready(function(){
+			if (confirm('Вы загрузили изображения не авторизировавшись, загрузить эти изображения в свой профиль?')) {
+				document.location = '/puzzle/reload/';
+			}
+		})
+	</script>
+{% endif %}

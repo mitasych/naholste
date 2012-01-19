@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load mosaic_table %}
+
+{% block content %}
+
+	<div class="main">
+		<h1>Выберите тип</h1>
+	</div>
+	<div class="container_24">
+		<div class="wrapper">
+			<div class="choise_mosaic">
+				<table class="choise_mosaic_table">
+					<tr>
+						<td align="center">
+							<a href="/mosaic/option?type=1">
+								<img src="/static/images/mosaic/t1.jpg" alt="" />
+							</a>
+						</td>
+						<td align="center">
+							<a href="/mosaic/option?type=2">
+								<img src="/static/images/mosaic/t2.jpg" alt="" />
+							</a>
+						</td>
+						<td align="center">
+							<a href="/mosaic/option?type=3">
+								<img src="/static/images/mosaic/t3.jpg" alt="" />
+							</a>
+						</td>
+					</tr>
+					<tr>
+						<td align="center">
+							<a href="/mosaic/option?type=1">Квадрат</a>
+						</td>
+						<td align="center">
+							<a href="/mosaic/option?type=2">Альбомная</a>
+						</td>
+						<td align="center">
+							<a href="/mosaic/option?type=3">Книжная</a>
+						</td>
+					</tr>
+				</table>
+			</div>
+
+			<div class="thumb_list">
+				{% mosaic_thumbs thumbs %}
+			</div>
+			
+		</div>
+	</div>
+{% endblock %}

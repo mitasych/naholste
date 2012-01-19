@@ -1,0 +1,7 @@
+static/images
+.project
+.pydevproject
+django.wsgi
+README
+settings.py
+*.pyc

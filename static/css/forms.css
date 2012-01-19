@@ -1,0 +1,33 @@
+input[type="text"],input[type=password],textarea{font-family:Arial, Helvetica, sans-serif;color:#828387;font-size:13px;vertical-align:middle;font-weight:normal;padding:5px 10px 6px;margin:0;background:#fff;border:1px solid #cfcfcf;outline:none;width:208px;}
+input[type="text"]:focus,input[type=password]:focus,textarea:focus{border:1px solid #696969;}
+
+#search input[type="text"]{margin-right:10px;vertical-align:middle;}
+#search a{vertical-align:middle;}
+
+#search1{float:right;padding:13px 0 0;}
+#search1 input[type="text"]{vertical-align:middle;width:169px;margin-right:3px;}
+#search1 a{vertical-align:middle;}
+
+fieldset{border:none;padding:0;margin:0;}
+/* Contact form */
+#contact-form{position:relative;vertical-align:top;color:#828282;}
+#contact-form .success{position:absolute;top:0;left:240px;display:none;font-weight:bold;}
+		#contact-form label{padding:0 0 20px;display:block;position:relative;margin:0;}
+			#contact-form .message{padding-bottom:40px}
+			#contact-form textarea{width:408px;height:196px;overflow:auto;resize:vertical;}
+			#contact-form .error,#contact-form .empty{color:#f00;display:none;position:absolute;font-size:12px;line-height:1.2em;}
+		#contact-form .btns{text-align:right;}
+		#contact-form .btns a{margin-left:18px;}
+		
+/* Newsletter-form */
+#newsletter-form{padding:5px 0 11px;}
+#newsletter-form input[type="text"]{width:180px;font-style:italic;font-size:11px;color:#8a8d91;vertical-align:middle;padding:6px 11px 7px;margin-right:3px;}
+#newsletter-form a{vertical-align:middle;}
+
+#newsletter-alt-form{position:relative;}
+#newsletter-alt-form fieldset{border:none}
+#newsletter-alt-form label,#newsletter-form label{display:inline-block;vertical-align:middle;position:relative;}
+#newsletter-alt-form .success,#newsletter-form .success{position:absolute;bottom:100%;left:0;display:none;font-weight:bold;}
+#newsletter-alt-form input[type=text]{width:215px;margin-right:12px;}
+#newsletter-alt-form .error,#newsletter-alt-form .empty,#newsletter-form .error,#newsletter-form .empty{color:#f00;display:none;position:absolute;top:100%;left:0;font-size:12px;line-height:1.2em;}
+#newsletter-alt-form a{vertical-align:middle;}

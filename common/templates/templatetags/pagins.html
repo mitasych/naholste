@@ -1,0 +1,35 @@
+{% if cfg.total_items > 0 %}
+	{% load pagins %}
+	<div class="paginator">
+		{#{% if cfg.first_page %}#}
+		{#	<a href="{% render_url cfg cfg.first_page %}">Первая</a>#}
+		{#{% else %}#}
+		{#	<b>Первая</b>#}
+		{#{% endif %}#}
+
+		{% if cfg.previous_page %}
+			<a href="{% render_url cfg cfg.previous_page %}">&laquo;</a>
+		{% endif %}
+
+		{% for row in cfg.links %}
+			{% if row.key == cfg.current_page %}
+				<span>{{ row.val }}</span>
+			{% else %}
+				{% autoescape off %}
+					<a href="{% render_url cfg row.key %}">{{ row.val }}</a>
+				{% endautoescape %}
+			{% endif %}
+		{% endfor %}
+
+		{% if cfg.next_page %}
+			<a href="{% render_url cfg cfg.next_page %}">&raquo;</a>
+		{% endif %}
+
+		{#{% if cfg.last_page %}#}
+		{#	<a href="{% render_url cfg cfg.last_page %}">Последняя</a>#}
+		{#{% else %}#}
+		{#	<b>Последняя</b>#}
+		{#{% endif %}#}
+
+	</div>
+{% endif %}

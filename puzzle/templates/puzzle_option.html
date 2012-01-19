@@ -1,0 +1,202 @@
+{% extends 'base.html' %}
+{% load list_puzzle_thumb %}
+
+{% block content %}
+	<script type="text/javascript">
+		function GlobalOption() {
+			this.w = {{ img_w }};
+			this.h = {{ img_h }};
+			///
+			this.img_stretch = {{ form.img_stretch.value }};
+			this.img_type = {{ form.img_type.value }};
+			this.img_size = {{ form.img_size.value }};
+			this.img_effect = {{ form.img_effect.value }};
+			this.qty = {{ form.qty.value }};
+			///
+			this.stretch = [];
+			///
+			{% for i in dataStretch %}
+				this.stretch[{{ i.id }}] = '{{ i.name }}';
+			{% endfor %}
+			///
+			this.type = [];
+			///
+			{% for i in dataType %}
+				this.type[{{ i.id }}] = '{{ i.name }}';
+			{% endfor %}
+			///
+			this.size = [];
+			///
+			{% for i in dataSize %}
+				this.size[{{ i.id }}] = '{{ i.name }}';
+			{% endfor %}
+			///
+			this.effect = [];
+			///
+			{% for i in dataEffect %}
+				this.effect[{{ i.id }}] = '{{ i.name }}';
+			{% endfor %}
+			///
+			this.stretch_event = function(obj) {
+				var val = obj.value;
+				///
+				if (val > 0) {
+					this.img_stretch = val;
+				}
+			};
+			///
+			this.type_event = function(obj) {
+				var val = obj.value;
+				///
+				if (val > 0) {
+					this.img_type = val;
+				}
+			};
+			///
+			this.size_event = function(obj) {
+				var val = obj.value;
+				///
+				if (val > 0) {
+					this.img_size = val;
+				}
+			};
+			///
+			this.effect_event = function(obj) {
+				var val = obj.value;
+				///
+				if (val > 0) {
+					this.img_effect = val;
+					///
+					effectImage('/puzzle/effect/{{ char_id }}?eff='+val);
+				}
+			};
+			///
+			this.qty_event = function(event) {};
+			///
+			this.qty_change = function() {
+				var val = $('#id_qty').val();
+				///
+				if (val <= 0) {
+					$('#id_qty').val(1);
+					///
+					this.qty = 1;
+				}
+				else {
+					this.qty = val;
+				}
+			};
+		}
+		///
+		oGlobalOption = new GlobalOption();
+	</script>
+
+	{% view_step 2 %}
+	<div class="main"><h1>Параметры изображения</h1></div>
+	<div class="container_24">
+		<div class="wrapper">
+			<div id="thumb_prev" class="left">
+				<img id="img_thumb_prev" src="{{ row.pth }}{{ dir_thumbs }}{{ row.char_id }}.{{ row.ext }}" alt="" />
+			</div>
+
+			<form action="" method="post" enctype="multipart/form-data">             
+				{% csrf_token %}
+				<div id="wrapper_option" class="left">
+					
+					<div id="step_opt_1">
+						<div class="optButton" id="b1">Натяжка</div>
+							<div class="optContent" id="c1">
+								{{ form.img_stretch }}
+								{% block form_img_stretch_errors %}
+									{% autoescape off %}
+										{{ form.img_stretch.errors }}
+									{% endautoescape %}
+								{% endblock %}
+							</div>
+						<div class="optButton" id="b2">Ориентация</div>
+							<div class="optContent" id="c2">
+								{{ form.img_type }}
+								{% block form_img_type_errors %}
+									{% autoescape off %}
+										{{ form.img_type.errors }}
+									{% endautoescape %}
+								{% endblock %}
+							</div>
+						<div class="optButton" id="b3">Размер</div>
+							<div class="optContent" id="c3">
+								{{ form.img_size }}
+								{% block form_img_size_errors %}
+									{% autoescape off %}
+										{{ form.img_size.errors }}
+									{% endautoescape %}
+								{% endblock %}
+							</div>
+						<div class="optButton" id="b4">Эффекты</div>
+							<div class="optContent" id="c4">
+								{{ form.img_effect }}
+								{% block form_img_effect_errors %}
+									{% autoescape off %}
+										{{ form.img_effect.errors }}
+									{% endautoescape %}
+								{% endblock %}
+							</div>
+						<div class="optButton" id="b5">Количество</div>
+							<div class="optContent" id="c5">
+								{{ form.qty }}
+								{% block form_qty_errors %}
+									{% autoescape off %}
+										{{ form.qty.errors }}
+									{% endautoescape %}
+								{% endblock %}
+							</div>
+						<div class="optContentBottom" id="c8">
+							<input type="button" value="Продолжить" class="right" onclick="setNextStep();" />
+						</div>
+					</div>
+
+					<div id="step_opt_2" style="display: none;">
+						<div class="optButton" id="b6">Рамка</div>
+							<div class="optContent" id="c6">
+								{% autoescape off %}
+									{{ form.frame }}
+								{% endautoescape %}
+							</div>
+						<div class="optButton" id="b7">Упаковка</div>
+							<div class="optContent" id="c7">
+								{% autoescape off %}
+									{{ form.packaging }}
+								{% endautoescape %}
+							</div>
+						<div class="optContentBottom" id="c8">
+							<input type="submit" value="Купить" class="right" />
+							<input type="button" value="Назад" class="right" onclick="setPrevStep();" />
+						</div>
+					</div>
+				</div>
+			</form>
+
+			<script type="text/javascript">
+				function setNextStep() {
+					$('#step_opt_1').slideUp('normal');
+					$('#step_opt_2').slideDown('normal');
+					///
+					setCurrentStep(3);
+				}
+				///
+				function setPrevStep() {
+					$('#step_opt_2').slideUp('normal');
+					$('#step_opt_1').slideDown('normal');
+					///
+					setCurrentStep(2);
+				}
+			</script>
+			
+			<div class="clear"></div>
+
+			<div class="thumb_list">
+				{% list_puzzle_thumbs thumbs %}
+			</div>
+		</div>
+	</div>
+
+	{% view_mess_cook_puzzle %}
+{% endblock %}

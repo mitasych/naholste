@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load list_thumb %}
+
+{% block content %}
+	{% view_step 1 %}
+	<div class="main"><h1>Загрузить фотографию</h1></div>
+	<div class="container_24">
+		<div class="wrapper">
+			<div class="uploadphoto">
+				<form id="upload_form" action="" method="post" enctype="multipart/form-data">             
+					{% csrf_token %}
+					<table>
+						<tr>
+							<td>{{ form.file }}</td>
+						</tr>
+						<!-- <tr>
+							<td colspan="2" align="right">
+								<input type="submit" value="Загрузить" onclick="setUpload();" />
+							</td>
+						</tr> -->
+					</table>
+				</form>
+				
+				<div id="progress" class="progress">
+					<img src="/static/images/loader2.gif" alt="" />
+					&nbsp;&nbsp;&nbsp;Загружаю изображение...
+				</div>
+
+				<div id="error_img"></div>
+				<div id="success_img"></div>
+			</div>
+
+			<div class="thumb_list">
+				{% list_thumbs thumbs %}
+			</div>
+			<div style="margin-top:20px;width:420px;color:#4E4444; font-size: 13px;">
+				<p>
+					Поддерживаемые форматы: JPG, PNG, GIF, TIF, BMP.<br>
+					Максимальный размер передаваемого файла — 60 мегабайт.
+				</p>
+				<p>
+					После загрузки изображение обратите внимание на индикатор качества изображения.
+				</p>            
+				<p>
+					Разрешение фотографии должно быть не менее 150 точек на дюйм (dpi).
+					При разрешении 150 dpi и более гарантируется достаточно высокое качество работы.
+				</p>            
+				<p>
+					Большинство современных цифровых фотоаппаратов, имеющих разрешение матрицы больше 2 мегапикселей, позволяют делать фотографии необходимого качества.
+				</p>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		$('#upload_form input[type="file"]').change(function() {
+		  setUpload();
+		});
+	</script>
+
+	{% view_mess_cook %}
+{% endblock %}

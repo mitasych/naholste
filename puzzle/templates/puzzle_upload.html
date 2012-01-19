@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load list_puzzle_thumb %}
+
+{% block content %}
+	{% view_step 1 %}
+	<div class="main"><h1>Загрузить фотографию</h1></div>
+	<div class="container_24">
+		<div class="wrapper">
+			<div class="uploadphoto">
+				<form id="upload_form" action="" method="post" enctype="multipart/form-data">             
+					{% csrf_token %}
+					<table>
+						<tr>
+							<td>Изображение</td>
+							<td>{{ form.file }}</td>
+						</tr>
+						<tr>
+							<td colspan="2" align="right">
+								<input type="submit" value="Загрузить" onclick="setPuzzleUpload();" />
+							</td>
+						</tr>
+					</table>
+				</form>
+				
+				<div id="progress" class="progress">
+					<img src="/static/images/loader2.gif" alt="" />
+					&nbsp;&nbsp;&nbsp;Загружаю изображение...
+				</div>
+
+				<div id="error_img"></div>
+				<div id="success_img"></div>
+			</div>
+
+			<div class="thumb_list">
+				{% list_puzzle_thumbs thumbs %}
+			</div>
+		</div>
+	</div>
+
+	{% view_mess_cook_puzzle %}
+{% endblock %}

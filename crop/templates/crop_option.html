@@ -1,0 +1,385 @@
+{% extends 'base.html' %}
+{% load list_thumb %}
+
+{% block content %}
+	<link rel="stylesheet" href="/static/css/imgareaselect/imgareaselect-default.css">
+	<script src="/static/js/imgareaselect/jquery.imgareaselect.pack.js"></script>
+	<script type="text/javascript">
+		function GlobalOption() {
+			this.w = {{ img_w }};
+			this.h = {{ img_h }};
+			///
+			this.x1 = {{ form.x1.value }}
+			this.y1 = {{ form.y1.value }}
+			this.x2 = {{ form.x2.value }}
+			this.y2 = {{ form.y2.value }}
+			///
+			this.img_stretch = {{ form.img_stretch.value }};
+			this.img_type = {{ form.img_type.value }};
+			this.img_size = {{ form.img_size.value }};
+			this.img_effect = {{ form.img_effect.value }};
+			this.qty = {{ form.qty.value }};
+			///
+			this.prop = [];
+			///
+			this.prop[1] = {'w':3, 'h':2};
+			this.prop[2] = {'w':4, 'h':3};
+			this.prop[3] = {'w':5, 'h':4};
+			this.prop[4] = {'w':6, 'h':4};
+			this.prop[5] = {'w':7, 'h':5};
+			this.prop[6] = {'w':9, 'h':6};
+			///
+			this.stretch = [];
+			///
+			{% for i in dataStretch %}
+				this.stretch[{{ i.id }}] = '{{ i.name }}';
+			{% endfor %}
+			///
+			this.type = [];
+			///
+			{% for i in dataType %}
+				this.type[{{ i.id }}] = '{{ i.name }}';
+			{% endfor %}
+			///
+			this.size = [];
+			///
+			{% for i in dataSize %}
+				this.size[{{ i.id }}] = '{{ i.name }}';
+			{% endfor %}
+			///
+			this.effect = [];
+			///
+			{% for i in dataEffect %}
+				this.effect[{{ i.id }}] = '{{ i.name }}';
+			{% endfor %}
+			///
+			this.getProp = function() {
+				var pr = [];
+				///
+				pr[0] = this.prop[this.img_size].w;
+				pr[1] = this.prop[this.img_size].h;
+				///
+				return pr;
+			};
+			///
+			this.wCreateCanvas = function() {
+				var pr = this.getProp();
+				///
+				var w = this.w - 1;
+				var h = this.h - 1;
+				///
+				var one_w = Math.ceil(w / pr[0]);
+				var one_h = Math.ceil(one_w * pr[1]);
+				///
+				if (one_h <= h) {
+					h = one_h;
+				}
+				else {
+					while (w > 0) {
+						w = w - 1;
+						///
+						one_w = Math.ceil(w / pr[0]);
+						one_h = Math.ceil(one_w * pr[1]);
+						///
+						if (one_h <= h) {
+							h = one_h;
+							///
+							break;
+						}
+					}
+				}
+				///
+				var to_y1 = Math.ceil((this.h - h) / 2);
+				///
+				$('#img_thumb_prev').imgAreaSelect({
+					minWidth: w,
+					maxWidth: w,
+					minHeight: h,
+					maxHeight: h,
+					x1:0,
+					y1:to_y1,
+					x2:w,
+					y2:to_y1 + h
+				});
+			};
+			///
+			this.hCreateCanvas = function() {
+				var pr = this.getProp();
+				///
+				var w = this.w - 1;
+				var h = this.h - 1;
+				///
+				var one_h = Math.ceil(h / pr[0]);
+				var one_w = Math.ceil(one_h * pr[1]);
+				///
+				if (one_w <= w) {
+					w = one_w;
+				}
+				else {
+					while (h > 0) {
+						h = h - 1;
+						///
+						one_h = Math.ceil(h / pr[0]);
+						one_w = Math.ceil(one_h * pr[1]);
+						///
+						if (one_w <= w) {
+							w = one_w;
+							///
+							break;
+						}
+					}
+				}
+				///
+				var to_x1 = Math.ceil((this.w - w) / 2);
+				///
+				$('#img_thumb_prev').imgAreaSelect({
+					minWidth: w,
+					maxWidth: w,
+					minHeight: h,
+					maxHeight: h,
+					x1:to_x1,
+					y1:0,
+					x2:to_x1 + w,
+					y2:h
+				});
+			};
+			///
+			this.setStretch = function() {
+				if (this.img_stretch == 2) {
+					$('.imgareaselect-border1').css({'background':'url(/static/css/imgareaselect/border-v-left.png) repeat-y left top'});
+					$('.imgareaselect-border2').css({'background':'url(/static/css/imgareaselect/border-h-top.png) repeat-x left top'});
+					$('.imgareaselect-border3').css({'background':'url(/static/css/imgareaselect/border-v-right.png) repeat-y right top'});
+					$('.imgareaselect-border4').css({'background':'url(/static/css/imgareaselect/border-h-bottom.png) repeat-x left bottom'});
+				}
+				else {
+					$('.imgareaselect-border1').css({'background':'url(/static/css/imgareaselect/border-v.gif) repeat-y left top'});
+					$('.imgareaselect-border2').css({'background':'url(/static/css/imgareaselect/border-h.gif) repeat-x left top'});
+					$('.imgareaselect-border3').css({'background':'url(/static/css/imgareaselect/border-v.gif) repeat-y right top'});
+					$('.imgareaselect-border4').css({'background':'url(/static/css/imgareaselect/border-h.gif) repeat-x left bottom'});
+				}
+			};
+			///
+			this.createNewCanvas = function() {
+				if (this.img_type == 1) {
+					this.wCreateCanvas();
+				}
+				///
+				if (this.img_type == 2) {
+					this.hCreateCanvas();
+				}
+				///
+				this.setStretch();
+			};
+			///
+			this.stretch_event = function(obj) {
+				var val = obj.value;
+				///
+				if (val > 0) {
+					this.img_stretch = val;
+					///
+					this.setStretch();
+				}
+			};
+			///
+			this.type_event = function(obj) {
+				var val = obj.value;
+				///
+				if (val > 0) {
+					this.img_type = val;
+					///
+					this.createNewCanvas();
+				}
+			};
+			///
+			this.size_event = function(obj) {
+				var val = obj.value;
+				///
+				if (val > 0) {
+					this.img_size = val;
+					///
+					this.createNewCanvas();
+				}
+			};
+			///
+			this.effect_event = function(obj) {
+				var val = obj.value;
+				///
+				if (val > 0) {
+					this.img_effect = val;
+					///
+					effectImage('/crop/effect/{{ char_id }}?eff='+val);
+				}
+			};
+			///
+			this.qty_event = function(event) {};
+			///
+			this.qty_change = function() {
+				var val = $('#id_qty').val();
+				///
+				if (val <= 0) {
+					$('#id_qty').val(1);
+					///
+					this.qty = 1;
+				}
+				else {
+					this.qty = val;
+				}
+			};
+			///
+			this.createCanvas = function() {
+				if (this.x1 > 0 || this.y1 > 0 || this.x2 > 0 || this.y2 > 0) {
+					$('#img_thumb_prev').imgAreaSelect({
+						x1: this.x1,
+						y1: this.y1,
+						x2: this.x2,
+						y2: this.y2
+					});
+					///
+					this.setStretch();
+				}
+				else {
+					this.createNewCanvas();
+				}
+			};
+		}
+		///
+		oGlobalOption = new GlobalOption();
+		///
+		$(document).ready(function () {
+			$('#clickme').click(function () {
+				$('#img_thumb_prev').imgAreaSelect({
+					handles: true,
+					onSelectEnd: function (img, selection) {
+						oGlobalOption.x1 = selection.x1;
+						oGlobalOption.y1 = selection.y1;
+						oGlobalOption.x2 = selection.x2;
+						oGlobalOption.y2 = selection.y2;
+						///
+						$('#id_x1').val(selection.x1);
+						$('#id_y1').val(selection.y1);
+						$('#id_x2').val(selection.x2);
+						$('#id_y2').val(selection.y2);
+					}
+				});
+			});
+			
+			///
+			oGlobalOption.createCanvas();
+		});
+	</script>
+
+	{% view_step 2 %}
+	<div class="main"><h1>Параметры изображения</h1></div>
+	<div class="container_24">
+	<div id="clickme">Crop </div>
+		<div class="wrapper">
+			<div id="thumb_prev" class="left">
+				<img id="img_thumb_prev" src="{{ row.pth }}{{ dir_thumbs }}{{ row.char_id }}.{{ row.ext }}" alt="" />
+			</div>
+
+			<form action="" method="post" enctype="multipart/form-data">             
+				{% csrf_token %}
+				{{ form.x1 }}
+				{{ form.y1 }}
+				{{ form.x2 }}
+				{{ form.y2 }}
+				<div id="wrapper_option" class="left">
+					
+					<div id="step_opt_1">
+						<div class="optButton" id="b1">Натяжка</div>
+							<div class="optContent" id="c1">
+								{{ form.img_stretch }}
+								{% block form_img_stretch_errors %}
+									{% autoescape off %}
+										{{ form.img_stretch.errors }}
+									{% endautoescape %}
+								{% endblock %}
+							</div>
+						<div class="optButton" id="b2">Ориентация</div>
+							<div class="optContent" id="c2">
+								{{ form.img_type }}
+								{% block form_img_type_errors %}
+									{% autoescape off %}
+										{{ form.img_type.errors }}
+									{% endautoescape %}
+								{% endblock %}
+							</div>
+						<div class="optButton" id="b3">Размер</div>
+							<div class="optContent" id="c3">
+								{{ form.img_size }}
+								{% block form_img_size_errors %}
+									{% autoescape off %}
+										{{ form.img_size.errors }}
+									{% endautoescape %}
+								{% endblock %}
+							</div>
+						<div class="optButton" id="b4">Эффекты</div>
+							<div class="optContent" id="c4">
+								{{ form.img_effect }}
+								{% block form_img_effect_errors %}
+									{% autoescape off %}
+										{{ form.img_effect.errors }}
+									{% endautoescape %}
+								{% endblock %}
+							</div>
+						<div class="optButton" id="b5">Количество</div>
+							<div class="optContent" id="c5">
+								{{ form.qty }}
+								{% block form_qty_errors %}
+									{% autoescape off %}
+										{{ form.qty.errors }}
+									{% endautoescape %}
+								{% endblock %}
+							</div>
+						<div class="optContentBottom" id="c8">
+							<input type="button" value="Продолжить" class="right" onclick="setNextStep();" />
+						</div>
+					</div>
+
+					<div id="step_opt_2" style="display: none;">
+						<div class="optButton" id="b6">Рамка</div>
+							<div class="optContent" id="c6">
+								{% autoescape off %}
+									{{ form.frame }}
+								{% endautoescape %}
+							</div>
+						<div class="optButton" id="b7">Упаковка</div>
+							<div class="optContent" id="c7">
+								{% autoescape off %}
+									{{ form.packaging }}
+								{% endautoescape %}
+							</div>
+						<div class="optContentBottom" id="c8">
+							<input type="submit" value="Купить" class="right" />
+							<input type="button" value="Назад" class="right" onclick="setPrevStep();" />
+						</div>
+					</div>
+				</div>
+			</form>
+
+			<script type="text/javascript">
+				function setNextStep() {
+					$('#step_opt_1').slideUp('normal');
+					$('#step_opt_2').slideDown('normal');
+					///
+					setCurrentStep(3);
+				}
+				///
+				function setPrevStep() {
+					$('#step_opt_2').slideUp('normal');
+					$('#step_opt_1').slideDown('normal');
+					///
+					setCurrentStep(2);
+				}
+			</script>
+			
+			<div class="clear"></div>
+
+			<div class="thumb_list">
+				{% list_thumbs thumbs %}
+			</div>
+		</div>
+	</div>
+
+	{% view_mess_cook %}
+{% endblock %}

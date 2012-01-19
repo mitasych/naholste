@@ -1,0 +1,22 @@
+{% load elements %}
+<div class="main">
+	<div class="wrapper">
+		<h1><a href="/">На холсте</a></h1>
+		{% if auth %}
+		<div id="search1" style="width:147px;">
+		{% else %}
+		<div id="search1" style="width:171px;">
+		{% endif  %}
+			<ul>
+				{% if auth %}
+					<li><a class="button1 right" href="/account/logout">Выйти</a></li>
+					<li><a class="button1 right" href="/account/profile">Профиль</a></li>
+				{% else %}
+					<li><a class="button1 right" href="/account/login">Войти</a></li>
+					<li><a class="button1 right" href="/registration/">Регистрация</a></li>
+				{% endif  %}
+			</ul>
+		</div>
+	</div>
+	{% menu %}
+</div>

@@ -1,0 +1,27 @@
+<div class="main">
+	<div id="step_1" class="step left">
+		Шаг 1<br />
+		<span>Загрузка изображения</span>
+	</div>
+	<div id="step_2" class="step left">
+		Шаг 2<br />
+		<span>Параметры изображения</span>
+	</div>
+	<div id="step_3" class="step left">
+		Шаг 3<br />
+		<span>Оформление изображения</span>
+	</div>
+	<div class="clear"></div>
+</div>
+
+<script type="text/javascript">
+function setCurrentStep(step) {
+	$('#step_1').attr({'style':'background:#fff;'});
+	$('#step_2').attr({'style':'background:#fff;'});
+	$('#step_3').attr({'style':'background:#fff;'});
+	///
+	$('#step_'+step).attr({'style':'background:#828387; color:#fff;'});
+}
+///
+setCurrentStep({{ current }});
+</script>

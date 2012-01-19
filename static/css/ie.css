@@ -1,0 +1,9 @@
+*+html{overflow:auto;}
+#constuction-box,#intro-box{behavior:url(js/PIE.htc)}
+#text_slider div{background:none !important}
+#advanced ul li.trigger_adv > span,dl#accordion dt,.dropcap,.dropcap_2,.cs-buttons a,.border,.border.border2,.border.border2 img,.list-1 li span{behavior:url(js/PIE.htc);position:relative}
+.kwicks li{filter:alpha(opacity=50)}
+.kwicks li.active{filter:alpha(opacity=100)}
+.blocks li a>div>span{filter:alpha(opacity=0)}
+*+html #contact-form label{padding:0 0 18px;}
+#contact-form .message .error,#contact-form .message .empty{left:0;top:210px;}

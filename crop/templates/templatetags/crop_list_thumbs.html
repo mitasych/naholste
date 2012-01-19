@@ -1,0 +1,17 @@
+{% if total_thumbs > 0 %}
+	<h3>Загруженые изображения</h3>
+	<h4>Выберете изображение для обработки:</h4>
+	<div>
+		{% for thumb in thumbs %}
+			<div class="thumbs left" id="{{ thumb.char_id }}">
+				<a href="/crop/option/{{ thumb.char_id }}/" />
+					<img src="{{ thumb.pth }}{{ dir_smallthumbs }}{{ thumb.char_id }}.{{ thumb.ext }}" alt="" />
+				</a><br />
+				<center>
+					<a href="javascript: delImage('/crop/del/{{ thumb.char_id }}/', '{{ thumb.char_id }}')" >Удалить</a>
+				</center>
+			</div>
+		{% endfor %}
+		<div class="clear"></div>
+	</div>
+{% endif %}

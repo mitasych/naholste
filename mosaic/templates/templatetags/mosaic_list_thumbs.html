@@ -1,0 +1,17 @@
+{% if total_thumbs > 0 %}
+	<h3>Загруженые коллажи</h3>
+	<h4>Выберете коллаж обработки:</h4>
+	<div>
+		{% for thumb in thumbs %}
+			<div class="thumbs left" id="th_{{ thumb.opt_id }}">
+				<a href="/mosaic/option?opt_id={{ thumb.opt_id }}" />
+					<img src="{{ thumb.pth }}{{ DIR_SMALLTHUMBS }}{{ thumb.f_smallthumb }}.{{ thumb.ext }}" alt="" />
+				</a><br />
+				<center>
+					<a href="javascript: delImage('/mosaic/del?opt_id={{ thumb.opt_id }}', 'th_{{ thumb.opt_id }}')" >Удалить</a>
+				</center>
+			</div>
+		{% endfor %}
+		<div class="clear"></div>
+	</div>
+{% endif %}

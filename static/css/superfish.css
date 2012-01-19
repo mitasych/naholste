@@ -1,0 +1,19 @@
+.sf-menu{text-transform:uppercase;font-size:0;line-height:0;}
+.sf-menu ul{position:absolute;top:-999em;min-width:172px;background:#002245;padding:3px 3px 0;left:0;display:none;}
+.sf-menu li{position:relative;}
+.sf-menu>li{float:left;background-image:url(../images/menu-hover.png);background-position:50% 52px;background-repeat:no-repeat;border-left:1px solid #00448a;background-color:#002245;background-position-x:50% !important;}
+.sf-menu>li:first-child{border:none}
+.sf-menu a{color:#eaeaea;text-decoration:none;display:block;font-size:11px;line-height:1.2em;white-space:nowrap;position:relative;z-index:2;}
+.sf-menu>li>a{padding:20px 0 19px;text-align:center;width:135px;}
+.sf-menu.sf-menu2>li>a{width:189px;}
+.sf-menu>li:first-child>a{width:134px;}
+.sf-menu.sf-menu2>li:first-child>a{width:190px;}
+.sf-menu li li span{background:#0266a1;top:15px;position:absolute;left:50%;width:0;height:0;font-size:0;line-height:0;}
+.sf-menu li:hover ul,.sf-menu li.sfHover ul{top:52px;z-index:99;}
+.sf-menu li:hover li ul,ul.sf-menu li.sfHover li ul{top:-999em}
+.sf-menu li.current{background-position:50% -72px;}
+.sf-menu li li>a{padding:9px 17px 8px 38px;font-weight:normal;font-size:10px;color:#a9a8a8;}
+.sf-menu li li.current a,.sf-menu li li a:hover,.sf-menu li li.sfHover a{color:#eaeaea;}
+.sf-menu li li.current{background:#0266a1;}
+.sf-menu li li{margin:0 0 3px;}
+.sf-menu li li:hover ul,ul.sf-menu li li.sfHover ul{left:-180px;top:-3px;margin-left:-2px;}

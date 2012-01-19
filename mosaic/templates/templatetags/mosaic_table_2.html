@@ -1,0 +1,58 @@
+{% load mosaic_table %}
+<table class="mosaic_div">
+	<tr>
+		<td style="width: 289px;">
+			<div id="td_0" class="mosaic_div_td left" style="width: {{ TYPE_SIZE_2.0.0 }}px; height: {{ TYPE_SIZE_2.0.1 }}px;" onclick="$('#file_block_0').show();">
+				{% if row.f_0 %}
+					<img id="img_thumb_0" src="{{ row.pth }}{{ DIR_THUMBS }}{{ row.f_0 }}.{{ row.ext }}" alt="" />
+				{% else %}
+					{% mosaic_table_form row 0 TYPE_SIZE_2.0.0 %}
+				{% endif %}
+			</div>
+			<div id="td_2" class="mosaic_div_td left" style="width: {{ TYPE_SIZE_2.2.0 }}px; height: {{ TYPE_SIZE_2.2.1 }}px;" onclick="$('#file_block_2').show();">
+				{% if row.f_2 %}
+					<img id="img_thumb_2" src="{{ row.pth }}{{ DIR_THUMBS }}{{ row.f_2 }}.{{ row.ext }}" alt="" />
+				{% else %}
+					{% mosaic_table_form row 2 TYPE_SIZE_2.2.0 %}
+				{% endif %}
+			</div>
+			<div id="td_3" class="mosaic_div_td left" style="border-left: none; width: {{ TYPE_SIZE_2.3.0 }}px; height: {{ TYPE_SIZE_2.3.1 }}px;" onclick="$('#file_block_3').show();">
+				{% if row.f_3 %}
+					<img id="img_thumb_3" src="{{ row.pth }}{{ DIR_THUMBS }}{{ row.f_3 }}.{{ row.ext }}" alt="" />
+				{% else %}
+					{% mosaic_table_form row 3 TYPE_SIZE_2.3.0 %}
+				{% endif %}
+			</div>
+		</td>
+		<td style="width: 193px;">
+			<div id="td_1" class="mosaic_div_td left" style="width: {{ TYPE_SIZE_2.1.0 }}px; height: {{ TYPE_SIZE_2.1.1 }}px;" onclick="$('#file_block_1').show();">
+				{% if row.f_1 %}
+					<img id="img_thumb_1" src="{{ row.pth }}{{ DIR_THUMBS }}{{ row.f_1 }}.{{ row.ext }}" alt="" />
+				{% else %}
+					{% mosaic_table_form row 1 TYPE_SIZE_2.1.0 %}
+				{% endif %}
+			</div>
+			<div id="td_4" class="mosaic_div_td left" style="width: {{ TYPE_SIZE_2.4.0 }}px; height: {{ TYPE_SIZE_2.4.1 }}px;" onclick="$('#file_block_4').show();">
+				{% if row.f_4 %}
+					<img id="img_thumb_4" src="{{ row.pth }}{{ DIR_THUMBS }}{{ row.f_4 }}.{{ row.ext }}" alt="" />
+				{% else %}
+					{% mosaic_table_form row 4 TYPE_SIZE_2.4.0 %}
+				{% endif %}
+			</div>
+			<div id="td_5" class="mosaic_div_td left" style="border-left: none; width: {{ TYPE_SIZE_2.5.0 }}px; height: {{ TYPE_SIZE_2.5.1 }}px;" onclick="$('#file_block_5').show();">
+				{% if row.f_5 %}
+					<img id="img_thumb_5" src="{{ row.pth }}{{ DIR_THUMBS }}{{ row.f_5 }}.{{ row.ext }}" alt="" />
+				{% else %}
+					{% mosaic_table_form row 5 TYPE_SIZE_2.5.0 %}
+				{% endif %}
+			</div>
+			<div id="td_6" class="mosaic_div_td left" style="border-top: none; width: {{ TYPE_SIZE_2.6.0 }}px; height: {{ TYPE_SIZE_2.6.1 }}px;" onclick="$('#file_block_6').show();">
+				{% if row.f_6 %}
+					<img id="img_thumb_6" src="{{ row.pth }}{{ DIR_THUMBS }}{{ row.f_6 }}.{{ row.ext }}" alt="" />
+				{% else %}
+					{% mosaic_table_form row 6 TYPE_SIZE_2.6.0 %}
+				{% endif %}
+			</div>
+		</td>
+	</tr>
+</table>

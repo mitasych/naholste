@@ -1,0 +1,23 @@
+#galleryfic_gallery{width:900px;margin:0 auto 30px;overflow:hidden;}
+div.content{display:none;width:900px;position:relative;z-index:10;}
+div.slideshow-container{position:relative;clear:both;height:600px;z-index:10;margin-bottom:30px;}
+.advanced_gallery div.slideshow-container{width:60%;overflow:hidden}
+div.loader{position: absolute;top: 0 !important;left: 0;width:100%;height:100%;margin:0 !important;background:url(../images/loader.gif) 50% 50% no-repeat #fff}
+div.slideshow{height:600px;width:900px}
+div.slideshow span.image-wrapper{display:block;position:absolute;top:0;left:0;height:600px;width:900px;overflow:hidden}
+div.slideshow a.advance-link{display:block;text-align:center}
+div.slideshow a.advance-link:hover,div.slideshow a.advance-link:active,div.slideshow a.advance-link:visited{text-decoration:none}
+div.slideshow img{position:absolute;left:0;top:0;}
+div.slideshow.noborder img{padding:0;border:none}
+div.caption-container{position:relative;clear:left;height:40px}
+.advanced_gallery div.caption-container{position:absolute;right:0;top:0;width:40%;height:100%}
+span.image-caption{display:block;position:absolute;top:0;left:0}
+div.caption{padding:10px 0px 40px 30px}
+div.image-desc{font-size:10px;text-transform:uppercase;float:right;padding:8px 0 0 0}
+ul.thumbs{clear:both;margin:0;padding:0;overflow:hidden;}
+ul.thumbs li{float:left;padding:1px !important;background:none !important;list-style:none;margin:0 2px 0 0;border:1px solid #ddd;font-size:0;line-height:0;}
+ul.thumbs li.last{padding-right:0}
+ul.thumbs li .caption{display:none}
+a.thumb{width:69px;height:69px;display:block;background:url(../images/loader.gif) 50% 50% no-repeat #fff}
+a.thumb:focus{outline:none}
+ul.thumbs img{border:none;display:block}

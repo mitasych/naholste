@@ -1,0 +1,36 @@
+<div class="main">
+	<div id="step_1" class="step left">
+		<div class="desc_step">
+			Шаг 1<br />
+			<span>Загрузка фото</span>
+		</div>
+		<div class="step_arrow"></div>
+	</div>
+	<div id="step_2" class="step left">
+		<div class="desc_step">
+			Шаг 2<br />
+			<span>Параметры</span>
+		</div>
+		<div class="step_arrow"></div>
+	</div>
+	<div id="step_3" class="step left">
+		<div class="desc_step">
+			Шаг 3<br />
+			<span>Оформление</span>
+		</div>
+		<div class="step_arrow"></div>
+	</div>
+	<div class="clear"></div>
+</div>
+
+<script type="text/javascript">
+function setCurrentStep(step) {
+	$('#step_1').removeClass('active');
+	$('#step_2').removeClass('active');
+	$('#step_3').removeClass('active');
+	///
+	$('#step_'+step).addClass('active');
+}
+///
+setCurrentStep({{ current }});
+</script>
