@@ -5,3 +5,4 @@ django.wsgi
 README
 settings.py
 *.pyc
+media/
