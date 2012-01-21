@@ -103,10 +103,10 @@ function effectImage(set_url) {
 }
 
 function setMosaicUpload(div_id) {
-	formname = document.getElementById('upload_form_'+div_id);
+	var formname = document.getElementById('upload_form_'+div_id);
 	///
-	jQuery("#error_img_"+div_id).hide();
-	jQuery("#success_img_"+div_id).hide();
+	var div_mess = getHtmlDiv();
+	///
 	jQuery("#upload_form_"+div_id).hide();
 	jQuery("#progress_"+div_id).show();
 	///
@@ -120,22 +120,23 @@ function setMosaicUpload(div_id) {
 			if (data.error == 0) {
 				htm = '<img id="img_thumb_' + div_id + '" src="' + data.url + '" alt="" />'
 				///
-				jQuery("#success_img_"+div_id).html(data.message);
-				jQuery("#success_img_"+div_id).show();
+				jQuery("#messages").html(div_mess.replace(':class', 'success').replace(':text', data.message));
+				jQuery("#messages").show();
 				///
 				jQuery("#td_"+div_id).html(htm);
 			}
 			else {
-				jQuery("#error_img_"+div_id).html(data.message);
-				jQuery("#error_img_"+div_id).show();
+				jQuery("#messages").html(div_mess.replace(':class', 'error').replace(':text', data.message));
+				jQuery("#messages").show();
 			}
 			///
 			jQuery("#progress_"+div_id).hide();
 			jQuery("#upload_form_"+div_id).show();
 		},
 		error: function (data, status, e, aa) {
-			jQuery("#error_img_"+div_id).html(e);
-			jQuery("#error_img_"+div_id).show();
+			jQuery("#messages").html(div_mess.replace(':class', 'error').replace(':text', e));
+			jQuery("#messages").show();
+			///
 			jQuery("#progress_"+div_id).hide();
 			jQuery("#upload_form_"+div_id).show();
 		}
@@ -162,10 +163,10 @@ function effectMosaicImage(set_url) {
 }
 
 function setPuzzleUpload() {
-	formname = document.getElementById('upload_form');
+	var formname = document.getElementById('upload_form');
 	///
-	jQuery("#error_img").hide();
-	jQuery("#success_img").hide();
+	var div_mess = getHtmlDiv();
+	///
 	jQuery("#upload_form").hide();
 	jQuery("#progress").show();
 	///
@@ -178,22 +179,23 @@ function setPuzzleUpload() {
 			fileUpload:true,
 			success: function (data, status) {
 				if (data.error == 0) {
-					jQuery("#success_img").html(data.message);
-					jQuery("#success_img").show();
+					jQuery("#messages").html(div_mess.replace(':class', 'success').replace(':text', data.message));
+					jQuery("#messages").show();
 					///
 					document.location = '/puzzle/option/'+data.file+'/';
 				}
 				else {
-					jQuery("#error_img").html(data.message);
-					jQuery("#error_img").show();
+					jQuery("#messages").html(div_mess.replace(':class', 'error').replace(':text', data.message));
+					jQuery("#messages").show();
 				}
 				///
 				jQuery("#progress").hide();
 				jQuery("#upload_form").show();
 			},
 			error: function (data, status, e, aa) {
-				jQuery("#error_img").html(e);
-				jQuery("#error_img").show();
+				jQuery("#messages").html(div_mess.replace(':class', 'error').replace(':text', e));
+				jQuery("#messages").show();
+				///
 				jQuery("#progress").hide();
 				jQuery("#upload_form").show();
 			}
@@ -201,7 +203,8 @@ function setPuzzleUpload() {
 	}
 	else {
 		jQuery("#upload_form").show();
-		jQuery("#error_img").html('Выберите изображение');
-		jQuery("#error_img").show();
+		///
+		jQuery("#messages").html(div_mess.replace(':class', 'error').replace(':text', 'Выберите изображение'));
+		jQuery("#messages").show();
 	}
 }

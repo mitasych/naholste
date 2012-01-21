@@ -21,8 +21,8 @@ DIR_THUMBS = 'thumbs/'
 DIR_CHANGE = 'change/'
 DIR_SMALLTHUMBS = 'smallthumbs/'
 
-MIN_W = 300
-MIN_H = 300
+MIN_W = 500
+MIN_H = 500
 MIN_DPI = 72
 
 TYPE_SIZE_1 = (

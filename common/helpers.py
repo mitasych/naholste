@@ -83,6 +83,7 @@ class BaseImg(object):
 			sw = self.img.size[1] * rx
 			sh = self.img.size[1]
 			sx = floor((float(self.img.size[0]) - sw) / 2)
+			sw = sw + sx
 			dw = wx
 			dh = hx
 		elif ((r < rm) and (r < rx)):
@@ -91,6 +92,7 @@ class BaseImg(object):
 			sh = floor(float(self.img.size[0]) / rx)
 			sy = floor((float(self.img.size[1]) - sh) / 2)
 			sw = self.img.size[0]
+			sh = sh + sy
 			dw = wx
 			dh = hx
 		elif ((r >= rx) and (r <= rm)):
@@ -156,7 +158,7 @@ class CropImg(BaseImg):
 		if w is not None:
 			self.w = w
 		###
-		if w is not None:
+		if h is not None:
 			self.h = h
 		###
 		self.img = self.img.resize(self.getSize(float(self.img.size[0]), float(self.img.size[1])), Image.ANTIALIAS)
@@ -165,7 +167,7 @@ class CropImg(BaseImg):
 		if w is not None:
 			self.w = w
 		###
-		if w is not None:
+		if h is not None:
 			self.h = h
 		###
 		new_size = self.getSizeCrop(self.w, self.h, self.w, self.h)
@@ -302,7 +304,6 @@ class CookieListOptions(CookieListBase):
 		if request.COOKIES.has_key(self.cookie_key):
 			try:
 				data = pickle.loads(request.COOKIES[self.cookie_key])
-				print data
 				###
 				if not type(data).__name__ == 'list':
 					data = []
@@ -441,7 +442,6 @@ class CookiePuzzleOption(CookieListBase):
 		if request.COOKIES.has_key(self.cookie_key):
 			try:
 				data = pickle.loads(request.COOKIES[self.cookie_key])
-				print data
 				###
 				if not type(data).__name__ == 'list':
 					data = []

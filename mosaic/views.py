@@ -6,7 +6,6 @@ import random
 from PIL import Image
 from md5 import md5
 
-from collage.mosaic.settings import *
 from django.http import HttpResponse, HttpResponseRedirect, HttpRequest, HttpResponseBadRequest
 from django.utils import simplejson
 from django.core.cache import cache
@@ -21,6 +20,7 @@ from collage.common.helpers import CropImg, CookieMosaicOption, BaseImg
 from collage.mosaic.models import MosaicOption
 from collage.mosaic.forms import MosaicOptionForm, MosaicUploadForm, SIZE_CHOISES
 from collage.crop.models import Frames, Packaging
+from collage.mosaic.settings import *
 
 class DataImg(object):
 
@@ -211,15 +211,6 @@ def choise(request):
 	return render(request, 'mosaic_choise.html', data)
 
 def option(request):
-	class Ttt(object):
-		size = (220, 180)
-	###
-	t = BaseImg()
-	###
-	t.img = Ttt()
-	###
-	t.getSizeCrop(80, 80, 80, 80)
-	###
 	table_type = int(request.GET.get('type', 1))
 	###
 	if table_type not in (1, 2, 3,):
