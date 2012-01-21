@@ -99,8 +99,8 @@
 				var w = this.w - 1;
 				var h = this.h - 1;
 				///
-				var one_w = Math.ceil(w / pr[0]);
-				var one_h = Math.ceil(one_w * pr[1]);
+				var one_w = w / pr[0];
+				var one_h = one_w * pr[1];
 				///
 				if (one_h <= h) {
 					h = one_h;
@@ -109,8 +109,8 @@
 					while (w > 0) {
 						w = w - 1;
 						///
-						one_w = Math.ceil(w / pr[0]);
-						one_h = Math.ceil(one_w * pr[1]);
+						one_w = w / pr[0];
+						one_h = one_w * pr[1];
 						///
 						if (one_h <= h) {
 							h = one_h;
@@ -120,9 +120,9 @@
 					}
 				}
 				///
-				var to_y1 = Math.ceil((this.h - h) / 2);
+				var to_y1 = (this.h - h) / 2;
 				///
-				var to_x1 = Math.ceil((this.w - w) / 2);
+				var to_x1 = (this.w - w) / 2;
 				///
 				if (to_x1 < 0) {
 					to_x1 = 0;
@@ -141,8 +141,8 @@
 				var w = this.w - 1;
 				var h = this.h - 1;
 				///
-				var one_h = Math.ceil(h / pr[0]);
-				var one_w = Math.ceil(one_h * pr[1]);
+				var one_h = h / pr[0];
+				var one_w = one_h * pr[1];
 				///
 				if (one_w <= w) {
 					w = one_w;
@@ -151,8 +151,8 @@
 					while (h > 0) {
 						h = h - 1;
 						///
-						one_h = Math.ceil(h / pr[0]);
-						one_w = Math.ceil(one_h * pr[1]);
+						one_h = h / pr[0];
+						one_w = one_h * pr[1];
 						///
 						if (one_w <= w) {
 							w = one_w;
@@ -162,9 +162,9 @@
 					}
 				}
 				///
-				var to_x1 = Math.ceil((this.w - w) / 2);
+				var to_x1 = (this.w - w) / 2;
 				///
-				var to_y1 = Math.ceil((this.h - h) / 2);
+				var to_y1 = (this.h - h) / 2;
 				///
 				if (to_y1 < 0) {
 					to_y1 = 0;
