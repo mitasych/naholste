@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load list_thumb %}
+{% load crop_scale_quality %}
 
 {% block content %}
 	<link rel="stylesheet" href="/static/css/imgareaselect/imgareaselect-default.css">
@@ -192,7 +193,7 @@
 			};
 			///
 			this.createNewCanvas = function() {
-				if (this.img_type == 1) {
+				if (this.img_type == 1 || this.img_type == 3) {
 					this.wCreateCanvas();
 				}
 				///
@@ -213,11 +214,37 @@
 				}
 			};
 			///
+			this.setType = function(val) {
+				if (val == 1 || val == 2) {
+					if (this.img_size > 6) {
+						this.img_size = 6;
+						///
+						$('#id_img_size_5').attr('checked', true);
+					}
+					///
+					$('#ul_size_0').show();
+					$('#ul_size_1').hide();
+				}
+				///
+				if (val == 3) {
+					if (this.img_size < 7) {
+						this.img_size = 12;
+						///
+						$('#id_img_size_11').attr('checked', true);
+					}
+					///
+					$('#ul_size_0').hide();
+					$('#ul_size_1').show();
+				}
+			}
+			///
 			this.type_event = function(obj) {
 				var val = obj.value;
 				///
 				if (val > 0) {
 					this.img_type = val;
+					///
+					this.setType(val);
 					///
 					this.createNewCanvas();
 				}
@@ -259,6 +286,8 @@
 			};
 			///
 			this.createCanvas = function() {
+				this.setType(this.img_type);
+				///
 				if (this.x1 > 0 || this.y1 > 0 || this.x2 > 0 || this.y2 > 0) {
 					this.setCoord(this.x1, this.y1, this.x2, this.y2);
 					///
@@ -276,10 +305,12 @@
 	{% view_step 2 %}
 	<div class="main"><h1>Параметры изображения</h1></div>
 	<div class="container_24">
-	<div id="clickme">Crop </div>
 		<div class="wrapper">
-			<div id="thumb_prev" class="left">
-				<img id="img_thumb_prev" src="{{ row.pth }}{{ dir_thumbs }}{{ row.char_id }}.{{ row.ext }}" alt="" />
+			<div class="left">
+				<div id="thumb_prev">
+					<img id="img_thumb_prev" src="{{ row.pth }}{{ dir_thumbs }}{{ row.char_id }}.{{ row.ext }}" alt="" />
+				</div>
+				{% scale_quality origin_w origin_h %}
 			</div>
 
 			<form action="" method="post" enctype="multipart/form-data">             
@@ -312,6 +343,7 @@
 						<div class="optButton" id="b3">Размер</div>
 							<div class="optContent" id="c3">
 								{{ form.img_size }}
+								<div class="clear"></div>
 								{% block form_img_size_errors %}
 									{% autoescape off %}
 										{{ form.img_size.errors }}

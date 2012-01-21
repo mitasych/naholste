@@ -3,6 +3,7 @@ from settings import *
 from django import forms
 from collage.crop.models import Frames, Packaging
 from collage.common.widgets import FrameChoise
+from collage.crop.widgets import ColumnRadioSelect
 
 STRETCH_CHOISES = (
 	(1, u'Стандартная',),
@@ -13,6 +14,7 @@ STRETCH_CHOISES = (
 TYPE_CHOISES = (
 	(1, u'Альбомная',),
 	(2, u'Книжная',),
+	(3, u'Квадрат',),
 )
 
 SIZE_CHOISES = (
@@ -40,7 +42,7 @@ class OptionForm(forms.Form):
 
 	img_stretch = forms.ChoiceField(widget=forms.RadioSelect(attrs={'onclick':'oGlobalOption.stretch_event(this)'}), required=True, initial=1, choices=STRETCH_CHOISES)
 	img_type = forms.ChoiceField(widget=forms.RadioSelect(attrs={'onclick':'oGlobalOption.type_event(this)'}), required=True, initial=1, choices=TYPE_CHOISES)
-	img_size = forms.ChoiceField(widget=forms.RadioSelect(attrs={'onclick':'oGlobalOption.size_event(this)'}), required=True, initial=6, choices=SIZE_CHOISES)
+	img_size = forms.ChoiceField(widget=ColumnRadioSelect(attrs={'onclick':'oGlobalOption.size_event(this)'}), required=True, initial=6, choices=SIZE_CHOISES)
 	img_effect = forms.ChoiceField(widget=forms.RadioSelect(attrs={'onclick':'oGlobalOption.effect_event(this)'}), required=True, initial=1, choices=EFFECT_CHOISES)
 	qty = forms.IntegerField(widget=forms.TextInput(attrs={'onchange':'oGlobalOption.qty_change()', 'onkeyup':'oGlobalOption.qty_event(event)'}), required=True, initial=1, min_value=1, max_value=1000)
 	frame = forms.ModelChoiceField(widget=FrameChoise(), queryset=Frames.objects.all(), initial=1)

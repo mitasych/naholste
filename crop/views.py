@@ -102,6 +102,11 @@ class DataImg(object):
 		if os.path.isfile(f):
 			img = CropImg(f, None, MIN_W, MIN_H, MIN_DPI)
 			###
+			size = img.getOriginSize()
+			###
+			self.origin_w = size[0]
+			self.origin_h = size[1]
+			###
 			if eff == 3: img.sepia()
 			if eff == 2: img.BlackWhite()
 			###
@@ -128,6 +133,11 @@ class DataImg(object):
 		###
 		if os.path.isfile(f):
 			img = CropImg(f, None, MIN_W, MIN_H, MIN_DPI)
+			###
+			size = img.getOriginSize()
+			###
+			self.origin_w = size[0]
+			self.origin_h = size[1]
 			###
 			if eff == 3: img.sepia()
 			if eff == 2: img.BlackWhite()
@@ -469,6 +479,8 @@ def option(request, file_id=''):
 			'char_id':file_id,
 			'img_w':di.w,
 			'img_h':di.h,
+			'origin_w':di.origin_w,
+			'origin_h':di.origin_h,
 			'nameStretch':form.getStretch(form['img_stretch'].value()),
 			'nameType':form.getType(form['img_type'].value()),
 			'nameSize':form.getSize(form['img_size'].value()),

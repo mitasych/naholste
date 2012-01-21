@@ -10,6 +10,15 @@ t = ' &nbsp;1&nbsp;2256.89&nbsp;  &nbsp; &nbsp; '
 t = float(t.strip().replace('&nbsp;', '').replace(' ', ''))
 print t
 
+a = 2
+b = 5
+c = a > b and a or b
+
+print c
+
+a = 3000
+print int(a - a * 0.01)
+
 """
 class Test(object):
 	f_0 = 1

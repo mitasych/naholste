@@ -29,25 +29,25 @@
 		<header>
 			{% header %}
 		</header>
-		
-		{% if messages %}
-			<section id="messages">
+
+		<section id="messages">
+			{% if messages %}
 				<div class="container_24">
 					<div class="wrapper">
+						<a href="javascript: hideMessage();" class="right" style="position: relative; top:2px; margin-right:12px;">
+							<img src="/static/images/close.png" alt="" class="close"  />
+						</a>
 						<center>
 							{% for message in messages %}
 								<div class="{{ message.tags }}">
 									{{ message }}
 								</div>
 							{% endfor %}
-							<a href="javascript: hideMessage();" class="right">
-								<img src="/static/images/close.png" alt="" class="close"  />
-							</a>
 						</center>
 					</div>
 				</div>
-			</section>
-		{% endif %}
+			{% endif %}
+		</section>
 		
 		<section id="content">
 			{% block content %}{% endblock %}

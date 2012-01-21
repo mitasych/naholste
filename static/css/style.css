@@ -90,7 +90,7 @@ header nav{position:relative;z-index:99;padding-bottom:6px;background:url(../ima
 
 
 section#content{padding:0px 0 71px;}
-section#messages{padding:20px 0 10px;}
+section#messages{}
 section#user_online{padding:10px 0 0px 20px;}
 
 
@@ -680,4 +680,55 @@ div.step_arrow{
 	width:40px;
 	height:36px;
 	margin-top: 28px;
+}
+
+.error {
+	background-color:#f4f4f4;
+	border-left:5px solid #ff0000;
+	border-right:5px solid #ff0000;
+	padding: 12px 0 12px 0px;
+	margin: 0px 5px 0px 5px;
+	color: #ff0000;
+	font-weight:bold;
+}
+.success {
+	background-color:#f4f4f4;
+	border-left:5px solid #0006ff;
+	border-right:5px solid #0006ff;
+	padding: 12px 0 12px 0px;
+	margin: 0px 5px 0px 5px;
+	color: #0006ff;
+	font-weight:bold;
+}
+
+.scale {
+	margin: 0 0 20px 0;
+	background: url(/static/images/scale_quality.jpg) repeat-y 0;
+	width: 375px;
+	height: 15px;
+}
+
+.scale_info {
+	margin: 20px 0 0 0;
+	font-size:10px;
+	width: 375px;
+}
+
+.scale_td {
+	border-left: 1px dotted gray;
+	border-right: 1px dotted gray;
+}
+
+.percent {
+	float: left;
+	height: 15px;
+	background-color: #000;
+	filter: alpha(opacity=50);
+	opacity: 0.5;
+}
+
+.scale_img {
+	position: relative;
+	top: 15px;
+	margin-left: -5px;
 }

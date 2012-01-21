@@ -3,7 +3,7 @@ static/images/*
 .pydevproject
 django.wsgi
 README
-settings.py
+/settings.py
 *.pyc
 media/*
 
