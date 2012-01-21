@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load list_puzzle_thumb %}
+{% load crop_scale_quality %}
 
 {% block content %}
 	<script type="text/javascript">
@@ -94,8 +95,11 @@
 	<div class="main"><h1>Параметры изображения</h1></div>
 	<div class="container_24">
 		<div class="wrapper">
-			<div id="thumb_prev" class="left">
-				<img id="img_thumb_prev" src="{{ row.pth }}{{ dir_thumbs }}{{ row.char_id }}.{{ row.ext }}" alt="" />
+			<div class="left">
+				<div id="thumb_prev">
+					<img id="img_thumb_prev" src="{{ row.pth }}{{ dir_thumbs }}{{ row.char_id }}.{{ row.ext }}" alt="" />
+				</div>
+				{% scale_quality origin_w origin_h %}
 			</div>
 
 			<form action="" method="post" enctype="multipart/form-data">             
