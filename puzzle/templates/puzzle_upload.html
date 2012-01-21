@@ -11,13 +11,7 @@
 					{% csrf_token %}
 					<table>
 						<tr>
-							<td>Изображение</td>
 							<td>{{ form.file }}</td>
-						</tr>
-						<tr>
-							<td colspan="2" align="right">
-								<input type="submit" value="Загрузить" onclick="setPuzzleUpload();" />
-							</td>
 						</tr>
 					</table>
 				</form>
@@ -26,10 +20,13 @@
 					<img src="/static/images/loader2.gif" alt="" />
 					&nbsp;&nbsp;&nbsp;Загружаю изображение...
 				</div>
-
-				<div id="error_img"></div>
-				<div id="success_img"></div>
 			</div>
+
+			<script type="text/javascript">
+				$('#upload_form input[type="file"]').change(function() {
+					setPuzzleUpload();
+				});
+			</script>
 
 			<div class="thumb_list">
 				{% list_puzzle_thumbs thumbs %}

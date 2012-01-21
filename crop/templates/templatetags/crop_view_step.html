@@ -24,13 +24,13 @@
 </div>
 
 <script type="text/javascript">
-function setCurrentStep(step) {
-	$('#step_1').removeClass('active');
-	$('#step_2').removeClass('active');
-	$('#step_3').removeClass('active');
+	function setCurrentStep(step) {
+		$('#step_1').removeClass('active');
+		$('#step_2').removeClass('active');
+		$('#step_3').removeClass('active');
+		///
+		$('#step_'+step).addClass('active');
+	}
 	///
-	$('#step_'+step).addClass('active');
-}
-///
-setCurrentStep({{ current }});
+	setCurrentStep({{ current }});
 </script>

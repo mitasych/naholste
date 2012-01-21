@@ -732,3 +732,11 @@ div.step_arrow{
 	top: 15px;
 	margin-left: -5px;
 }
+
+.thumb_list {
+	padding-top: 20px;
+}
+
+.thumb_list h3, .thumb_list h4 {
+	margin-bottom: 2px;
+}
