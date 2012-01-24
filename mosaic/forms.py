@@ -2,30 +2,9 @@
 from settings import *
 from django import forms
 from django.forms.util import ErrorList
-from collage.mosaic.models import MosaicOption
+from collage.mosaic.models import MosaicOption, EFFECT_CHOISES, SIZE_CHOISES
 from collage.crop.models import Frames, Packaging
 from collage.common.widgets import FrameChoise
-
-EFFECT_CHOISES = (
-	(1, u'Нет',),
-	(2, u'Черно-белое',),
-	(3, u'Сепия',),
-)
-
-SIZE_CHOISES = (
-	(12, 12,),
-	(20, 20,),
-	(30, 30,),
-	(36, 36,),
-	(16, 12,),
-	(20, 16,),
-	(30, 24,),
-	(35, 28,),
-	(12, 16,),
-	(16, 20,),
-	(24, 30,),
-	(28, 35,),
-)
 
 class MosaicOptionForm(forms.Form):
 

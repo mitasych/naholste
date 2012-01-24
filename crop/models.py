@@ -5,6 +5,51 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.forms import ModelForm, Textarea
 
+STRETCH_CHOISES = (
+	(1, u'Стандартная',),
+	(2, u'Галерейная',),
+	(3, u'Холст',),
+)
+
+TYPE_CHOISES = (
+	(1, u'Альбомная',),
+	(2, u'Книжная',),
+	(3, u'Квадрат',),
+)
+
+SIZE_CHOISES = (
+	(1, u'30x20 см',),
+	(2, u'40x30 см',),
+	(3, u'50x40 см',),
+	(4, u'60x40 см',),
+	(5, u'70x50 см',),
+	(6, u'90x60 см',),
+	(7, u'30x30 см',),
+	(8, u'40x40 см',),
+	(9, u'50x50 см',),
+	(10, u'60x60 см',),
+	(11, u'70x70 см',),
+	(12, u'90x90 см',),
+)
+
+EFFECT_CHOISES = (
+	(1, u'Нет',),
+	(2, u'Черно-белое',),
+	(3, u'Сепия',),
+)
+
+class CropPrice(models.Model):
+
+	size_id = models.IntegerField(u'Размер', choices=SIZE_CHOISES, blank=False)
+	price = models.DecimalField(u'Цена', max_digits=5, decimal_places=2, blank=False)
+
+	class Meta:
+		verbose_name = u'Размеры и цены'
+		verbose_name_plural = u'Размеры и цены'
+
+	def __unicode__(self):
+		return u'%d тенге' % self.price
+
 class Files(models.Model):
 
 	char_id = models.CharField(u'Строковый ИД', max_length=32)

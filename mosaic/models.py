@@ -7,6 +7,52 @@ from django.forms import ModelForm, Textarea
 from django.db.models import Max
 from collage.crop.models import Frames, Packaging
 
+EFFECT_CHOISES = (
+	(1, u'Нет',),
+	(2, u'Черно-белое',),
+	(3, u'Сепия',),
+)
+
+SIZE_CHOISES = (
+	(12, 12,),
+	(20, 20,),
+	(30, 30,),
+	(36, 36,),
+	(16, 12,),
+	(20, 16,),
+	(30, 24,),
+	(35, 28,),
+	(12, 16,),
+	(16, 20,),
+	(24, 30,),
+	(28, 35,),
+)
+
+class ChoiseAdmin(object):
+
+	start = 0
+	
+	def new(self, row):
+		self.start = self.start + 1
+		###
+		return (self.start, u"%sx%s см" % (row[0], row[1]))
+
+ca = ChoiseAdmin()
+
+SIZE_CHOISES_ADMIN = tuple(ca.new(v) for v in SIZE_CHOISES)
+	
+class MosaicPrice(models.Model):
+
+	size_id = models.IntegerField(u'Размер', choices=SIZE_CHOISES_ADMIN, blank=False)
+	price = models.DecimalField(u'Цена', max_digits=5, decimal_places=2, blank=False)
+
+	class Meta:
+		verbose_name = u'Размеры и цены'
+		verbose_name_plural = u'Размеры и цены'
+
+	def __unicode__(self):
+		return u'%d тенге' % self.price
+
 class MosaicOption(models.Model):
 
 	opt_id = models.IntegerField(u'Идентификатор строки')

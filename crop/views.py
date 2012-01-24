@@ -19,7 +19,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 
 from collage.common.helpers import CropImg, CookieListFiles, CookieListOptions
-from collage.crop.models import Files, OptionFiles, Frames, Packaging
+from collage.crop.models import CropPrice, Files, OptionFiles, Frames, Packaging
 from collage.crop.forms import UploadForm, OptionForm
 
 class DataImg(object):

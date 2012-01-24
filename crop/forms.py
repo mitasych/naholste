@@ -2,41 +2,9 @@
 from settings import *
 from django import forms
 from collage.crop.models import Frames, Packaging
+from collage.crop.models import STRETCH_CHOISES, TYPE_CHOISES, SIZE_CHOISES, EFFECT_CHOISES
 from collage.common.widgets import FrameChoise
 from collage.crop.widgets import ColumnRadioSelect
-
-STRETCH_CHOISES = (
-	(1, u'Стандартная',),
-	(2, u'Галерейная',),
-	(3, u'Холст',),
-)
-
-TYPE_CHOISES = (
-	(1, u'Альбомная',),
-	(2, u'Книжная',),
-	(3, u'Квадрат',),
-)
-
-SIZE_CHOISES = (
-	(1, u'30x20 см',),
-	(2, u'40x30 см',),
-	(3, u'50x40 см',),
-	(4, u'60x40 см',),
-	(5, u'70x50 см',),
-	(6, u'90x60 см',),
-	(7, u'30x30 см',),
-	(8, u'40x40 см',),
-	(9, u'50x50 см',),
-	(10, u'60x60 см',),
-	(11, u'70x70 см',),
-	(12, u'90x90 см',),
-)
-
-EFFECT_CHOISES = (
-	(1, u'Нет',),
-	(2, u'Черно-белое',),
-	(3, u'Сепия',),
-)
 
 class OptionForm(forms.Form):
 

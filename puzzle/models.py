@@ -6,6 +6,50 @@ from django.contrib.auth.models import User
 from django.forms import ModelForm, Textarea
 from collage.crop.models import Frames, Packaging
 
+STRETCH_CHOISES = (
+	(1, u'Стандартная',),
+	(2, u'Галерейная',),
+	(3, u'Холст',),
+)
+
+TYPE_CHOISES = (
+	(1, u'Альбомная',),
+	(2, u'Книжная',),
+)
+
+SIZE_CHOISES = (
+	(1, u'Нет ',),
+	(2, u'4-45x45',),
+	(3, u'3-25x100',),
+	(4, u'4-30x30',),
+	(5, u'3-45x45',),
+	(6, u'6-30x30',),
+	(7, u'6-45x45',),
+	(8, u'5-25x100',),
+	(9, u'9-30x30',),
+	(10, u'9-45x45',),
+	(11, u'3-30x30',),
+	(12, u'3-25x50',),
+)
+
+EFFECT_CHOISES = (
+	(1, u'Нет',),
+	(2, u'Черно-белое',),
+	(3, u'Сепия',),
+)
+
+class PuzzlePrice(models.Model):
+
+	size_id = models.IntegerField(u'Размер', choices=SIZE_CHOISES, blank=False)
+	price = models.DecimalField(u'Цена', max_digits=5, decimal_places=2, blank=False)
+
+	class Meta:
+		verbose_name = u'Размеры и цены'
+		verbose_name_plural = u'Размеры и цены'
+
+	def __unicode__(self):
+		return u'%d тенге' % self.price
+
 class PuzzleFiles(models.Model):
 
 	char_id = models.CharField(u'Строковый ИД', max_length=32)

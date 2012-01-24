@@ -17,8 +17,8 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 
 from collage.common.helpers import CropImg, CookieMosaicOption, BaseImg
-from collage.mosaic.models import MosaicOption
-from collage.mosaic.forms import MosaicOptionForm, MosaicUploadForm, SIZE_CHOISES
+from collage.mosaic.models import MosaicPrice, MosaicOption, SIZE_CHOISES
+from collage.mosaic.forms import MosaicOptionForm, MosaicUploadForm
 from collage.crop.models import Frames, Packaging
 from collage.mosaic.settings import *
 
@@ -294,6 +294,7 @@ def option(request):
 		'row':row,
 		'form':form,
 		'SIZE_CHOISES':SIZE_CHOISES,
+		'MosaicPrice':MosaicPrice.objects.all(),
 	}
 	###
 	return render(request, 'mosaic_option.html', param)

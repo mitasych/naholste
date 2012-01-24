@@ -3,44 +3,14 @@ from settings import *
 from django import forms
 from collage.crop.models import Frames, Packaging
 from collage.common.widgets import FrameChoise
-
-STRETCH_CHOISES = (
-	(1, u'Стандартная',),
-	(2, u'Галерейная',),
-	(3, u'Холст',),
-)
-
-TYPE_CHOISES = (
-	(1, u'Альбомная',),
-	(2, u'Книжная',),
-)
-
-SIZE_CHOISES = (
-	(1, u'Нет ',),
-	(2, u'4-45x45',),
-	(3, u'3-25x100',),
-	(4, u'4-30x30',),
-	(5, u'3-45x45',),
-	(6, u'6-30x30',),
-	(7, u'6-45x45',),
-	(8, u'5-25x100',),
-	(9, u'9-30x30',),
-	(10, u'9-45x45',),
-	(11, u'3-30x30',),
-	(12, u'3-25x50',),
-)
-
-EFFECT_CHOISES = (
-	(1, u'Нет',),
-	(2, u'Черно-белое',),
-	(3, u'Сепия',),
-)
+from collage.puzzle.widgets import FrameChoisePrice
+from collage.puzzle.models import STRETCH_CHOISES, TYPE_CHOISES, SIZE_CHOISES, EFFECT_CHOISES
 
 class OptionForm(forms.Form):
 
 	img_stretch = forms.ChoiceField(widget=forms.RadioSelect(attrs={'onclick':'oGlobalOption.stretch_event(this)'}), required=True, initial=1, choices=STRETCH_CHOISES)
 	img_type = forms.ChoiceField(widget=forms.RadioSelect(attrs={'onclick':'oGlobalOption.type_event(this)'}), required=True, initial=1, choices=TYPE_CHOISES)
-	img_size = forms.ChoiceField(widget=FrameChoise(attrs={'onclick':'oGlobalOption.size_event(this)'}), required=True, initial=1, choices=SIZE_CHOISES)
+	img_size = forms.ChoiceField(widget=FrameChoisePrice(attrs={'onclick':'oGlobalOption.size_event(this)'}), required=True, initial=1, choices=SIZE_CHOISES)
 	img_effect = forms.ChoiceField(widget=forms.RadioSelect(attrs={'onclick':'oGlobalOption.effect_event(this)'}), required=True, initial=1, choices=EFFECT_CHOISES)
 	qty = forms.IntegerField(widget=forms.TextInput(attrs={'onchange':'oGlobalOption.qty_change()', 'onkeyup':'oGlobalOption.qty_event(event)'}), required=True, initial=1, min_value=1, max_value=1000)
 	frame = forms.ModelChoiceField(widget=FrameChoise(), queryset=Frames.objects.all(), initial=1)

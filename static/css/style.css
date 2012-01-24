@@ -639,6 +639,10 @@ div.step_arrow{
 	width: 76px;
 }
 
+.frame_choise small, .frame_item small {
+	font-size: 10px;
+}
+
 .frame_parent {
 	position: relative;
 }

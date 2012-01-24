@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load mosaic_table %}
+{% load mosaic_price %}
 
 {% block content %}
 	<script type="text/javascript">
@@ -94,22 +95,22 @@
 								<ul>
 									<li>
 										<label for="table_size_0">
-											<input id="table_size_0" {% if row.table_size == 1 %}checked="checked"{% endif %} type="radio" value="1" name="table_size"> {{ SIZE_CHOISES.0.0 }}x{{ SIZE_CHOISES.0.1 }}см
+											<input id="table_size_0" {% if row.table_size == 1 %}checked="checked"{% endif %} type="radio" value="1" name="table_size"> {{ SIZE_CHOISES.0.0 }}x{{ SIZE_CHOISES.0.1 }}см {% mosaic_price MosaicPrice 1 %}
 										</label>
 									</li>
 									<li>
 										<label for="table_size_1">
-											<input id="table_size_1" {% if row.table_size == 2 %}checked="checked"{% endif %} type="radio" value="2" name="table_size"> {{ SIZE_CHOISES.1.0 }}x{{ SIZE_CHOISES.1.1 }}см
+											<input id="table_size_1" {% if row.table_size == 2 %}checked="checked"{% endif %} type="radio" value="2" name="table_size"> {{ SIZE_CHOISES.1.0 }}x{{ SIZE_CHOISES.1.1 }}см {% mosaic_price MosaicPrice 2 %}
 										</label>
 									</li>
 									<li>
 										<label for="table_size_2">
-											<input id="table_size_2" {% if row.table_size == 3 %}checked="checked"{% endif %} type="radio" value="3" name="table_size"> {{ SIZE_CHOISES.2.0 }}x{{ SIZE_CHOISES.2.1 }}см
+											<input id="table_size_2" {% if row.table_size == 3 %}checked="checked"{% endif %} type="radio" value="3" name="table_size"> {{ SIZE_CHOISES.2.0 }}x{{ SIZE_CHOISES.2.1 }}см {% mosaic_price MosaicPrice 3 %}
 										</label>
 									</li>
 									<li>
 										<label for="table_size_3">
-											<input id="table_size_3" {% if row.table_size == 4 %}checked="checked"{% endif %} type="radio" value="4" name="table_size"> {{ SIZE_CHOISES.3.0 }}x{{ SIZE_CHOISES.3.1 }}см
+											<input id="table_size_3" {% if row.table_size == 4 %}checked="checked"{% endif %} type="radio" value="4" name="table_size"> {{ SIZE_CHOISES.3.0 }}x{{ SIZE_CHOISES.3.1 }}см {% mosaic_price MosaicPrice 4 %}
 										</label>
 									</li>
 								</ul>
@@ -118,22 +119,22 @@
 								<ul>
 									<li>
 										<label for="table_size_4">
-											<input id="table_size_4" {% if row.table_size == 5 %}checked="checked"{% endif %} type="radio" value="5" name="table_size"> {{ SIZE_CHOISES.4.0 }}x{{ SIZE_CHOISES.4.1 }}см
+											<input id="table_size_4" {% if row.table_size == 5 %}checked="checked"{% endif %} type="radio" value="5" name="table_size"> {{ SIZE_CHOISES.4.0 }}x{{ SIZE_CHOISES.4.1 }}см {% mosaic_price MosaicPrice 5 %}
 										</label>
 									</li>
 									<li>
 										<label for="table_size_5">
-											<input id="table_size_5" {% if row.table_size == 6 %}checked="checked"{% endif %} type="radio" value="6" name="table_size"> {{ SIZE_CHOISES.5.0 }}x{{ SIZE_CHOISES.5.1 }}см
+											<input id="table_size_5" {% if row.table_size == 6 %}checked="checked"{% endif %} type="radio" value="6" name="table_size"> {{ SIZE_CHOISES.5.0 }}x{{ SIZE_CHOISES.5.1 }}см {% mosaic_price MosaicPrice 6 %}
 										</label>
 									</li>
 									<li>
 										<label for="table_size_6">
-											<input id="table_size_6" {% if row.table_size == 7 %}checked="checked"{% endif %} type="radio" value="7" name="table_size"> {{ SIZE_CHOISES.6.0 }}x{{ SIZE_CHOISES.6.1 }}см
+											<input id="table_size_6" {% if row.table_size == 7 %}checked="checked"{% endif %} type="radio" value="7" name="table_size"> {{ SIZE_CHOISES.6.0 }}x{{ SIZE_CHOISES.6.1 }}см {% mosaic_price MosaicPrice 7 %}
 										</label>
 									</li>
 									<li>
 										<label for="table_size_7">
-											<input id="table_size_7" {% if row.table_size == 8 %}checked="checked"{% endif %} type="radio" value="8" name="table_size"> {{ SIZE_CHOISES.7.0 }}x{{ SIZE_CHOISES.7.1 }}см
+											<input id="table_size_7" {% if row.table_size == 8 %}checked="checked"{% endif %} type="radio" value="8" name="table_size"> {{ SIZE_CHOISES.7.0 }}x{{ SIZE_CHOISES.7.1 }}см {% mosaic_price MosaicPrice 8 %}
 										</label>
 									</li>
 								</ul>
@@ -142,22 +143,22 @@
 								<ul>
 									<li>
 										<label for="table_size_8">
-											<input id="table_size_8" {% if row.table_size == 9 %}checked="checked"{% endif %} type="radio" value="9" name="table_size"> {{ SIZE_CHOISES.8.0 }}x{{ SIZE_CHOISES.8.1 }}см
+											<input id="table_size_8" {% if row.table_size == 9 %}checked="checked"{% endif %} type="radio" value="9" name="table_size"> {{ SIZE_CHOISES.8.0 }}x{{ SIZE_CHOISES.8.1 }}см {% mosaic_price MosaicPrice 9 %}
 										</label>
 									</li>
 									<li>
 										<label for="table_size_9">
-											<input id="table_size_9" {% if row.table_size == 10 %}checked="checked"{% endif %} type="radio" value="10" name="table_size"> {{ SIZE_CHOISES.9.0 }}x{{ SIZE_CHOISES.9.1 }}см
+											<input id="table_size_9" {% if row.table_size == 10 %}checked="checked"{% endif %} type="radio" value="10" name="table_size"> {{ SIZE_CHOISES.9.0 }}x{{ SIZE_CHOISES.9.1 }}см {% mosaic_price MosaicPrice 10 %}
 										</label>
 									</li>
 									<li>
 										<label for="table_size_10">
-											<input id="table_size_10" {% if row.table_size == 11 %}checked="checked"{% endif %} type="radio" value="11" name="table_size"> {{ SIZE_CHOISES.10.0 }}x{{ SIZE_CHOISES.10.1 }}см
+											<input id="table_size_10" {% if row.table_size == 11 %}checked="checked"{% endif %} type="radio" value="11" name="table_size"> {{ SIZE_CHOISES.10.0 }}x{{ SIZE_CHOISES.10.1 }}см {% mosaic_price MosaicPrice 11 %}
 										</label>
 									</li>
 									<li>
 										<label for="table_size_11">
-											<input id="table_size_11" {% if row.table_size == 12 %}checked="checked"{% endif %} type="radio" value="12" name="table_size"> {{ SIZE_CHOISES.11.0 }}x{{ SIZE_CHOISES.11.1 }}см
+											<input id="table_size_11" {% if row.table_size == 12 %}checked="checked"{% endif %} type="radio" value="12" name="table_size"> {{ SIZE_CHOISES.11.0 }}x{{ SIZE_CHOISES.11.1 }}см {% mosaic_price MosaicPrice 12 %}
 										</label>
 									</li>
 								</ul>

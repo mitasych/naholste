@@ -8,17 +8,43 @@ from math import floor
 
 t = ' &nbsp;1&nbsp;2256.89&nbsp;  &nbsp; &nbsp; '
 t = float(t.strip().replace('&nbsp;', '').replace(' ', ''))
-print t
+#print t
 
 a = 2
 b = 5
 c = a > b and a or b
 
-print c
+class ChoiseAdmin(object):
 
-a = 3000
-print int(a - a * 0.01)
+	start = 0
+	
+	def new(self, row):
+		self.start = self.start + 1
+		###
+		return (self.start, u"%sx%s см" % (row[0], row[1]))
 
+ca = ChoiseAdmin()
+
+SIZE_CHOISES = (
+	(12, 12,),
+	(20, 20,),
+	(30, 30,),
+	(36, 36,),
+	(16, 12,),
+	(20, 16,),
+	(30, 24,),
+	(35, 28,),
+	(12, 16,),
+	(16, 20,),
+	(24, 30,),
+	(28, 35,),
+)
+
+t = tuple(ca.new(v) for v in SIZE_CHOISES)
+
+print t
+
+#http://blog.swlogic.eu/2010/09/19/pishem-rasshirenie-prilozheniya-dlya-django/
 """
 class Test(object):
 	f_0 = 1
