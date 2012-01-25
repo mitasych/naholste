@@ -51,7 +51,7 @@ class MosaicPrice(models.Model):
 		verbose_name_plural = u'Размеры и цены'
 
 	def __unicode__(self):
-		return u'%d тенге' % self.price
+		return u'%s тенге' % self.price
 
 class MosaicOption(models.Model):
 

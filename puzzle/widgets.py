@@ -16,10 +16,12 @@ class FrameChoisePrice(FrameChoise):
 		self.price = PuzzlePrice.objects.all()
 
 	def getPrice(self, val):
+		val = int(val)
+		###
 		ret = ''
 		###
 		for p in self.price:
-			if p.size_id == val:
+			if int(p.size_id) == val:
 				ret = p.__unicode__()
 				###
 				break

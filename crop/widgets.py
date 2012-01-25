@@ -16,9 +16,11 @@ class RowPrice(object):
 	def get(self, row_id):
 		ret = ''
 		###
+		row_id = int(row_id)
+		###
 		for p in self.data:
-			if p.size_id == row_id:
-				ret = p
+			if int(p.size_id) == row_id:
+				ret = p.__unicode__()
 				###
 				break
 		###
@@ -36,7 +38,7 @@ class RowRadioInput(RadioInput):
 		###
 		choice_label = conditional_escape(force_unicode(self.choice_label))
 		###
-		return mark_safe(u'<label%s>%s %s - (%s)</label>' % (label_for, self.tag(), choice_label, RP.get(self.index)))
+		return mark_safe(u'<label%s>%s %s - (%s)</label>' % (label_for, self.tag(), choice_label, RP.get(self.choice_value)))
 
 class ColumnRadioFieldRenderer(RadioFieldRenderer):
 
