@@ -770,3 +770,9 @@ div.step_arrow{
 	font-weight: bold;
 	font-size:18px;
 }
+
+.thumbs img, .list_cart img {
+	border: 1px solid #E7E7E7;
+	-webkit-box-shadow: 3px 3px 7px #777;
+	box-shadow: 3px 3px 7px #777;
+}
