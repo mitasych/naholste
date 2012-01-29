@@ -15,6 +15,7 @@ class OptionForm(forms.Form):
 	qty = forms.IntegerField(widget=forms.TextInput(attrs={'onchange':'oGlobalOption.qty_change()', 'onkeyup':'oGlobalOption.qty_event(event)'}), required=True, initial=1, min_value=1, max_value=1000)
 	frame = forms.ModelChoiceField(widget=FrameChoise(), queryset=Frames.objects.all(), initial=1)
 	packaging = forms.ModelChoiceField(widget=FrameChoise(), queryset=Packaging.objects.all(), initial=1)
+	to_cart = forms.IntegerField(widget=forms.HiddenInput(), required=True, initial=0, min_value=0, max_value=1)
 
 	def getStretch(self, val_id=0): return self.getVal(val_id, STRETCH_CHOISES)
 	def getType(self, val_id=0): return self.getVal(val_id, TYPE_CHOISES)
@@ -64,6 +65,7 @@ class OptionForm(forms.Form):
 		obj.qty = self['qty'].value()
 		obj.frame = Frames.objects.get(pk=1)
 		obj.packaging = Packaging.objects.get(pk=1)
+		obj.to_cart = 0
 		###
 		return obj
 
@@ -77,6 +79,7 @@ class OptionForm(forms.Form):
 			'qty':self['qty'].value(),
 			'frame':self['frame'].value(),
 			'packaging':self['packaging'].value(),
+			'to_cart':0,
 		}
 
 	def getDataRow(self, obj):
@@ -88,6 +91,7 @@ class OptionForm(forms.Form):
 			'qty':obj.qty,
 			'frame':obj.frame,
 			'packaging':obj.packaging,
+			'to_cart':0,
 		}
 
 class UploadForm(forms.Form):

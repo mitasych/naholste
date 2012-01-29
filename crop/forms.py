@@ -19,6 +19,7 @@ class OptionForm(forms.Form):
 	y1 = forms.IntegerField(widget=forms.HiddenInput(), required=True, initial=0)
 	x2 = forms.IntegerField(widget=forms.HiddenInput(), required=True, initial=0)
 	y2 = forms.IntegerField(widget=forms.HiddenInput(), required=True, initial=0)
+	to_cart = forms.IntegerField(widget=forms.HiddenInput(), required=True, initial=0, min_value=0, max_value=1)
 
 	def getStretch(self, val_id=0): return self.getVal(val_id, STRETCH_CHOISES)
 	def getType(self, val_id=0): return self.getVal(val_id, TYPE_CHOISES)
@@ -72,6 +73,7 @@ class OptionForm(forms.Form):
 		obj.y1 = self['y1'].value()
 		obj.x2 = self['x2'].value()
 		obj.y2 = self['y2'].value()
+		obj.to_cart = 0
 		###
 		return obj
 
@@ -89,6 +91,7 @@ class OptionForm(forms.Form):
 			'y1':self['y1'].value(),
 			'x2':self['x2'].value(),
 			'y2':self['y2'].value(),
+			'to_cart':0,
 		}
 
 	def getDataRow(self, obj):
@@ -104,6 +107,7 @@ class OptionForm(forms.Form):
 			'y1':obj.y1,
 			'x2':obj.x2,
 			'y2':obj.y2,
+			'to_cart':0,
 		}
 
 class UploadForm(forms.Form):

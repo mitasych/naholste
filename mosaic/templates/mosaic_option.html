@@ -47,6 +47,7 @@
 				{{ form.f_6 }}
 				{{ form.f_7 }}
 				{{ form.f_8 }}
+				{{ form.to_cart }}
 				<div>
 					<table>
 						
@@ -213,7 +214,8 @@
 						
 						<tr>
 							<td colspan="2">
-								<input type="submit" value="Купить" class="right" />
+								<input type="submit" value="В корзину" onmousedown="setValCart();" class="right" />
+								<input type="submit" value="Сохранить" class="right" />
 							</td>
 						</tr>
 					</table>

@@ -208,3 +208,7 @@ function setPuzzleUpload() {
 		jQuery("#messages").show();
 	}
 }
+
+function setValCart() {
+	$('#id_to_cart').val('1');
+}

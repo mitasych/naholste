@@ -6,15 +6,12 @@ from django.contrib import admin
 
 admin.autodiscover()
 
-# Uncomment the next two lines to enable the admin:
-# from django.contrib import admin
-# admin.autodiscover()
-
 urlpatterns = patterns('',
 	url('', include('account.urls')),
 	url('', include('crop.urls')),
 	url('', include('mosaic.urls')),
 	url('', include('puzzle.urls')),
+	url('', include('cart.urls')),
 	###
 	url(r'^$', 'common.views.index'),
 	###

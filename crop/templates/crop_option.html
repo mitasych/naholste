@@ -67,10 +67,10 @@
 				this.x2 = x2;
 				this.y2 = y2;
 				///
-				$('#id_x1').val(x1);
-				$('#id_y1').val(y1);
-				$('#id_x2').val(x2);
-				$('#id_y2').val(y2);
+				$('#id_x1').val(Math.floor(x1));
+				$('#id_y1').val(Math.floor(y1));
+				$('#id_x2').val(Math.floor(x2));
+				$('#id_y2').val(Math.floor(y2));
 				///
 				$('#img_thumb_prev').imgAreaSelect({
 					minWidth: (x2 - x1),
@@ -319,6 +319,7 @@
 				{{ form.y1 }}
 				{{ form.x2 }}
 				{{ form.y2 }}
+				{{ form.to_cart }}
 				<div id="wrapper_option" class="left">
 					
 					<div id="step_opt_1">
@@ -387,7 +388,8 @@
 								{% endautoescape %}
 							</div>
 						<div class="optContentBottom" id="c8">
-							<input type="submit" value="Купить" class="right" />
+							<input type="submit" value="В корзину" onmousedown="setValCart();" class="right" />
+							<input type="submit" value="Сохранить" class="right" />
 							<input type="button" value="Назад" class="right" onclick="setPrevStep();" />
 						</div>
 					</div>

@@ -744,3 +744,29 @@ div.step_arrow{
 .thumb_list h3, .thumb_list h4 {
 	margin-bottom: 2px;
 }
+
+.list_cart {}
+
+.list_cart h2 {
+	margin: 10px 0 10px 0 !important;
+}
+
+.list_cart table th {
+	color: #eaeaea !important;
+	background: #696969;
+	font-weight: normal;
+	text-transform: uppercase;
+	padding: 8px 0 8px 0;
+	font-size:11px;
+}
+
+.list_cart table td {
+	border-bottom: 1px solid gray;
+	padding: 8px 0 8px 0;
+}
+
+.list_cart_total {
+	padding: 8px 12px 8px 0;
+	font-weight: bold;
+	font-size:18px;
+}

@@ -6,6 +6,11 @@ import os
 from PIL import Image
 from math import floor
 
+a = [1, 2, 3, 4, 5]
+a.remove(2)
+a.remove(2)
+print a
+"""
 t = ' &nbsp;1&nbsp;2256.89&nbsp;  &nbsp; &nbsp; '
 t = float(t.strip().replace('&nbsp;', '').replace(' ', ''))
 #print t
@@ -43,6 +48,7 @@ SIZE_CHOISES = (
 t = tuple(ca.new(v) for v in SIZE_CHOISES)
 
 print t
+"""
 
 #http://blog.swlogic.eu/2010/09/19/pishem-rasshirenie-prilozheniya-dlya-django/
 """

@@ -391,8 +391,6 @@ def option(request, file_id=''):
 			if form.is_valid():
 				send_data = form.cleaned_data
 				###
-				messages.success(request, 'Изображение добавлено в корзину покупок')
-				###
 				if (user.is_authenticated() and user.is_active):
 					if ins:
 						opt.img_stretch = send_data['img_stretch']
@@ -406,6 +404,14 @@ def option(request, file_id=''):
 						opt.save()
 					else:
 						DataOpt().save_opt(row, send_data)
+					###
+					if send_data['to_cart'] == 0:
+						messages.success(request, 'Параметры изображения сохранены')
+					elif send_data['to_cart'] == 1:
+						if request.CART.set(file_id, 2, True):
+							messages.success(request, 'Параметры сохранены, а изображение добавлено в корзину')
+						else:
+							messages.success(request, 'Параметры сохранены, а изображение уже ранее было добавлено в корзину')
 					###
 					return HttpResponseRedirect(reverse('puzzle.views.option', args=[file_id]))
 				else:
@@ -437,6 +443,14 @@ def option(request, file_id=''):
 							'packaging':send_data['packaging'].id,
 							'qty':send_data['qty'],
 						})
+					###
+					if send_data['to_cart'] == 0:
+						messages.success(request, 'Параметры изображения сохранены')
+					elif send_data['to_cart'] == 1:
+						if request.CART.set(file_id, 2, False):
+							messages.success(request, 'Параметры сохранены, а изображение добавлено в корзину')
+						else:
+							messages.success(request, 'Параметры сохранены, а изображение уже ранее было добавлено в корзину')
 					###
 					resp = HttpResponseRedirect(reverse('puzzle.views.option', args=[file_id]))
 					###

@@ -24,6 +24,7 @@ class MosaicOptionForm(forms.Form):
 	f_6 = forms.CharField(widget=forms.HiddenInput(), required=False, initial='', max_length=32)
 	f_7 = forms.CharField(widget=forms.HiddenInput(), required=False, initial='', max_length=32)
 	f_8 = forms.CharField(widget=forms.HiddenInput(), required=False, initial='', max_length=32)
+	to_cart = forms.IntegerField(widget=forms.HiddenInput(), required=True, initial=0, min_value=0, max_value=1)
 
 	def find(self, opts=[], opt_id=0):
 		row = None
@@ -72,6 +73,7 @@ class MosaicOptionForm(forms.Form):
 		obj.f_6 = self['f_6'].value()
 		obj.f_7 = self['f_7'].value()
 		obj.f_8 = self['f_8'].value()
+		obj.to_cart = 0
 		###
 		return obj
 
@@ -95,6 +97,7 @@ class MosaicOptionForm(forms.Form):
 			'f_6':self['f_6'].value(),
 			'f_7':self['f_7'].value(),
 			'f_8':self['f_8'].value(),
+			'to_cart':0,
 		}
 
 	def getDataRow(self, obj):
@@ -117,6 +120,7 @@ class MosaicOptionForm(forms.Form):
 			'f_6':obj.f_6,
 			'f_7':obj.f_7,
 			'f_8':obj.f_8,
+			'to_cart':0,
 		}
 
 class MosaicUploadForm(forms.Form):

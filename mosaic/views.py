@@ -256,7 +256,13 @@ def option(request):
 					###
 					mo.save()
 					###
-					messages.success(request, 'Изображение добавлено в корзину покупок')
+					if send_data['to_cart'] == 0:
+						messages.success(request, 'Параметры изображения сохранены')
+					elif send_data['to_cart'] == 1:
+						if request.CART.set(send_data['opt_id'], 3, True):
+							messages.success(request, 'Параметры сохранены, а изображение добавлено в корзину')
+						else:
+							messages.success(request, 'Параметры сохранены, а изображение уже ранее было добавлено в корзину')
 				###
 				return HttpResponseRedirect('/mosaic/option?opt_id=%s' % (send_data['opt_id'],))
 			else:
@@ -270,7 +276,13 @@ def option(request):
 					if o['opt_id'] == send_data['opt_id']:
 						o = row
 						###
-						messages.success(request, 'Изображение добавлено в корзину покупок')
+						if send_data['to_cart'] == 0:
+							messages.success(request, 'Параметры изображения сохранены')
+						elif send_data['to_cart'] == 1:
+							if request.CART.set(send_data['opt_id'], 3, False):
+								messages.success(request, 'Параметры сохранены, а изображение добавлено в корзину')
+							else:
+								messages.success(request, 'Параметры сохранены, а изображение уже ранее было добавлено в корзину')
 						###
 						break
 				###
