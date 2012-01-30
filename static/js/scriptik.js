@@ -209,6 +209,6 @@ function setPuzzleUpload() {
 	}
 }
 
-function setValCart() {
-	$('#id_to_cart').val('1');
+function setValCart(v) {
+	$('#id_to_cart').val(v);
 }

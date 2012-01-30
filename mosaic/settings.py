@@ -23,7 +23,7 @@ DIR_SMALLTHUMBS = 'smallthumbs/'
 
 MIN_W = 500
 MIN_H = 500
-MIN_DPI = 72
+MIN_DPI = 150
 
 TYPE_SIZE_1 = (
 	(150, 150,),
