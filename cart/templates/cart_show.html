@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-{% load list_thumb %}
 
 {% block content %}
 	<div class="main"><h1 style="margin-bottom: 0px;">Корзина</h1></div>
@@ -215,7 +214,7 @@
 						</tr>
 						<tr>
 							<td align="center" class="list_cart_total">
-								Купить
+								<input type="button" onclick="document.location='{{ to_url }}';" value="К оплате" />
 							</td>
 						</tr>
 					</table>

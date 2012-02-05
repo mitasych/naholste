@@ -48,11 +48,6 @@ class RegistrationForm(forms.Form):
 		else:
 			return email
 
-	def __init__(self, *args, **kwargs):
-		super(RegistrationForm, self).__init__(*args, **kwargs)
-		###
-		self.error_class = self.RefistrationFormErrorList
-
 	class RefistrationFormErrorList(ErrorList):
 		def __unicode__(self):
 			return self.as_divs()
@@ -62,6 +57,11 @@ class RegistrationForm(forms.Form):
 				return u''
 			###
 			return u'<div class="errorlist_registration">%s</div>' % ''.join([u'<div class="error">%s</div>' % e for e in self])
+
+	def __init__(self, *args, **kwargs):
+		super(RegistrationForm, self).__init__(*args, **kwargs)
+		###
+		self.error_class = self.RefistrationFormErrorList
 
 class UserProfileForm(forms.ModelForm):
 	class Meta:

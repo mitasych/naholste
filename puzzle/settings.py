@@ -23,7 +23,11 @@ DIR_SMALLTHUMBS = 'smallthumbs/'
 
 MIN_W = 500
 MIN_H = 500
-MIN_DPI = 150
+
+if DEBUG:
+	MIN_DPI = 72
+else:
+	MIN_DPI = 150
 
 THUMB_W = 500
 THUMB_X = 400

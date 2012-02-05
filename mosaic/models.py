@@ -7,6 +7,12 @@ from django.forms import ModelForm, Textarea
 from django.db.models import Max
 from collage.crop.models import Frames, Packaging
 
+TYPE_CHOISES = (
+	(1, u'Квадрат',),
+	(2, u'Альбомная',),
+	(3, u'Книжная',),
+)
+
 EFFECT_CHOISES = (
 	(1, u'Нет',),
 	(2, u'Черно-белое',),
@@ -60,7 +66,7 @@ class MosaicOption(models.Model):
 	ext = models.CharField(u'Расширение', max_length=10, blank=True, default='')
 	pth = models.CharField(u'Путь', max_length=255, blank=True, default='')
 	qty = models.IntegerField(u'Количество', blank=True, default=1)
-	table_type = models.IntegerField(u'Количество', blank=True, default=1)
+	table_type = models.IntegerField(u'Тип', choices=TYPE_CHOISES, blank=True, default=1)
 	table_size = models.IntegerField(u'Размер', blank=True, default=1)
 	effect = models.SmallIntegerField(u'Эффекты', max_length=1)
 	frame = models.OneToOneField(Frames, blank=True)

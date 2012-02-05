@@ -180,6 +180,60 @@ class DataOpt(object):
 			packaging = packaging
 		).save()
 
+class ReloadPuzzle(object):
+
+	def __init__(self, request):
+		self.request = request
+		self.user = request.user
+		###
+		self.clf = CookiePuzzleFiles()
+		self.clo = CookiePuzzleOption()
+
+	def reload(self):
+		ret = False
+		###
+		if (self.user.is_authenticated() and self.user.is_active):
+			data = self.clf.get_data(self.request)
+			thumbs = PuzzleFiles().getListCookie(data)
+			###
+			opts = self.clo.get_data(self.request)
+			###
+			if len(thumbs) > 0:
+				for f in thumbs:
+					if not PuzzleFiles.objects.filter(char_id=f['char_id']).exists():
+						origin = "%s%s%s.%s" % (FILES_DIR, DIR_NOBODY, f['char_id'], SAVE_IMG_EXT)
+						###
+						if os.path.isfile(origin):
+							img = CropImg(origin, None, MIN_W, MIN_H, MIN_DPI)
+							###
+							dir_date = DataImg().save_auth(img, f['char_id'])
+							###
+							new_f = PuzzleFiles(
+								char_id=f['char_id'],
+								user=self.user,
+								ext=SAVE_IMG_EXT,
+								pth=''.join([MEDIA_URL, MEDIA_URL_FILES, DIR_AUTH, dir_date])
+							)
+							###
+							new_f.save()
+							###
+							DataImg().del_nobody(f['char_id'])
+							###
+							for o in opts:
+								if f['char_id'] == o['char_id']:
+									DataOpt().save_opt(new_f, o)
+									###
+									break
+				###
+				ret = True
+		###
+		return ret
+
+	def clear(self, response):
+		response = self.clf.set_data(response, [])
+		###
+		return self.clo.set_data(response, [])
+
 def upload(request):
 	user = request.user
 	###
@@ -204,51 +258,16 @@ def upload(request):
 	return render(request, 'puzzle_upload.html', data)
 
 def reload(request):
-	user = request.user
+	rp = ReloadPuzzle(request)
 	###
-	if (user.is_authenticated() and user.is_active):
-		clf = CookiePuzzleFiles()
-		data = clf.get_data(request)
-		thumbs = PuzzleFiles().getListCookie(data)
+	if rp.reload():
+		messages.success(request, 'Изображения скопированы в ваш профиль')
 		###
-		clo = CookiePuzzleOption()
-		opts = clo.get_data(request)
+		response = HttpResponseRedirect(reverse('puzzle.views.upload'))
 		###
-		if len(thumbs) > 0:
-			for f in thumbs:
-				if not PuzzleFiles.objects.filter(char_id=f['char_id']).exists():
-					origin = "%s%s%s.%s" % (FILES_DIR, DIR_NOBODY, f['char_id'], SAVE_IMG_EXT)
-					###
-					if os.path.isfile(origin):
-						img = CropImg(origin, None, MIN_W, MIN_H, MIN_DPI)
-						###
-						dir_date = DataImg().save_auth(img, f['char_id'])
-						###
-						new_f = PuzzleFiles(
-							char_id=f['char_id'],
-							user=user,
-							ext=SAVE_IMG_EXT,
-							pth=''.join([MEDIA_URL, MEDIA_URL_FILES, DIR_AUTH, dir_date])
-						)
-						###
-						new_f.save()
-						###
-						DataImg().del_nobody(f['char_id'])
-						###
-						for o in opts:
-							if f['char_id'] == o['char_id']:
-								DataOpt().save_opt(new_f, o)
-								###
-								break
-			###
-			messages.success(request, 'Изображения скопированы в ваш профиль')
-			###
-			resp = HttpResponseRedirect(reverse('puzzle.views.upload'))
-			###
-			clf.set_data(resp, [])
-			clo.set_data(resp, [])
-			###
-			return resp
+		return rp.clear(response)
+	else:
+		return HttpResponseRedirect(reverse('puzzle.views.upload'))
 
 def upload_file(request):
 	set_cook = False

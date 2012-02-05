@@ -155,6 +155,37 @@ class DataImg(object):
 		###
 		return ret
 
+	def new_coord(self, f='', f_t='', coord={}):
+		ret = {'x1':0, 'y1':0, 'x2':0, 'y2':0,}
+		###
+		if os.path.isfile(f) and os.path.isfile(f_t):
+			origin_size = CropImg(f, None, MIN_W, MIN_H, MIN_DPI).getOriginSize()
+			###
+			thumb_size = CropImg(f_t, None, MIN_W, MIN_H, MIN_DPI).getOriginSize()
+			###
+			ret['x1'] = int(coord['x1'] * origin_size[0] / thumb_size[0])
+			ret['x2'] = int(coord['x2'] * origin_size[0] / thumb_size[0])
+			###
+			ret['y1'] = int(coord['y1'] * origin_size[1] / thumb_size[1])
+			ret['y2'] = int(coord['y2'] * origin_size[1] / thumb_size[1])
+		###
+		return ret
+
+	def coord_auth(self, char_id='', pth='', coord={}):
+		pth_file = ''.join([PATH_PJT, pth])
+		pth_thumb = ''.join([pth_file, DIR_THUMBS])
+		###
+		f = ''.join([pth_file, char_id, '.', SAVE_IMG_EXT])
+		f_t = ''.join([pth_thumb, char_id, '.', SAVE_IMG_EXT])
+		###
+		return self.new_coord(f, f_t, coord)
+
+	def coord_nobody(self, char_id='', coord={}):
+		f = ''.join([FILES_DIR, DIR_NOBODY, char_id, '.', SAVE_IMG_EXT])
+		f_t = ''.join([FILES_DIR, DIR_NOBODY, DIR_THUMBS, char_id, '.', SAVE_IMG_EXT])
+		###
+		return self.new_coord(f, f_t, coord)
+
 class DataOpt(object):
 
 	def save_opt(self, row, data):
@@ -183,6 +214,60 @@ class DataOpt(object):
 			y2 = data['y2'],
 		).save()
 
+class ReloadCrop(object):
+
+	def __init__(self, request):
+		self.request = request
+		self.user = request.user
+		###
+		self.clf = CookieListFiles()
+		self.clo = CookieListOptions()
+
+	def reload(self):
+		ret = False
+		###
+		if (self.user.is_authenticated() and self.user.is_active):
+			data = self.clf.get_data(self.request)
+			thumbs = Files().getListCookie(data)
+			###
+			opts = self.clo.get_data(self.request)
+			###
+			if len(thumbs) > 0:
+				for f in thumbs:
+					if not Files.objects.filter(char_id=f['char_id']).exists():
+						origin = "%s%s%s.%s" % (FILES_DIR, DIR_NOBODY, f['char_id'], SAVE_IMG_EXT)
+						###
+						if os.path.isfile(origin):
+							img = CropImg(origin, None, MIN_W, MIN_H, MIN_DPI)
+							###
+							dir_date = DataImg().save_auth(img, f['char_id'])
+							###
+							new_f = Files(
+								char_id=f['char_id'],
+								user=self.user,
+								ext=SAVE_IMG_EXT,
+								pth=''.join([MEDIA_URL, MEDIA_URL_FILES, DIR_AUTH, dir_date])
+							)
+							###
+							new_f.save()
+							###
+							DataImg().del_nobody(f['char_id'])
+							###
+							for o in opts:
+								if f['char_id'] == o['char_id']:
+									DataOpt().save_opt(new_f, o)
+									###
+									break
+				###
+				ret = True
+		###
+		return ret
+
+	def clear(self, response):
+		response = self.clf.set_data(response, [])
+		###
+		return self.clo.set_data(response, [])
+
 def upload(request):
 	user = request.user
 	###
@@ -207,51 +292,16 @@ def upload(request):
 	return render(request, 'crop_upload.html', data)
 
 def reload(request):
-	user = request.user
+	rc = ReloadCrop(request)
 	###
-	if (user.is_authenticated() and user.is_active):
-		clf = CookieListFiles()
-		data = clf.get_data(request)
-		thumbs = Files().getListCookie(data)
+	if ReloadCrop(request).reload():
+		messages.success(request, 'Изображения скопированы в ваш профиль')
 		###
-		clo = CookieListOptions()
-		opts = clo.get_data(request)
+		response = HttpResponseRedirect(reverse('crop.views.upload'))
 		###
-		if len(thumbs) > 0:
-			for f in thumbs:
-				if not Files.objects.filter(char_id=f['char_id']).exists():
-					origin = "%s%s%s.%s" % (FILES_DIR, DIR_NOBODY, f['char_id'], SAVE_IMG_EXT)
-					###
-					if os.path.isfile(origin):
-						img = CropImg(origin, None, MIN_W, MIN_H, MIN_DPI)
-						###
-						dir_date = DataImg().save_auth(img, f['char_id'])
-						###
-						new_f = Files(
-							char_id=f['char_id'],
-							user=user,
-							ext=SAVE_IMG_EXT,
-							pth=''.join([MEDIA_URL, MEDIA_URL_FILES, DIR_AUTH, dir_date])
-						)
-						###
-						new_f.save()
-						###
-						DataImg().del_nobody(f['char_id'])
-						###
-						for o in opts:
-							if f['char_id'] == o['char_id']:
-								DataOpt().save_opt(new_f, o)
-								###
-								break
-			###
-			messages.success(request, 'Изображения скопированы в ваш профиль')
-			###
-			resp = HttpResponseRedirect(reverse('crop.views.upload'))
-			###
-			clf.set_data(resp, [])
-			clo.set_data(resp, [])
-			###
-			return resp
+		return rc.clear(response)
+	else:
+		return HttpResponseRedirect(reverse('crop.views.upload'))
 
 def upload_file(request):
 	set_cook = False

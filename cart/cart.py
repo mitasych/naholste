@@ -1,10 +1,15 @@
 # -*- coding: utf-8 -*-
 
+from django.contrib.sites.models import Site
+
 class Cart(object):
 
 	data = []
+	domain = ''
 
 	def __init__(self, data):
+		self.domain = Site.objects.get_current().name
+		###
 		if type(data).__name__ == 'list':
 			self.data = data
 
@@ -37,6 +42,9 @@ class Cart(object):
 		###
 		return ok
 
+	def clear(self):
+		self.data = []
+
 	def get(self):
 		return self.data
 
@@ -51,3 +59,8 @@ class Cart(object):
 				data.append(item)
 		###
 		return data
+
+	def reload(self, auth=False):
+		for item in self.data:
+			if not item['reg'] == auth:
+				item['reg'] = auth

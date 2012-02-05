@@ -686,6 +686,11 @@ div.step_arrow{
 	margin-top: 28px;
 }
 
+.errorlist {
+	color: #ff0000;
+	padding-bottom: 4px;
+}
+
 .error {
 	background-color:#f4f4f4;
 	border-left:5px solid #ff0000;
@@ -771,8 +776,29 @@ div.step_arrow{
 	font-size:18px;
 }
 
-.thumbs img, .list_cart img {
+.thumbs img, .list_cart img, .cart_block img {
 	border: 1px solid #E7E7E7;
 	-webkit-box-shadow: 3px 3px 7px #777;
 	box-shadow: 3px 3px 7px #777;
+}
+
+.list_address {}
+
+.list_address input[type="text"], .list_address input[type="password"] {
+	width: 100%
+}
+
+.list_address td {
+	padding: 6px 4px 6px 4px;
+	vertical-align: middle;
+}
+
+.list_address .required {
+	color: #E90000 !important;
+}
+
+.cart_block {
+	float: left;
+	width: 300px;
+	border-bottom: 1px solid gray;
 }
