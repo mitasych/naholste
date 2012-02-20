@@ -3,12 +3,12 @@
 	<h4>Выберете изображение для обработки:</h4>
 	<div>
 		{% for thumb in thumbs %}
-			<div class="thumbs left" id="{{ thumb.char_id }}">
-				<a href="/crop/option/{{ thumb.char_id }}/" />
-					<img src="{{ thumb.pth }}{{ dir_smallthumbs }}{{ thumb.char_id }}.{{ thumb.ext }}" alt="" />
+			<div class="thumbs left" id="{{ thumb.id }}">
+				<a href="/crop/option?id={{ thumb.id }}" />
+					<img src="{{ dir }}{{ thumb.img }}.{{ ext }}" alt="" />
 				</a><br />
 				<center>
-					<a href="javascript: delImage('/crop/del/{{ thumb.char_id }}/', '{{ thumb.char_id }}')" >Удалить</a>
+					<a href="javascript: delImage('/crop/del?id={{ thumb.id }}', '{{ thumb.id }}')" >Удалить</a>
 				</center>
 			</div>
 		{% endfor %}

@@ -3,22 +3,19 @@
 import os
 from collage.settings import *
 
-PATH_PJT_CROP = os.path.dirname(os.path.abspath(__file__))
+PATH_PJT_MOSAIC = os.path.dirname(os.path.abspath(__file__))
 
 TEMPLATE_DIRS += (
-	''.join([PATH_PJT_CROP, '/templates']),
+	''.join([PATH_PJT_MOSAIC, '/templates']),
 )
 
-SAVE_IMG_EXT = 'jpg'
+IMG_EXT = 'jpg'
 
-FILES_DIR = ''.join([PATH_PJT_CROP, '/../media/files/mosaic/'])
+FILES_DIR = ''.join([PATH_PJT_MOSAIC, '/../media/files/mosaic/'])
 
 MEDIA_URL_FILES = 'files/mosaic/'
 
-DIR_NOBODY = 'nobody/'
-DIR_AUTH = 'auth/'
 DIR_THUMBS = 'thumbs/'
-DIR_CHANGE = 'change/'
 DIR_SMALLTHUMBS = 'smallthumbs/'
 
 MIN_W = 500
@@ -60,3 +57,5 @@ TYPE_SIZE_3 = (
 	(120, 120,),
 	(180, 240,),
 )
+
+REDIRECT = 'mosaic.views.choise'

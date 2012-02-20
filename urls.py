@@ -11,11 +11,10 @@ urlpatterns = patterns('',
 	url('', include('crop.urls')),
 	url('', include('mosaic.urls')),
 	url('', include('puzzle.urls')),
-	url('', include('cart.urls')),
+	#url('', include('cart.urls')),
 	###
 	url(r'^$', 'common.views.index'),
 	###
-	url(r'^captcha/', include('captcha.urls')),
 	url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
 	url(r'^favicon\.ico$', RedirectView.as_view(url='/media/favicon.ico')),
 	(r'^admin/', include(admin.site.urls)),

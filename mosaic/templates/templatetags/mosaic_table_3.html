@@ -3,26 +3,26 @@
 	<tr>
 		<td>
 			<div id="td_0" class="mosaic_div_td" style="width: {{ TYPE_SIZE_3.0.0 }}px; height: {{ TYPE_SIZE_3.0.1 }}px;" onclick="$('#file_block_0').show();">
-				{% if row.f_0 %}
-					<img id="img_thumb_0" src="{{ row.pth }}{{ DIR_THUMBS }}{{ row.f_0 }}.{{ row.ext }}" alt="" />
+				{% if thumb.f_0 %}
+					<img id="img_thumb_0" src="{{ dir }}{{ thumb.f_0 }}.{{ ext }}" alt="" />
 				{% else %}
-					{% mosaic_table_form row 0 TYPE_SIZE_3.0.0 %}
+					{% mosaic_table_form thumb 0 TYPE_SIZE_3.0.0 %}
 				{% endif %}
 			</div>
 			<div id="td_1" class="mosaic_div_td" style="border-top: none; width: {{ TYPE_SIZE_3.1.0 }}px; height: {{ TYPE_SIZE_3.1.1 }}px;" onclick="$('#file_block_1').show();">
-				{% if row.f_1 %}
-					<img id="img_thumb_1" src="{{ row.pth }}{{ DIR_THUMBS }}{{ row.f_1 }}.{{ row.ext }}" alt="" />
+				{% if thumb.f_1 %}
+					<img id="img_thumb_1" src="{{ dir }}{{ thumb.f_1 }}.{{ ext }}" alt="" />
 				{% else %}
-					{% mosaic_table_form row 1 TYPE_SIZE_3.1.0 %}
+					{% mosaic_table_form thumb 1 TYPE_SIZE_3.1.0 %}
 				{% endif %}
 			</div>
 		</td>
 		<td>
 			<div id="td_2" class="mosaic_div_td" style="border-left: none; margin-left: -2px !important; width: {{ TYPE_SIZE_3.2.0 }}px; height: {{ TYPE_SIZE_3.2.1 }}px;" onclick="$('#file_block_2').show();">
-				{% if row.f_2 %}
-					<img id="img_thumb_2" src="{{ row.pth }}{{ DIR_THUMBS }}{{ row.f_2 }}.{{ row.ext }}" alt="" />
+				{% if thumb.f_2 %}
+					<img id="img_thumb_2" src="{{ dir }}{{ thumb.f_2 }}.{{ ext }}" alt="" />
 				{% else %}
-					{% mosaic_table_form row 2 TYPE_SIZE_3.2.0 %}
+					{% mosaic_table_form thumb 2 TYPE_SIZE_3.2.0 %}
 				{% endif %}
 			</div>
 		</td>
@@ -32,35 +32,35 @@
 	<tr>
 		<td>
 			<div id="td_3" class="mosaic_div_td" style="width: {{ TYPE_SIZE_3.3.0 }}px; height: {{ TYPE_SIZE_3.3.1 }}px;" onclick="$('#file_block_3').show();">
-				{% if row.f_3 %}
-					<img id="img_thumb_3" src="{{ row.pth }}{{ DIR_THUMBS }}{{ row.f_3 }}.{{ row.ext }}" alt="" />
+				{% if thumb.f_3 %}
+					<img id="img_thumb_3" src="{{ dir }}{{ thumb.f_3 }}.{{ ext }}" alt="" />
 				{% else %}
-					{% mosaic_table_form row 3 TYPE_SIZE_3.3.0 %}
+					{% mosaic_table_form thumb 3 TYPE_SIZE_3.3.0 %}
 				{% endif %}
 			</div>
 		</td>
 		<td>
 			<div id="td_4" class="mosaic_div_td" style="border-left: none; width: {{ TYPE_SIZE_3.4.0 }}px; height: {{ TYPE_SIZE_3.4.1 }}px;" onclick="$('#file_block_4').show();">
-				{% if row.f_4 %}
-					<img id="img_thumb_4" src="{{ row.pth }}{{ DIR_THUMBS }}{{ row.f_4 }}.{{ row.ext }}" alt="" />
+				{% if thumb.f_4 %}
+					<img id="img_thumb_4" src="{{ dir }}{{ thumb.f_4 }}.{{ ext }}" alt="" />
 				{% else %}
-					{% mosaic_table_form row 4 TYPE_SIZE_3.4.0 %}
+					{% mosaic_table_form thumb 4 TYPE_SIZE_3.4.0 %}
 				{% endif %}
 			</div>
 			<div id="td_5" class="mosaic_div_td" style="border-top: none; border-left: none; width: {{ TYPE_SIZE_3.5.0 }}px; height: {{ TYPE_SIZE_3.5.1 }}px;" onclick="$('#file_block_5').show();">
-				{% if row.f_5 %}
-					<img id="img_thumb_5" src="{{ row.pth }}{{ DIR_THUMBS }}{{ row.f_5 }}.{{ row.ext }}" alt="" />
+				{% if thumb.f_5 %}
+					<img id="img_thumb_5" src="{{ dir }}{{ thumb.f_5 }}.{{ ext }}" alt="" />
 				{% else %}
-					{% mosaic_table_form row 5 TYPE_SIZE_3.5.0 %}
+					{% mosaic_table_form thumb 5 TYPE_SIZE_3.5.0 %}
 				{% endif %}
 			</div>
 		</td>
 		<td>
 			<div id="td_6" class="mosaic_div_td" style="border-left: none; margin-left: -7px !important; width: {{ TYPE_SIZE_3.6.0 }}px; height: {{ TYPE_SIZE_3.6.1 }}px;" onclick="$('#file_block_6').show();">
-				{% if row.f_6 %}
-					<img id="img_thumb_6" src="{{ row.pth }}{{ DIR_THUMBS }}{{ row.f_6 }}.{{ row.ext }}" alt="" />
+				{% if thumb.f_6 %}
+					<img id="img_thumb_6" src="{{ dir }}{{ thumb.f_6 }}.{{ ext }}" alt="" />
 				{% else %}
-					{% mosaic_table_form row 6 TYPE_SIZE_3.6.0 %}
+					{% mosaic_table_form thumb 6 TYPE_SIZE_3.6.0 %}
 				{% endif %}
 			</div>
 		</td>

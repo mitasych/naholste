@@ -1,83 +1,119 @@
 # -*- coding: utf-8 -*-
-
-from django.forms.widgets import RadioFieldRenderer, RadioSelect, RadioInput
+from django.forms.widgets import Widget, Select
 from django.utils.safestring import mark_safe
-from django.utils.encoding import force_unicode
+from django.template import Context, loader
+from itertools import chain
 from django.utils.html import escape, conditional_escape
-from collage.crop.models import CropPrice
+from django.utils.encoding import force_unicode
 
-class RowPrice(object):
+class ChoiceSize(Widget):
 
-	data = None
-
-	def __init__(self, data):
-		self.data = data
-
-	def get(self, row_id):
-		ret = ''
-		###
-		row_id = int(row_id)
-		###
-		for p in self.data:
-			if int(p.size_id) == row_id:
-				ret = p.__unicode__()
-				###
-				break
-		###
-		return ret
-
-RP = RowPrice(CropPrice.objects.all())
-
-class RowRadioInput(RadioInput):
-
-	def __unicode__(self):
-		if 'id' in self.attrs:
-			label_for = ' for="%s_%s"' % (self.attrs['id'], self.index)
-		else:
-			label_for = ''
-		###
-		choice_label = conditional_escape(force_unicode(self.choice_label))
-		###
-		return mark_safe(u'<label%s>%s %s - (%s)</label>' % (label_for, self.tag(), choice_label, RP.get(self.choice_value)))
-
-class ColumnRadioFieldRenderer(RadioFieldRenderer):
-
+	f_name = ''
+	curr_title = ''
+	curr_price = 0.00
+	choices = ()
+	data = ()
+	width = 0
+	height = 0
+	after = []
 	rows_in_col = 6
 
-	def __iter__(self):
-		for i, choice in enumerate(self.choices):
-			yield RowRadioInput(self.name, self.value, self.attrs.copy(), choice, i)
-
-	def __getitem__(self, idx):
-		choice = self.choices[idx]
+	def __init__(self, attrs=None, choices=()):
+		super(ChoiceSize, self).__init__(attrs)
 		###
-		return RowRadioInput(self.name, self.value, self.attrs.copy(), choice, idx)
+		self.data = self.choices = list(choices)
 
-	def render(self):
-		item_all = 0
+	def render(self, name='', value='', attrs=None, choices=()):
+		self.after = []
+		self.f_name = name
 		###
-		for w in self:
-			item_all = item_all + 1
+		if value is None or value == '':
+			value = 0
+		else:
+			value = int(value)
+		###
+		options = self.render_options(self.data, [value])
+		###
+		final_attrs = self.build_attrs(attrs, name=name)
+		###
+		item_all = len(options)
 		###
 		out = ''
+		items = ''
 		ul = u'<ul id="ul_size_%s" class="left" style="padding-right: 20px;">\n%s\n</ul>'
 		ul_id = 0
 		i = 1
-		items = ''
 		###
-		for w in self:
-			items = ''.join([items, u'<li>%s</li>' % force_unicode(w),])
+		for item in options:
+			items = ''.join([items, item])
 			###
 			if ((i == item_all) or (i == self.rows_in_col)):
 				out = ''.join([out, ul % (ul_id, items),])
 				###
-				ul_id = ul_id + 1
-				###
 				items = ''
+				###
+				ul_id = ul_id + 1
 			###
 			i = i + 1
 		###
-		return mark_safe(out)
+		data = {
+			'name':name,
+			'out':out,
+			'title':self.curr_title,
+			'price':'%.2f' % self.curr_price,
+			'value':value,
+			'width':self.width,
+			'height':self.height,
+			'after':mark_safe(''.join(self.after))
+		}
+		###
+		t = loader.get_template('crop_widget_choice_size.html')
+		c = Context(data)
+		###
+		return t.render(c)
 
-class ColumnRadioSelect(RadioSelect):
-	renderer = ColumnRadioFieldRenderer
+	def render_options(self, choices, selected_choices):
+		options = []
+		###
+		for option in choices:
+			options.append(self.render_option(option, selected_choices))
+		###
+		return options
+
+	def render_option(self, option, selected_choices):
+		checked = ''
+		###
+		if option.id in selected_choices:
+			self.curr_title = option.name
+			self.curr_price = option.price
+			self.height = option.height
+			self.width = option.width
+			checked = 'checked="checked"'
+		###
+		params = {
+			'name':self.f_name,
+			'value':escape(str(option.id)),
+			'title':option.name,
+			'price':'%.2f' % option.price,
+			'checked':checked,
+			'width':option.width,
+			'height':option.height,
+		}
+		###
+		self.after.append(u"""
+			o%(name)sData.items[%(value)s] = {
+				'title':'%(title)s',
+				'price':(%(price)s).toFixed(2),
+				'width':%(width)s,
+				'height':%(height)s
+			};
+		""" % params)
+		###
+		return u"""
+			<li>
+				<label for="%(name)s_item_%(value)s">
+					<input type="radio" value="%(value)s" id="id_%(name)s_%(value)s" name="%(name)s" %(checked)s onclick="o%(name)sData.selectItem(%(value)s);">
+					%(title)s
+				</label>
+			</li>
+		""" % params

@@ -3,22 +3,19 @@
 import os
 from collage.settings import *
 
-PATH_PJT_CROP = os.path.dirname(os.path.abspath(__file__))
+PATH_PJT_PUZZLE = os.path.dirname(os.path.abspath(__file__))
 
 TEMPLATE_DIRS += (
-	''.join([PATH_PJT_CROP, '/templates']),
+	''.join([PATH_PJT_PUZZLE, '/templates']),
 )
 
-SAVE_IMG_EXT = 'jpg'
+IMG_EXT = 'jpg'
 
-FILES_DIR = ''.join([PATH_PJT_CROP, '/../media/files/puzzle/'])
+FILES_DIR = ''.join([PATH_PJT_PUZZLE, '/../media/files/puzzle/'])
 
 MEDIA_URL_FILES = 'files/puzzle/'
 
-DIR_NOBODY = 'nobody/'
-DIR_AUTH = 'auth/'
 DIR_THUMBS = 'thumbs/'
-DIR_CHANGE = 'change/'
 DIR_SMALLTHUMBS = 'smallthumbs/'
 
 MIN_W = 500
@@ -31,3 +28,5 @@ else:
 
 THUMB_W = 500
 THUMB_X = 400
+
+MAX_SIZE = 3000

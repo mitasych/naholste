@@ -1,0 +1,63 @@
+<script type="text/javascript">
+	function {{ name }}Data() {
+		this.items = [];
+		this.price = {{ price }};
+		this.title = '{{ title }}';
+		this.width = {{ width }};
+		this.height = {{ height }};
+		///
+		this.showBlock = function() {
+			$('#view_{{ name }}').toggle();
+		};
+		///
+		this.selectItem = function(item) {
+			if (item > 0) {
+				$('#title_{{ name }}').html(this.items[item]['title']);
+				$('#price_{{ name }}').html(this.items[item]['price']+' тенге');
+				///
+				$('#img_{{ name }}').attr({'src':this.items[item]['src']});
+				///
+				for (var i in this.items) {
+					$('#{{ name }}_item_'+i).attr({'class':'{{ cssdef }}'});
+				}
+				///
+				$('#{{ name }}_item_'+item).attr({'class':'{{ csssel }}'});
+				///
+				$('#id_{{ name }}').val(item);
+				///
+				this.price = this.items[item]['price'];
+				this.width = this.items[item]['width'];
+				this.height = this.items[item]['height'];
+				///
+				this.showBlock();
+				///
+				oGlobalOption.size_event({'value':item});
+			}
+		};
+	}
+	///
+	o{{ name }}Data = new {{ name }}Data();
+	///
+	{{ after }}
+</script>
+
+<div class="frame_parent">
+	<div class="frame_choise">
+		<a href="javascript: o{{ name }}Data.showBlock();">
+			<div class="frame_click right"></div>
+			<img id="img_{{ name }}" src="{{ src }}" /><br />
+		</a>
+		<center>
+			<span id="title_{{ name }}">{{ title }}</span><br />
+			<span id="price_{{ name }}">{{ price }} тенге</span>
+		</center>
+	</div>
+	<div class="frame_view" id="view_{{ name }}">
+		{% for o in options %}
+			{% autoescape off %}
+				{{ o }}
+			{% endautoescape %}
+		{% endfor %}
+	</div>
+	<input type="hidden" id="id_{{ name }}" name="{{ name }}" value="{{ value }}" />
+</div>

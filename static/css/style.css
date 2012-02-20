@@ -586,7 +586,7 @@ div.step_arrow{
 .optButton {
 	background-color: #ededed;
 	height: 18px;
-	width: 300px;
+	width: 194px;
 	border: 1px solid #a9a9a9;
 	margin: 0px;
 	margin-top: -1px;
@@ -596,7 +596,7 @@ div.step_arrow{
 
 .optContent {
 	background-color: #fff;
-	width: 290px;
+	width: 184px;
 	border: 1px solid #a9a9a9;
 	margin: 0px;
 	margin-top: -1px;
@@ -604,12 +604,16 @@ div.step_arrow{
 	text-align: left;
 }
 
+.optContent input[type="text"] {
+	width: 157px !important;
+}
+
 .optContentBottom {
 	background-color: #fff;
-	width: 312px;
+	width: 206px;
 	margin: 0px;
 	padding: 0px;
-	text-align: left;
+	text-align: center;
 }
 
 .optContent ul {
@@ -801,4 +805,21 @@ div.step_arrow{
 	float: left;
 	width: 300px;
 	border-bottom: 1px solid gray;
+}
+
+.price_info {
+	width: 212px;
+	margin: 0px;
+	margin-top: 6px;
+	padding: 6px 6px 6px 12px;
+	text-align: left;
+}
+
+.price_info ul {
+	width: 100%;
+}
+
+.price_info p {
+	font-weight:bold;
+	font-size:16px;
 }

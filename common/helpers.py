@@ -249,6 +249,7 @@ class Img(object):
 		###
 		return self.img
 
+'''
 class CookieListBase(object):
 	
 	days = 14
@@ -462,3 +463,4 @@ class CookiePuzzleOption(CookieListBase):
 				pass
 		###
 		return opt
+'''

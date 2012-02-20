@@ -1,18 +1,45 @@
 {% extends 'base.html' %}
 {% load list_puzzle_thumb %}
-{% load crop_scale_quality %}
+{% load scale_quality %}
 
 {% block content %}
+	<script src="/static/js/jquery.min.js" type="text/javascript"></script>
+	<script src="/static/js/jcrop/jquery.Jcrop.js" type="text/javascript"></script>
+	<link rel="stylesheet" href="/static/css/jcrop/jquery.Jcrop.css" type="text/css" />
+	
 	<script type="text/javascript">
 		function GlobalOption() {
+			/* ------------------------------ */
+			/*              DATA              */
+			/* ------------------------------ */
+			this.oSize = false;
+			this.oFrame = false;
+			this.oPackaging = false;
+			///
 			this.w = {{ img_w }};
 			this.h = {{ img_h }};
 			///
-			this.img_stretch = {{ form.img_stretch.value }};
-			this.img_type = {{ form.img_type.value }};
-			this.img_size = {{ form.img_size.value }};
-			this.img_effect = {{ form.img_effect.value }};
-			this.qty = {{ form.qty.value }};
+			this.x1 = {{ form.instance.x1 }}
+			this.y1 = {{ form.instance.y1 }}
+			this.x2 = {{ form.instance.x2 }}
+			this.y2 = {{ form.instance.y2 }}
+			///
+			this.img_stretch = {{ form.instance.img_stretch.id }};
+			this.img_size = {{ form.instance.img_size.id }};
+			this.img_effect = {{ form.instance.img_effect }};
+			this.qty = {{ form.instance.qty }};
+			///
+			{% if form.instance.frame %}
+				this.frame = {{ form.instance.frame.id }};
+			{% else %}
+				this.frame = 0;
+			{% endif %};
+			///
+			{% if form.instance.packaging %}
+				this.packaging = {{ form.instance.packaging.id }};
+			{% else %}
+				this.packaging = 0;
+			{% endif %};
 			///
 			this.stretch = [];
 			///
@@ -20,37 +47,72 @@
 				this.stretch[{{ i.id }}] = '{{ i.name }}';
 			{% endfor %}
 			///
-			this.type = [];
-			///
-			{% for i in dataType %}
-				this.type[{{ i.id }}] = '{{ i.name }}';
-			{% endfor %}
-			///
-			this.size = [];
-			///
-			{% for i in dataSize %}
-				this.size[{{ i.id }}] = '{{ i.name }}';
-			{% endfor %}
-			///
 			this.effect = [];
 			///
 			{% for i in dataEffect %}
-				this.effect[{{ i.id }}] = '{{ i.name }}';
+				this.effect[{{ i.0 }}] = '{{ i.1 }}';
 			{% endfor %}
+			/* ------------------------------ */
+			/*            METHODS             */
+			/* ------------------------------ */
+			this.getProp = function() {
+				var pr = [];
+				///
+				pr[0] = this.oSize.items[this.img_size].width;
+				pr[1] = this.oSize.items[this.img_size].height;
+				///
+				return pr;
+			};
 			///
+			this.createNewCanvas = function() {
+				var pr = this.getProp();
+				///
+				if (pr[0] > pr[1]) {
+					this.wCreateCanvas();
+				}
+				else {
+					this.hCreateCanvas();
+				}
+				///
+				this.setStretch();
+			};
+			///
+			this.data_price = function() {
+				var data = [];
+				///
+				if (this.img_size > 0) {
+					data.push({
+						'name':'Размер: ' + this.oSize.title,
+						'price':this.oSize.price * this.qty
+					});
+				}
+				///
+				if (this.frame > 0) {
+					data.push({
+						'name':'Рамка: ' + this.oFrame.items[this.frame].title,
+						'price':this.oFrame.items[this.frame].price * this.qty
+					});
+				}
+				///
+				if (this.packaging > 0) {
+					data.push({
+						'name':'Упаковка: ' + this.oPackaging.items[this.packaging].title,
+						'price':this.oPackaging.items[this.packaging].price * this.qty
+					});
+				}
+				///
+				this.show_price(data);
+			};
+			/* ------------------------------ */
+			/*             EVENTS             */
+			/* ------------------------------ */
 			this.stretch_event = function(obj) {
 				var val = obj.value;
 				///
 				if (val > 0) {
 					this.img_stretch = val;
-				}
-			};
-			///
-			this.type_event = function(obj) {
-				var val = obj.value;
-				///
-				if (val > 0) {
-					this.img_type = val;
+					///
+					this.setStretch();
 				}
 			};
 			///
@@ -59,6 +121,10 @@
 				///
 				if (val > 0) {
 					this.img_size = val;
+					///
+					this.createNewCanvas();
+					///
+					this.data_price();
 				}
 			};
 			///
@@ -68,7 +134,27 @@
 				if (val > 0) {
 					this.img_effect = val;
 					///
-					effectImage('/puzzle/effect/{{ char_id }}?eff='+val);
+					effectImage('/puzzle/effect?id={{ form.instance.id }}&eff='+val);
+				}
+			};
+			///
+			this.frame_event = function(obj) {
+				var val = obj.value;
+				///
+				if (val >= 0) {
+					this.frame = val;
+					///
+					this.data_price();
+				}
+			};
+			///
+			this.packaging_event = function(obj) {
+				var val = obj.value;
+				///
+				if (val >= 0) {
+					this.packaging = val;
+					///
+					this.data_price();
 				}
 			};
 			///
@@ -85,8 +171,27 @@
 				else {
 					this.qty = val;
 				}
+				///
+				this.data_price();
+			};
+			///
+			/* ------------------------------ */
+			/*              INIT              */
+			/* ------------------------------ */
+			this.createCanvas = function() {
+				if (this.x1 > 0 || this.y1 > 0 || this.x2 > 0 || this.y2 > 0) {
+					this.setCoord(this.x1, this.y1, this.x2, this.y2);
+					///
+					this.setStretch();
+				}
+				else {
+					this.createNewCanvas();
+				}
 			};
 		}
+		///
+		GlobalOption.prototype = new Sizer();
+		GlobalOption.prototype.constructor = GlobalOption;
 		///
 		oGlobalOption = new GlobalOption();
 	</script>
@@ -97,14 +202,18 @@
 		<div class="wrapper">
 			<div class="left">
 				<div id="thumb_prev">
-					<img id="img_thumb_prev" src="{{ row.pth }}{{ dir_thumbs }}{{ row.char_id }}.{{ row.ext }}" alt="" />
+					<img id="img_thumb_prev_old" src="{{ src }}" alt="" />
 				</div>
-				{% scale_quality origin_w origin_h %}
+				{% scale_quality origin_w origin_h 'puzzle' %}
 			</div>
 
 			<form action="" method="post" enctype="multipart/form-data">             
 				{% csrf_token %}
 				{{ form.to_cart }}
+				{{ form.x1 }}
+				{{ form.y1 }}
+				{{ form.x2 }}
+				{{ form.y2 }}
 				<div id="wrapper_option" class="left">
 					
 					<div id="step_opt_1">
@@ -114,15 +223,6 @@
 								{% block form_img_stretch_errors %}
 									{% autoescape off %}
 										{{ form.img_stretch.errors }}
-									{% endautoescape %}
-								{% endblock %}
-							</div>
-						<div class="optButton" id="b2">Ориентация</div>
-							<div class="optContent" id="c2">
-								{{ form.img_type }}
-								{% block form_img_type_errors %}
-									{% autoescape off %}
-										{{ form.img_type.errors }}
 									{% endautoescape %}
 								{% endblock %}
 							</div>
@@ -180,6 +280,8 @@
 				</div>
 			</form>
 
+			<div class="price_info left" id="price_info"></div>
+
 			<script type="text/javascript">
 				function setNextStep() {
 					$('#step_opt_1').slideUp('normal');
@@ -194,6 +296,28 @@
 					///
 					setCurrentStep(2);
 				}
+				///
+				oGlobalOption.oSize = oimg_sizeData;
+				oGlobalOption.oFrame = oframeData;
+				oGlobalOption.oPackaging = opackagingData;
+				///
+				jQuery(function () {
+					$('#img_thumb_prev_old').Jcrop({
+							image_id: 'img_thumb_prev',
+							bgColor: 'black',
+							bgOpacity: 0.2,
+							onSelect: function(s) {
+								oGlobalOption.setCoord(s.x, s.y, s.x2, s.y2);
+							}
+						}, function () {
+							oGlobalOption.jcrop_api = this;
+							///
+							oGlobalOption.createCanvas();
+						}
+					);
+					///
+					oGlobalOption.data_price();
+				});
 			</script>
 			
 			<div class="clear"></div>
@@ -203,6 +327,4 @@
 			</div>
 		</div>
 	</div>
-
-	{% view_mess_cook_puzzle %}
 {% endblock %}

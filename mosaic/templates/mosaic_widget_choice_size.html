@@ -1,0 +1,28 @@
+<script type="text/javascript">
+	function {{ name }}Data() {
+		this.items = [];
+		this.price = {{ price }};
+		this.title = '{{ title }}';
+		this.width = {{ width }};
+		this.height = {{ height }};
+		///
+		this.selectItem = function(item) {
+			if (item > 0) {
+				this.price = this.items[item]['price'];
+				this.title = this.items[item]['title'];
+				this.width = this.items[item]['width'];
+				this.height = this.items[item]['height'];
+				///
+				oGlobalOption.size_event({'value':item});
+			}
+		};
+	}
+	///
+	o{{ name }}Data = new {{ name }}Data();
+	///
+	{{ after }}
+</script>
+
+{% autoescape off %}
+	{{ out }}
+{% endautoescape %}

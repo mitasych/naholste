@@ -9,16 +9,13 @@ TEMPLATE_DIRS += (
 	''.join([PATH_PJT_CROP, '/templates']),
 )
 
-SAVE_IMG_EXT = 'jpg'
+IMG_EXT = 'jpg'
 
-FILES_DIR = ''.join([PATH_PJT_CROP, '/../media/files/'])
+FILES_DIR = ''.join([PATH_PJT_CROP, '/../media/files/crop/'])
 
-MEDIA_URL_FILES = 'files/'
+MEDIA_URL_FILES = 'files/crop/'
 
-DIR_NOBODY = 'nobody/'
-DIR_AUTH = 'auth/'
 DIR_THUMBS = 'thumbs/'
-DIR_CHANGE = 'change/'
 DIR_SMALLTHUMBS = 'smallthumbs/'
 
 MIN_W = 500

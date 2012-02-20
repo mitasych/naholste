@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load list_thumb %}
+{% load list_crop_thumb %}
 
 {% block content %}
 	{% view_step 1 %}
@@ -23,7 +23,7 @@
 			</div>
 
 			<div class="thumb_list">
-				{% list_thumbs thumbs %}
+				{% list_crop_thumbs thumbs %}
 			</div>
 			<div style="margin-top:20px;width:420px;color:#4E4444; font-size: 13px;">
 				<p>
@@ -48,6 +48,4 @@
 		  setUpload();
 		});
 	</script>
-
-	{% view_mess_cook %}
 {% endblock %}

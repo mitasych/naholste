@@ -3,7 +3,7 @@
 		<form id="upload_form_{{ div_id }}" action="" method="post" enctype="multipart/form-data">             
 			{% csrf_token %}
 			{{ form.as_p }}
-			<input type="submit" value="Загрузить" onclick="setMosaicUpload('{{ div_id }}');" />
+			<input type="submit" value="Загрузить" onclick="setMosaicUpload('{{ id }}', '{{ div_id }}');" />
 		</form>
 		<div id="progress_{{ div_id }}" class="progress">
 			<img src="/static/images/loader2.gif" alt="" />

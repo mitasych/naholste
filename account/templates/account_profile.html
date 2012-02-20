@@ -1,68 +1,23 @@
 {% extends 'base.html' %}
 
 {% block content %}
-	<div class="main"><h1>Управление профилем</h1></div>
+	<div class="main">
+		<h1 style="margin-bottom: 0px;">Профиль</h1>
+	</div>
 	<div class="container_24">
 		<div class="wrapper">
-			<h3>{{ user_profile.user }}</h3>
-
-			<form action="" method="post" enctype="multipart/form-data">             
+			<form action="" method="post">
 				{% csrf_token %}
-				<table>
-					{% if user_profile.avatar %}
-						<tr>
-							<td colspan="2">
-								<img src="/media/avatar/{{ user_profile.avatar }}" alt="" />
-							</td>
-						</tr>
-					{% endif %}
-					<tr>
-						<td>
-							{% if user_profile.avatar %}
-								<label for="id_avatar">Сменить аватар:</label>
-							{% else %}
-								<label for="id_avatar">Аватар:</label>
-							{% endif %}
-						</td>
-						<td>
-							<input type="file" name="avatar" id="id_avatar" />
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<label for="id_gender">Пол:</label>
-						</td>
-						<td>
-							{{ form.gender }}
-							<br />
-							{% block form_gender_errors %}
-								{% autoescape off %}
-									{{ form.gender.errors }}
-								{% endautoescape %}
-							{% endblock %}
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<label for="id_about">О себе:</label>
-						</td>
-						<td>
-							{{ form.about }}
-							<br />
-							{% block form_about_errors %}
-								{% autoescape off %}
-									{{ form.about.errors }}
-								{% endautoescape %}
-							{% endblock %}
-						</td>
-					</tr>
-					<tr>
-						<td colspan="2" align="right">
-							<input type="submit" value="Изменить">
-						</td>
-					</tr>
+				<table cellpadding="0" cellspacing="0" border="0" class="table_3">
+					{{ form.as_table }}
 				</table>
+				<div class="block_1">
+					<input type="submit" class="btn_1 right" value="Изменить"/>
+					<div class="clear"></div>
+				</div>
 			</form>
+			<br />
+			<span class="helptext">* - Оставле поле пустым, если не хотите менять пароль</span>
 		</div>
 	</div>
 {% endblock %}

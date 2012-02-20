@@ -1,7 +1,20 @@
 {% extends 'base.html' %}
-{% load mosaic_table %}
+{% load list_mosaic_thumb %}
 
 {% block content %}
+
+	<script type="text/javascript">
+		function create(val) {
+			$('#id_table_type').val(val);
+			///
+			ThisFormSubmit('create_form');
+		}
+	</script>
+
+	<form id="create_form" action="/mosaic/create/" method="post">
+		{% csrf_token %}
+		{{ form }}
+	</form>
 
 	<div class="main">
 		<h1>Выберите тип</h1>
@@ -12,37 +25,37 @@
 				<table class="choise_mosaic_table">
 					<tr>
 						<td align="center">
-							<a href="/mosaic/option?type=1">
+							<a href="#" onclick="create(1);">
 								<img src="/static/images/mosaic/t1.jpg" alt="" />
 							</a>
 						</td>
 						<td align="center">
-							<a href="/mosaic/option?type=2">
+							<a href="#" onclick="create(2);">
 								<img src="/static/images/mosaic/t2.jpg" alt="" />
 							</a>
 						</td>
 						<td align="center">
-							<a href="/mosaic/option?type=3">
+							<a href="#" onclick="create(3);">
 								<img src="/static/images/mosaic/t3.jpg" alt="" />
 							</a>
 						</td>
 					</tr>
 					<tr>
 						<td align="center">
-							<a href="/mosaic/option?type=1">Квадрат</a>
+							<a href="#" onclick="create(1);">Квадрат</a>
 						</td>
 						<td align="center">
-							<a href="/mosaic/option?type=2">Альбомная</a>
+							<a href="#" onclick="create(2);">Альбомная</a>
 						</td>
 						<td align="center">
-							<a href="/mosaic/option?type=3">Книжная</a>
+							<a href="#" onclick="create(3);">Книжная</a>
 						</td>
 					</tr>
 				</table>
 			</div>
 
 			<div class="thumb_list">
-				{% mosaic_thumbs thumbs %}
+				{% list_mosaic_thumbs thumbs %}
 			</div>
 			
 		</div>

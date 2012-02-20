@@ -1,44 +1,46 @@
 {% extends 'base.html' %}
-{% load list_thumb %}
-{% load crop_scale_quality %}
+{% load list_crop_thumb %}
+{% load scale_quality %}
 
 {% block content %}
 	<script src="/static/js/jquery.min.js" type="text/javascript"></script>
 	<script src="/static/js/jcrop/jquery.Jcrop.js" type="text/javascript"></script>
 	<link rel="stylesheet" href="/static/css/jcrop/jquery.Jcrop.css" type="text/css" />
+	
 	<script type="text/javascript">
 		function GlobalOption() {
-			this.jcrop_api = false;
+			/* ------------------------------ */
+			/*              DATA              */
+			/* ------------------------------ */
+			this.oSize = false;
+			this.oFrame = false;
+			this.oPackaging = false;
 			///
 			this.w = {{ img_w }};
 			this.h = {{ img_h }};
 			///
-			this.x1 = {{ form.x1.value }}
-			this.y1 = {{ form.y1.value }}
-			this.x2 = {{ form.x2.value }}
-			this.y2 = {{ form.y2.value }}
+			this.x1 = {{ form.instance.x1 }}
+			this.y1 = {{ form.instance.y1 }}
+			this.x2 = {{ form.instance.x2 }}
+			this.y2 = {{ form.instance.y2 }}
 			///
-			this.img_stretch = {{ form.img_stretch.value }};
-			this.img_type = {{ form.img_type.value }};
-			this.img_size = {{ form.img_size.value }};
-			this.img_effect = {{ form.img_effect.value }};
-			this.qty = {{ form.qty.value }};
+			this.img_stretch = {{ form.instance.img_stretch.id }};
+			this.img_type = {{ form.instance.img_type }};
+			this.img_size = {{ form.instance.img_size.id }};
+			this.img_effect = {{ form.instance.img_effect }};
+			this.qty = {{ form.instance.qty }};
 			///
-			this.prop = [];
+			{% if form.instance.frame %}
+				this.frame = {{ form.instance.frame.id }};
+			{% else %}
+				this.frame = 0;
+			{% endif %};
 			///
-			this.prop[1] = {'w':3, 'h':2};
-			this.prop[2] = {'w':4, 'h':3};
-			this.prop[3] = {'w':5, 'h':4};
-			this.prop[4] = {'w':6, 'h':4};
-			this.prop[5] = {'w':7, 'h':5};
-			this.prop[6] = {'w':9, 'h':6};
-			///
-			this.prop[7] = {'w':3, 'h':3};
-			this.prop[8] = {'w':4, 'h':4};
-			this.prop[9] = {'w':5, 'h':5};
-			this.prop[10] = {'w':6, 'h':6};
-			this.prop[11] = {'w':7, 'h':7};
-			this.prop[12] = {'w':9, 'h':9};
+			{% if form.instance.packaging %}
+				this.packaging = {{ form.instance.packaging.id }};
+			{% else %}
+				this.packaging = 0;
+			{% endif %};
 			///
 			this.stretch = [];
 			///
@@ -49,175 +51,92 @@
 			this.type = [];
 			///
 			{% for i in dataType %}
-				this.type[{{ i.id }}] = '{{ i.name }}';
-			{% endfor %}
-			///
-			this.size = [];
-			///
-			{% for i in dataSize %}
-				this.size[{{ i.id }}] = '{{ i.name }}';
+				this.type[{{ i.0 }}] = '{{ i.1 }}';
 			{% endfor %}
 			///
 			this.effect = [];
 			///
 			{% for i in dataEffect %}
-				this.effect[{{ i.id }}] = '{{ i.name }}';
+				this.effect[{{ i.0 }}] = '{{ i.1 }}';
 			{% endfor %}
-			///
-			this.css_v = {'background':'#ffffff','filter':'alpha(opacity=40)','opacity':'0.4','width':'22px !important'};
-			this.css_h = {'background':'#ffffff','filter':'alpha(opacity=40)','opacity':'0.4','height':'22px !important'};
-			this.css_tdv = {'background':'white url(/static/css/jcrop/Jcrop.gif) top left repeat','width':'1px !important'};
-			this.css_tdh = {'background':'white url(/static/css/jcrop/Jcrop.gif) top left repeat','height':'1px !important'};
-			this.css_bdv = {'background':'white url(/static/css/jcrop/Jcrop.gif) top left repeat','width':'1px !important'};
-			this.css_bdh = {'background':'white url(/static/css/jcrop/Jcrop.gif) top left repeat','height':'1px !important'};
-			///
-			this.setStretch = function() {
-				var css_v = this.css_v;
-				var css_h = this.css_h;
-				///
-				var css_tdh = this.css_tdh;
-				var css_bdh = this.css_bdh;
-				var css_bdv = this.css_tdv;
-				var css_tdv = this.css_bdv;
-				///
-				if (this.img_stretch == 2) {
-					$('.jcrop-hline').css(css_h);
-					$('.jcrop-hline[class=bottom]').css(css_h);
-					$('.jcrop-vline').css(css_v);
-					$('.jcrop-vline[class=right]').css(css_v);
-				}
-				else {
-					$('.jcrop-hline').css(css_tdh);
-					$('.jcrop-hline[class=bottom]').css(css_bdh);
-					$('.jcrop-vline').css(css_tdv);
-					$('.jcrop-vline[class=right]').css(css_bdv);
-				}
-			};
-			///
-			this.setCoord = function(x1, y1, x2, y2) {
-				this.x1 = x1;
-				this.y1 = y1;
-				this.x2 = x2;
-				this.y2 = y2;
-				///
-				$('#id_x1').val(Math.floor(x1));
-				$('#id_y1').val(Math.floor(y1));
-				$('#id_x2').val(Math.floor(x2));
-				$('#id_y2').val(Math.floor(y2));
-				///
-				this.jcrop_api.animateTo([x1, y1, x2, y2]);
-				///
-				this.jcrop_api.setOptions({
-					minSize: [(x2 - x1), (y2 - y1)],
-					maxSize: [(x2 - x1), (y2 - y1)]
-				});
-			};
-			///
+			/* ------------------------------ */
+			/*            METHODS             */
+			/* ------------------------------ */
 			this.getProp = function() {
 				var pr = [];
 				///
-				pr[0] = this.prop[this.img_size].w;
-				pr[1] = this.prop[this.img_size].h;
+				pr[0] = this.oSize.items[this.img_size].width;
+				pr[1] = this.oSize.items[this.img_size].height;
 				///
 				return pr;
 			};
 			///
-			this.wCreateCanvas = function() {
-				var pr = this.getProp();
-				///
-				var w = this.w - 1;
-				var h = this.h - 1;
-				///
-				var one_w = w / pr[0];
-				var one_h = one_w * pr[1];
-				///
-				if (one_h <= h) {
-					h = one_h;
-				}
-				else {
-					while (w > 0) {
-						w = w - 1;
-						///
-						one_w = w / pr[0];
-						one_h = one_w * pr[1];
-						///
-						if (one_h <= h) {
-							h = one_h;
-							///
-							break;
-						}
-					}
-				}
-				///
-				var to_y1 = (this.h - h) / 2;
-				///
-				var to_x1 = (this.w - w) / 2;
-				///
-				if (to_x1 < 0) {
-					to_x1 = 0;
-				}
-				///
-				var to_x2 = to_x1 + w;
-				///
-				var to_y2 = to_y1 + h;
-				///
-				this.setCoord(to_x1, to_y1, to_x2, to_y2);
-			};
-			///
-			this.hCreateCanvas = function() {
-				var pr = this.getProp();
-				///
-				var w = this.w - 1;
-				var h = this.h - 1;
-				///
-				var one_h = h / pr[0];
-				var one_w = one_h * pr[1];
-				///
-				if (one_w <= w) {
-					w = one_w;
-				}
-				else {
-					while (h > 0) {
-						h = h - 1;
-						///
-						one_h = h / pr[0];
-						one_w = one_h * pr[1];
-						///
-						if (one_w <= w) {
-							w = one_w;
-							///
-							break;
-						}
-					}
-				}
-				///
-				var to_x1 = (this.w - w) / 2;
-				///
-				var to_y1 = (this.h - h) / 2;
-				///
-				if (to_y1 < 0) {
-					to_y1 = 0;
-				}
-				///
-				var to_x2 = to_x1 + w;
-				///
-				var to_y2 = to_y1 + h;
-				///
-				this.setCoord(to_x1, to_y1, to_x2, to_y2);
-			};
-			///
 			this.createNewCanvas = function() {
+				var pr = this.getProp();
+				///
 				if (this.img_type == 1 || this.img_type == 3) {
 					this.wCreateCanvas();
 				}
-				///
-				if (this.img_type == 2) {
+				else {
 					this.hCreateCanvas();
 				}
 				///
 				this.setStretch();
 			};
 			///
+			this.data_price = function() {
+				var data = [];
+				///
+				if (this.img_size > 0) {
+					data.push({
+						'name':'Размер: ' + this.oSize.title,
+						'price':this.oSize.price * this.qty
+					});
+				}
+				///
+				if (this.frame > 0) {
+					data.push({
+						'name':'Рамка: ' + this.oFrame.items[this.frame].title,
+						'price':this.oFrame.items[this.frame].price * this.qty
+					});
+				}
+				///
+				if (this.packaging > 0) {
+					data.push({
+						'name':'Упаковка: ' + this.oPackaging.items[this.packaging].title,
+						'price':this.oPackaging.items[this.packaging].price * this.qty
+					});
+				}
+				///
+				this.show_price(data);
+			};
+			///
+			this.setType = function(val) {
+				if (val == 1 || val == 2) {
+					if (this.img_size > 6) {
+						this.img_size = 1;
+						///
+						$('#id_img_size_1').attr('checked', true);
+					}
+					///
+					$('#ul_size_0').show();
+					$('#ul_size_1').hide();
+				}
+				///
+				if (val == 3) {
+					if (this.img_size < 7) {
+						this.img_size = 7;
+						///
+						$('#id_img_size_7').attr('checked', true);
+					}
+					///
+					$('#ul_size_0').hide();
+					$('#ul_size_1').show();
+				}
+			}
+			/* ------------------------------ */
+			/*             EVENTS             */
+			/* ------------------------------ */
 			this.stretch_event = function(obj) {
 				var val = obj.value;
 				///
@@ -227,30 +146,6 @@
 					this.setStretch();
 				}
 			};
-			///
-			this.setType = function(val) {
-				if (val == 1 || val == 2) {
-					if (this.img_size > 6) {
-						this.img_size = 6;
-						///
-						$('#id_img_size_5').attr('checked', true);
-					}
-					///
-					$('#ul_size_0').show();
-					$('#ul_size_1').hide();
-				}
-				///
-				if (val == 3) {
-					if (this.img_size < 7) {
-						this.img_size = 12;
-						///
-						$('#id_img_size_11').attr('checked', true);
-					}
-					///
-					$('#ul_size_0').hide();
-					$('#ul_size_1').show();
-				}
-			}
 			///
 			this.type_event = function(obj) {
 				var val = obj.value;
@@ -271,6 +166,8 @@
 					this.img_size = val;
 					///
 					this.createNewCanvas();
+					///
+					this.data_price();
 				}
 			};
 			///
@@ -280,7 +177,27 @@
 				if (val > 0) {
 					this.img_effect = val;
 					///
-					effectImage('/crop/effect/{{ char_id }}?eff='+val);
+					effectImage('/crop/effect?id={{ form.instance.id }}&eff='+val);
+				}
+			};
+			///
+			this.frame_event = function(obj) {
+				var val = obj.value;
+				///
+				if (val >= 0) {
+					this.frame = val;
+					///
+					this.data_price();
+				}
+			};
+			///
+			this.packaging_event = function(obj) {
+				var val = obj.value;
+				///
+				if (val >= 0) {
+					this.packaging = val;
+					///
+					this.data_price();
 				}
 			};
 			///
@@ -297,8 +214,12 @@
 				else {
 					this.qty = val;
 				}
+				///
+				this.data_price();
 			};
-			///
+			/* ------------------------------ */
+			/*              INIT              */
+			/* ------------------------------ */
 			this.createCanvas = function() {
 				this.setType(this.img_type);
 				///
@@ -313,6 +234,9 @@
 			};
 		}
 		///
+		GlobalOption.prototype = new Sizer();
+		GlobalOption.prototype.constructor = GlobalOption;
+		///
 		oGlobalOption = new GlobalOption();
 	</script>
 
@@ -322,9 +246,9 @@
 		<div class="wrapper">
 			<div class="left">
 				<div id="thumb_prev">
-					<img id="img_thumb_prev_old" src="{{ row.pth }}{{ dir_thumbs }}{{ row.char_id }}.{{ row.ext }}" alt="" />
+					<img id="img_thumb_prev_old" src="{{ src }}" alt="" />
 				</div>
-				{% scale_quality origin_w origin_h %}
+				{% scale_quality origin_w origin_h 'crop' %}
 			</div>
 
 			<form action="" method="post" enctype="multipart/form-data">
@@ -410,6 +334,8 @@
 				</div>
 			</form>
 
+			<div class="price_info left" id="price_info"></div>
+
 			<script type="text/javascript">
 				function setNextStep() {
 					$('#step_opt_1').slideUp('normal');
@@ -425,6 +351,10 @@
 					setCurrentStep(2);
 				}
 				///
+				oGlobalOption.oSize = oimg_sizeData;
+				oGlobalOption.oFrame = oframeData;
+				oGlobalOption.oPackaging = opackagingData;
+				///
 				jQuery(function () {
 					$('#img_thumb_prev_old').Jcrop({
 							image_id: 'img_thumb_prev',
@@ -439,16 +369,17 @@
 							oGlobalOption.createCanvas();
 						}
 					);
+					///
+					oGlobalOption.data_price();
 				});
 			</script>
 			
 			<div class="clear"></div>
 
 			<div class="thumb_list">
-				{% list_thumbs thumbs %}
+				{% list_crop_thumbs thumbs %}
 			</div>
 		</div>
 	</div>
 
-	{% view_mess_cook %}
 {% endblock %}
