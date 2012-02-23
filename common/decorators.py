@@ -45,3 +45,25 @@ def permission_views(perm, go_page):
 		return wrapper
 	###
 	return decorator
+
+def reload_data(Mod, user, nouser):
+	p = Mod.objects.filter(user=None, nouser=nouser)
+	###
+	if p.exists():
+		p.update(user=user, nouser='')
+
+def reload(Mod):
+	def decorator(func):
+		def wrapper(request, *args, **kwargs):
+			user = request.user
+			###
+			if (user.is_authenticated() and user.is_active):
+				nouser = request.NOUSER.get()
+				###
+				reload_data(Mod, user, nouser)
+			###
+			return func(request, *args, **kwargs)
+		###
+		return wrapper
+	###
+	return decorator

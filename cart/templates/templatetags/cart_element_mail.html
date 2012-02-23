@@ -1,0 +1,14 @@
+<div style="float: left; width: 310px; border-bottom: 1px solid gray;">
+	<table border="0">
+		<tr>
+			<td align="center">
+				<img src="http://{{ domain }}{{ opt.image }}" alt="" style="border: 1px solid #E7E7E7; -webkit-box-shadow: 3px 3px 7px #777; box-shadow: 3px 3px 7px #777;" />
+			</td>
+			<td>
+				{% for o in opt.options %}
+					{{ o }}<br />
+				{% endfor %}
+			</td>
+		</tr>
+	</table>
+</div>

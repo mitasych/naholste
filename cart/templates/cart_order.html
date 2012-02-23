@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load cart_tags %}
+
+{% block content %}
+	<div class="main"><h1 style="margin-bottom: 0px;">Сведения о получателе</h1></div>
+	<div class="container_24">
+		<div class="wrapper">
+			<div class="list_address">
+				<form action="" method="post" enctype="multipart/form-data">
+					{% csrf_token %}
+					<table width="70%">
+						{{ form.as_table }}
+						<tr>
+							<td colspan="2" align="right" class="list_cart_total">Сумма к оплате: {{ total }} тенге</td>
+						</tr>
+						<tr>
+							<td colspan="2" align="right" width="100%">
+								<input type="submit" value="Заказать" />
+							</td>
+						</tr>
+					</table>
+				</form>
+				<h2>Информация о заказе</h2>
+				{% if crop_option %}
+					<table width="105%">
+						<tr>
+							<td align="center">
+								<h2>Фото на холсте</h2>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								{% for opt in crop_option %}
+									{% show_block opt %}
+								{% endfor %}
+							</td>
+						</tr>
+					</table>
+				{% endif %}
+
+				{% if puzzle_option %}
+					<table width="105%" style="margin-top: 20px;">
+						<tr>
+							<td align="center">
+								<h2>Мультихолст</h2>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								{% for opt in puzzle_option %}
+									{% show_block opt %}
+								{% endfor %}
+							</td>
+						</tr>
+					</table>
+				{% endif %}
+
+				{% if mosaic_option %}
+					<table width="105%" style="margin-top: 20px;">
+						<tr>
+							<td align="center">
+								<h2>Коллаж</h2>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								{% for opt in mosaic_option %}
+									{% show_block opt %}
+								{% endfor %}
+							</td>
+						</tr>
+					</table>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+{% endblock %}

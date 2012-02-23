@@ -1,0 +1,61 @@
+{% load cart_tags %}
+<html>
+	<body>
+		<h2>:TITLE{{ order_id }}</h2>
+		
+		<h3>Информация о заказе:</h3>
+		
+		:ZIP_URL
+
+		{% if crop_option %}
+			<table border="0" style="width: 650px;">
+				<tr>
+					<td align="center">
+						<h4>Фото на холсте</h4>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						{% for opt in crop_option %}
+							{% show_block_mail opt %}
+						{% endfor %}
+					</td>
+				</tr>
+			</table>
+		{% endif %}
+
+		{% if puzzle_option %}
+			<table width="100%" border="0" style="width: 650px; margin-top: 20px;">
+				<tr>
+					<td align="center">
+						<h4>Мультихолст</h4>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						{% for opt in puzzle_option %}
+							{% show_block_mail opt %}
+						{% endfor %}
+					</td>
+				</tr>
+			</table>
+		{% endif %}
+
+		{% if mosaic_option %}
+			<table width="100%" border="0" style="width: 650px; margin-top: 20px;">
+				<tr>
+					<td align="center">
+						<h4>Коллаж</h4>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						{% for opt in mosaic_option %}
+							{% show_block_mail opt %}
+						{% endfor %}
+					</td>
+				</tr>
+			</table>
+		{% endif %}
+	</body>
+</html>

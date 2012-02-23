@@ -11,7 +11,7 @@ urlpatterns = patterns('',
 	url('', include('crop.urls')),
 	url('', include('mosaic.urls')),
 	url('', include('puzzle.urls')),
-	#url('', include('cart.urls')),
+	url('', include('cart.urls')),
 	###
 	url(r'^$', 'common.views.index'),
 	###

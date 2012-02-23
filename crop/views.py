@@ -15,11 +15,11 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.db.models import Q
 
+from collage.common.decorators import reload
 from collage.common.helpers import CropImg
 from collage.common.models import Frames, Packaging
 from collage.crop.models import CropSize, Crop, Stretch, TYPE_CHOISES, EFFECT_CHOISES
 from collage.crop.forms import CropForm, UploadForm, SIZE_INIT, STRETCH_INIT
-from collage.crop.decorators import reload
 
 class DataImg(object):
 
@@ -81,7 +81,20 @@ class DataImg(object):
 		###
 		return ret
 
-@reload()
+	def coord(self, img='', coord={}):
+		ret = {'x1':0, 'y1':0, 'x2':0, 'y2':0,}
+		###
+		size = self.size(img)
+		###
+		ret['x1'] = int(coord['x1'] * size['fw'] / size['tw'])
+		ret['x2'] = int(coord['x2'] * size['fw'] / size['tw'])
+		###
+		ret['y1'] = int(coord['y1'] * size['fh'] / size['th'])
+		ret['y2'] = int(coord['y2'] * size['fh'] / size['th'])
+		###
+		return ret
+
+@reload(Crop)
 def upload(request):
 	user = request.user
 	auth = (user.is_authenticated() and user.is_active) and True or False
@@ -168,7 +181,7 @@ def delete_file(request):
 	###
 	return HttpResponse(simplejson.dumps(json))
 
-@reload()
+@reload(Crop)
 def option(request):
 	user = request.user
 	auth = (user.is_authenticated() and user.is_active) and True or False
@@ -192,16 +205,19 @@ def option(request):
 			form = CropForm(request.POST, instance=p)
 			###
 			if form.is_valid():
+				send_data = form.cleaned_data
+				###
 				form.save()
 				###
-				messages.success(request, 'Параметры изображения сохранены')
-				"""if send_data['to_cart'] == 0:
+				if send_data['to_cart'] == 0:
 					messages.success(request, 'Параметры изображения сохранены')
 				elif send_data['to_cart'] == 1:
-					if request.CART.set(file_id, 2, True):
+					if request.CART.add(p.id, 1, auth):
 						messages.success(request, 'Параметры сохранены, а изображение добавлено в корзину')
 					else:
-						messages.success(request, 'Параметры сохранены, а изображение уже ранее было добавлено в корзину')"""
+						messages.success(request, 'Параметры сохранены, а изображение уже ранее было добавлено в корзину')
+					###
+					return HttpResponseRedirect(reverse('cart.views.show'))
 			else:
 				messages.error(request, 'Не верно выбраны параметры изображения')
 		else:
