@@ -74,6 +74,8 @@ function setUpload() {
 }
 
 function delImage(set_url, key) {
+	var div_mess = getHtmlDiv();
+	///
 	jQuery.ajax({
 		type: 'get',
 		url: set_url,
@@ -82,10 +84,18 @@ function delImage(set_url, key) {
 		success: function(data, status) {
 			if (data.error == 0) {
 				jQuery('#'+key).hide();
+				///
+				jQuery("#messages").html(div_mess.replace(':class', 'success').replace(':text', data.message));
+				jQuery("#messages").show();
+			}
+			else {
+				jQuery("#messages").html(div_mess.replace(':class', 'error').replace(':text', data.message));
+				jQuery("#messages").show();
 			}
 		},
 		error: function(data, status, e) {
-			alert(e);
+			jQuery("#messages").html(div_mess.replace(':class', 'error').replace(':text', e));
+			jQuery("#messages").show();
 		}
 	});
 }

@@ -16,7 +16,7 @@ class CropForm(forms.ModelForm):
 	
 	class Meta:
 		model = Crop
-		exclude = ('user', 'nouser', 'img', 'created')
+		exclude = ('user', 'nouser', 'img', 'status', 'created')
 		widgets = {
 			'img_stretch':RadioSelectNotNull(attrs={'onclick':'oGlobalOption.stretch_event(this)'}),
 			'img_type':RadioSelectNotNull(attrs={'onclick':'oGlobalOption.type_event(this)'}),

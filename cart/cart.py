@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 
 from django.contrib.sites.models import Site
+from collage.cart.models import Order
 
 class Cart(object):
 
 	data = []
 	domain = ''
+	order = None
 
 	def __init__(self, data):
 		self.domain = Site.objects.get_current().name
@@ -62,3 +64,12 @@ class Cart(object):
 		for item in self.data:
 			if not item['auth'] == auth:
 				item['auth'] = auth
+
+	def set_order(self, order_id=0):
+		self.order = order_id
+
+	def get_order(self):
+		if Order.objects.filter(pk=self.order).exists():
+			return Order.objects.get(pk=self.order)
+		else:
+			return None

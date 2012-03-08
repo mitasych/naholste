@@ -56,5 +56,6 @@ class Crop(models.Model):
 	y1 = models.IntegerField(u'Координата Y1', blank=False)
 	x2 = models.IntegerField(u'Координата X2', blank=False)
 	y2 = models.IntegerField(u'Координата Y2', blank=False)
+	status = models.BooleanField(u'Статус', default=False)
 	created = models.DateTimeField(u'Создан', auto_now=True)
 

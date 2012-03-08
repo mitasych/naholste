@@ -6,6 +6,45 @@ import os
 from PIL import Image
 from math import floor
 
+
+www = [
+	'1',
+	'2',
+	'3',
+	'4',
+]
+
+print www
+
+d1 = {'a1':1, 'a2':2, 'a3':3,}
+d2 = {'a1':4, 'a5':5, 'a6':7,}
+
+print d1
+print 
+print d2
+
+d1.update(d2)
+print d1
+print
+print d2
+"""
+ee = ['a1', 'a2', 'a3']
+
+if 'a4' not in ee:
+	print 'Yep'
+
+d = {
+	'k1':10,
+	'k2':20,
+}
+
+print d.get('k3', None)
+
+letterst = 'qwertyuiop'
+signst = 'uiop'
+
+print letterst[0:-len(signst)]
+
 TYPE_SIZE_2 = (
 	(288, 192,),
 	(192, 144,),
@@ -50,6 +89,7 @@ SIZE_CHOISES = (
 )
 
 print '%(price).2f' % {'price': 10}
+"""
 """
 t = ' &nbsp;1&nbsp;2256.89&nbsp;  &nbsp; &nbsp; '
 t = float(t.strip().replace('&nbsp;', '').replace(' ', ''))

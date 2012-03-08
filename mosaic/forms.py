@@ -16,7 +16,7 @@ class MosaicForm(forms.ModelForm):
 	
 	class Meta:
 		model = Mosaic
-		exclude = ('user', 'nouser', 'table_type', 'f_0', 'f_1', 'f_2', 'f_3', 'f_4', 'f_5', 'f_6', 'f_7', 'f_8')
+		exclude = ('user', 'nouser', 'table_type', 'f_0', 'f_1', 'f_2', 'f_3', 'f_4', 'f_5', 'f_6', 'f_7', 'f_8', 'status', 'created')
 		widgets = {
 			'img_size':ChoiceSize(choices=MosaicSize.objects.all()),
 			'img_effect':RadioSelectNotNull(attrs={'onclick':'oGlobalOption.effect_event(this)'}),

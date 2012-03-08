@@ -3,6 +3,7 @@
 import os
 import shutil
 import threading
+import hashlib
 
 from collage.cart.settings import *
 from django.http import HttpResponseRedirect, HttpRequest
@@ -25,6 +26,13 @@ from collage.cart.forms import OrderForm, AuthCartForm
 
 from collage.crop.views import DataImg as Dic
 from collage.puzzle.views import DataImg as Dip
+
+from collage.payment.kzcom.utils import ProcessRequest as kzReq, ProcessResponse as kzRes
+from collage.payment.kzcom.forms import PayForm as kzform
+from collage.payment.kzcom.settings import FORM_ACTION as kzcom_action
+
+from collage.payment.webmoney.forms import PayForm as webform
+from collage.payment.webmoney.settings import FORM_ACTION as web_action, SECRET_KEY
 
 class Id2Name(object):
 
@@ -268,12 +276,9 @@ class Opt2Text(object):
 
 class OrderFiles(object):
 
-	auth = False
 	zipf = ''
 
-	def __init__(self, order_id=0, data={}, auth=False):
-		self.auth
-		###
+	def __init__(self, order_id=0, options=[]):
 		order_pth = '/'.join([ORDERS_DIR, str(order_id)])
 		order_crop = '/'.join([order_pth, 'crop'])
 		order_puzzle = '/'.join([order_pth, 'puzzle'])
@@ -281,18 +286,17 @@ class OrderFiles(object):
 		###
 		if not os.path.isdir(order_pth):
 			os.makedirs(order_pth)
-			os.makedirs(order_crop)
-			os.makedirs(order_puzzle)
-			os.makedirs(order_mosaic)
-		### Обрабатываем на холсте
-		for o in data['crop_option']:
-			self.crop(o, order_crop)
-		### Обрабатываем мультихолст
-		for o in data['puzzle_option']:
-			self.puzzle(o, order_puzzle)
-		### Обрабатываем коллаж
-		for o in data['mosaic_option']:
-			self.mosaic(o, order_mosaic)
+		###
+		for o in options:
+			if o.type_id == 1:
+				os.makedirs(order_crop)
+				self.crop(o, order_crop)
+			elif o.type_id == 2:
+				os.makedirs(order_puzzle)
+				self.puzzle(o, order_puzzle)
+			elif o.type_id == 3:
+				os.makedirs(order_mosaic)
+				self.mosaic(o, order_mosaic)
 		### Пакуем в ZIP
 		self.to_zip(str(order_id), order_pth)
 		### Удалим мусор
@@ -317,10 +321,10 @@ class OrderFiles(object):
 					###
 					z.write(absfn, zfn)
 
-	def mosaic(self, o={}, order_mosaic=''):
+	def mosaic(self, o=None, order_mosaic=''):
 		from collage.mosaic.settings import IMG_EXT, PATH_PJT, FILES_DIR
 		###
-		opt_id = str(o['id'])
+		opt_id = str(o.id)
 		###
 		dist_pth = '/'.join([order_mosaic, opt_id])
 		###
@@ -329,96 +333,147 @@ class OrderFiles(object):
 		dist_txt = '/'.join([dist_pth, 'info.txt',])
 		###
 		with open(dist_txt, 'w') as f:
-			f.write("\n".join([v for v in o['options']]).encode('utf-8'))
+			s = unicode(o.options).encode('utf-8') 
+			###
+			f.write(s)
 			###
 			f.close()
 		###
 		for i in xrange(9):
 			k = 'f_%s' % (i,)
 			###
-			if not o[k] == '':
-				dist = '/'.join([dist_pth, '%s_%s.%s' % (i, o[k], IMG_EXT),])
+			v = getattr(o, k)
+			###
+			if not v == '':
+				dist = '/'.join([dist_pth, '%s_%s.%s' % (i, v, IMG_EXT),])
 				###
-				src = ''.join([FILES_DIR, o[k], '.', IMG_EXT])
+				src = ''.join([FILES_DIR, v, '.', IMG_EXT])
 				###
 				if os.path.isfile(src):
 					shutil.copyfile(src, dist)
 
-	def puzzle(self, o={}, order_puzzle=''):
+	def puzzle(self, o=None, order_puzzle=''):
 		from collage.puzzle.settings import IMG_EXT, PATH_PJT, FILES_DIR
 		###
-		opt_id = str(o['id'])
+		opt_id = str(o.id)
 		###
 		dist_pth = '/'.join([order_puzzle, opt_id,])
 		###
 		os.makedirs(dist_pth)
 		###
-		dist = '/'.join([dist_pth, '%s.%s' % (o['img'], IMG_EXT),])
+		dist = '/'.join([dist_pth, '%s.%s' % (o.img, IMG_EXT),])
 		dist_txt = '/'.join([dist_pth, 'info.txt',])
 		###
-		src = ''.join([FILES_DIR, o['img'], '.', IMG_EXT])
+		src = ''.join([FILES_DIR, o.img, '.', IMG_EXT])
 		###
 		if os.path.isfile(src):
 			shutil.copyfile(src, dist)
 			###
 			with open(dist_txt, 'w') as f:
-				f.write("\n".join([v for v in o['options']]).encode('utf-8'))
+				s = unicode(o.options).encode('utf-8') 
+				###
+				f.write(s)
 				###
 				f.close()
 
-	def crop(self, o={}, order_crop=''):
+	def crop(self, o=None, order_crop=''):
 		from collage.crop.settings import IMG_EXT, PATH_PJT, FILES_DIR
 		###
-		opt_id = str(o['id'])
+		opt_id = str(o.id)
 		###
 		dist_pth = '/'.join([order_crop, opt_id,])
 		###
 		os.makedirs(dist_pth)
 		###
-		dist = '/'.join([dist_pth, '%s.%s' % (o['img'], IMG_EXT),])
+		dist = '/'.join([dist_pth, '%s.%s' % (o.img, IMG_EXT),])
 		dist_txt = '/'.join([dist_pth, 'info.txt',])
 		###
-		src = ''.join([FILES_DIR, o['img'], '.', IMG_EXT])
+		src = ''.join([FILES_DIR, o.img, '.', IMG_EXT])
 		###
 		if os.path.isfile(src):
 			shutil.copyfile(src, dist)
 			###
 			with open(dist_txt, 'w') as f:
-				f.write("\n".join([v for v in o['options']]).encode('utf-8'))
+				s = unicode(o.options).encode('utf-8') 
+				###
+				f.write(s)
 				###
 				f.close()
 
 class HiddenWork(threading.Thread):
 
-	def setData(self, request, data, email, auth):
+	request = None
+	order_id = 0
+
+	def setData(self, request, order_id):
 		self.request = request
-		self.data = data
-		self.email = email
-		self.auth = auth
+		self.order_id = order_id
 
 	def run(self):
-		t = loader.get_template('cart_order_mail.html')
-		c = RequestContext(self.request, self.data)
-		###
-		html = t.render(c)
-		### Формируем письмо клиенту
-		html_user = html.replace(u':TITLE', u'Ваш заказ №').replace(u':ZIP_URL', '')
-		###
-		msg = EmailMessage(u'Ваш заказ №%s' % self.data['order_id'], html_user, EMAIL_FROM, [self.email])
-		msg.content_subtype = "html"
-		msg.send()
-		### Формируем данные для админа
-		of = OrderFiles(self.data['order_id'], self.data, self.auth)
-		###
-		a_zip = u'''
-		<a href="%s">Архив с данными</a><br /><br />
-		''' % (of.zipname(),)
-		###
-		html_admin = html.replace(u':TITLE', u'Поступил заказ №').replace(u':ZIP_URL', a_zip)
-		###
-		msg = EmailMessage(u'Новый заказ №%s' % self.data['order_id'], html_user, EMAIL_FROM, EMAILS_LIST)
-		msg.content_subtype = "html"
-		msg.send()
+		if self.order_id > 0:
+			if Order.objects.filter(pk=self.order_id).exists():
+				order = Order.objects.get(pk=self.order_id)
+				###
+				if not order.status:
+					options = OrderOption.objects.order_by('type_id').filter(order=order)
+					### Формируем данные для админа
+					of = OrderFiles(self.order_id, options)
+					###
+					crop_option = []
+					puzzle_option = []
+					mosaic_option = []
+					###
+					cd = CropData(self.request)
+					pd = PuzzleData(self.request)
+					md = MosaicData(self.request)
+					###
+					for o in options:
+						row = {
+							'id':o.id,
+							'options':unicode(o.options).encode('utf-8').split("\n")
+						}
+						###
+						if o.type_id == 1:
+							row['image'] = cd.image(o)
+							crop_option.append(row)
+						elif o.type_id == 2:
+							row['image'] = pd.image(o)
+							puzzle_option.append(row)
+						elif o.type_id == 3:
+							row['image'] = md.image(o)
+							mosaic_option.append(row)
+					### Установим статус оплаченного заказа
+					order.status = True
+					order.save()
+					###
+					data = {
+						'order_id':self.order_id,
+						'crop_option':crop_option,
+						'puzzle_option':puzzle_option,
+						'mosaic_option':mosaic_option,
+					}
+					###
+					t = loader.get_template('cart_order_mail.html')
+					###
+					c = RequestContext(self.request, data)
+					###
+					html = t.render(c)
+					### Формируем письмо клиенту
+					html_user = html.replace(u':TITLE', u'Ваш заказ №').replace(u':ZIP_URL', '')
+					###
+					a_zip = u'''
+					<a href="%s">Архив с данными</a><br /><br />
+					''' % (of.zipname(),)
+					###
+					html_admin = html.replace(u':TITLE', u'Поступил заказ №').replace(u':ZIP_URL', a_zip)
+					###
+					msg = EmailMessage(u'Ваш заказ №%s' % self.order_id, html_user, EMAIL_FROM, [order.email])
+					msg.content_subtype = "html"
+					msg.send()
+					###
+					msg = EmailMessage(u'Новый заказ №%s' % self.order_id, html_admin, EMAIL_FROM, EMAILS_LIST)
+					msg.content_subtype = "html"
+					msg.send()
 
 HW = HiddenWork()
 
@@ -535,12 +590,13 @@ def order(request):
 			send_data = form.cleaned_data
 			###
 			order = Order.objects.create(
-				price=total,
-				shiping_price=0,
-				address=send_data['address'],
-				email=send_data['email'],
-				name=send_data['name'],
-				phone=send_data['phone'],
+				price = total,
+				shiping_price = 0,
+				address = send_data['address'],
+				email = send_data['email'],
+				name = send_data['name'],
+				phone = send_data['phone'],
+				status = False
 			)
 			###
 			if auth:
@@ -549,8 +605,12 @@ def order(request):
 				order.nouser = request.NOUSER.get()
 			###
 			order.save()
+			### Запишем в сессию идентификатор ордера для оплат
+			request.CART.set_order(order.id)
 			### Crop
 			for o in crop_option:
+				Crop.objects.filter(pk=o['id']).update(status=True)
+				###
 				order_opt = OrderOption.objects.create(
 					order=order,
 					type_id=1,
@@ -567,6 +627,8 @@ def order(request):
 				order_opt.save()
 			### Puzzle
 			for o in puzzle_option:
+				Puzzle.objects.filter(pk=o['id']).update(status=True)
+				###
 				order_opt = OrderOption.objects.create(
 					order=order,
 					type_id=2,
@@ -583,6 +645,8 @@ def order(request):
 				order_opt.save()
 			### Mosaic
 			for o in mosaic_option:
+				Mosaic.objects.filter(pk=o['id']).update(status=True)
+				###
 				order_opt = OrderOption.objects.create(
 					order=order,
 					type_id=3,
@@ -602,19 +666,9 @@ def order(request):
 			### Очистим корзину
 			request.CART.clear()
 			###
-			messages.success(request, u'Ваш заказ №%s принят.' % (order.id,))
-			### Отправим подтверждение на мыло администратору
-			data = {
-				'order_id':order.id,
-				'crop_option':crop_option,
-				'puzzle_option':puzzle_option,
-				'mosaic_option':mosaic_option,
-			}
+			#messages.success(request, u'Ваш заказ №%s принят. Пожалуйста произведите оплату.' % (order.id,))
 			###
-			HW.setData(request, data, send_data['email'], auth)
-			HW.start()
-			###
-			return HttpResponseRedirect(reverse('common.views.index'))
+			return HttpResponseRedirect(reverse('cart.views.payment'))
 	###
 	if not is_create:
 		if auth:
@@ -647,3 +701,128 @@ def order(request):
 	}
 	###
 	return render(request, 'cart_order.html', data)
+
+def payment(request):
+	user = request.user
+	auth = (user.is_authenticated() and user.is_active) and True or False
+	###
+	order = request.CART.get_order()
+	###
+	if order is None:
+		response = HttpResponseRedirect(reverse('cart.views.show'))
+	else:
+		if order.status:
+			response = HttpResponseRedirect(reverse('cart.views.show'))
+		else:
+			### Форма для казахов
+			kkb = kzReq()
+			###
+			Signed_Order_B64 = kkb.get(order_id=order.id, amount=order.price)
+			kzcom_form = None
+			###
+			if kkb.estatus is None:
+				initial = {'Signed_Order_B64':Signed_Order_B64,}
+				###
+				if auth: initial['email'] = user.email
+				###
+				kzcom_form = kzform(initial=initial)
+				kzcom_mess = False
+			else:
+				kzcom_mess = Signed_Order_B64
+			### Webmoney
+			initial = {
+				'LMI_PAYMENT_AMOUNT':order.price,
+				'LMI_PAYMENT_DESC':'Оплата по заказу №%s' % order.id,
+				'LMI_PAYMENT_NO':order.id,
+			}
+			###
+			web_form = webform(initial=initial)
+			###
+			data = {
+				### Казахи
+				'kzcom_mess':kzcom_mess,
+				'kzcom_form':kzcom_form,
+				'kzcom_action':kzcom_action,
+				###
+				'web_form':web_form,
+				'web_action':web_action,
+			}
+			###
+			response = render(request, 'cart_payment.html', data)
+	###
+	return response
+
+def kzcom(request):
+	#r = '<document><bank name="Kazkommertsbank JSC"><customer name="Ucaf Test Maest" mail="SeFrolov@kkb.kz" phone=""><merchant cert_id="00C182B189" name="test merch"><order order_id="0706172110" amount="1000" currency="398"><department merchant_id="92056001" amount="1000"/></order></merchant><merchant_sign type="RSA"/></customer><customer_sign type="RSA"/><results timestamp="2006-07-06 17:21:50"><payment merchant_id="92056001" amount="1000" reference="618704198173" approval_code="447753" response_code="00"/></results></bank><bank_sign cert_id="00C18327E8" type="SHA/RSA">xjJwgeLAyWssZr3/gS7TI/xaajoF3USk0B/ZfLv6SYyY/3H8tDHUiyGcV7zDO5+rINwBoTn7b9BrnO/kvQfebIhHbDlCSogz2cB6Qa2ELKAGqs8aDZDekSJ5dJrgmFT6aTfgFgnZRmadybxTMHGR6cn8ve4m0TpQuaPMQmKpxTI=</bank_sign ></document>'
+	#r = '<response order_id="123456"><error type="system" time="21.01.2001 21:12:60" code="00">Error Message</error><session id="1234654656545"/></response>'
+	#r = '<response order_id="123456"><error type="auth" time="21.01.2001 21:12:60" code="00">Error Message</error><session id="1234654656545"/></response>'
+	###
+	if request.method == 'POST':
+		response = request.POST.get('response', None)
+		###
+		if response is not None:
+			kkb = kzRes()
+			###
+			result = kkb.get(response)
+			###
+			if type(result).__name__ == 'str':
+				r = ''.join(['System error ', result])
+			else:
+				error = result.get('TAG_ERROR', None)
+				###
+				if error is not None:
+					if result['ERROR_TYPE'] == 'ERROR':
+						r = ''.join(['System error: ', result['ERROR']])
+					elif result['ERROR_TYPE'] == 'system':
+						r = ''.join(["Bank system error > Code: '", result['ERROR_CODE'], "' Text: '", result['ERROR_CHARDATA'], "' Time: '", result['ERROR_TIME'], "' Order_ID: '", result['RESPONSE_ORDER_ID'], "'"])
+					elif result['ERROR_TYPE'] == 'auth':
+						r = ''.join(["Bank system user autentication error > Code: '", result['ERROR_CODE'], "' Text: '", result['ERROR_CHARDATA'], "' Time: '", result['ERROR_TIME'], "' Order_ID: '", result['RESPONSE_ORDER_ID'], "'"])
+				else:
+					doc = result.get('TAG_DOCUMENT', None)
+					###
+					if doc is not None:
+						o_amount = float(result['ORDER_AMOUNT'])
+						p_amount = float(result['PAYMENT_AMOUNT'])
+						###
+						order_id = int(result['ORDER_ORDER_ID'])
+						###
+						r = order_id
+						### Отправим подтверждение на мыло администратору
+						HW.setData(request, order_id)
+						HW.start()
+			###
+			data = {'r':response,}
+	###
+	return HttpResponseRedirect(reverse('cart.views.show'))
+
+def webmoney(request):
+	if request.method == 'POST':
+		if not request.POST or request.POST.get('LMI_PREREQUEST', None):
+			return HttpResponseRedirect(reverse('cart.views.show'))
+		else:
+			string_to_sign = ''.join([
+				request.POST['LMI_PAYEE_PURSE'],
+				request.POST['LMI_PAYMENT_AMOUNT'],
+				request.POST['LMI_PAYMENT_NO'],
+				request.POST['LMI_MODE'],
+				request.POST['LMI_SYS_INVS_NO'],
+				request.POST['LMI_SYS_TRANS_NO'],
+				request.POST['LMI_SYS_TRANS_DATE'],
+				SECRET_KEY,
+				request.POST['LMI_PAYER_PURSE'],
+				request.POST['LMI_PAYER_WM']
+			])
+			###
+			sign = hashlib.md5(string_to_sign).hexdigest().upper()
+			###
+			if sign == request.POST['LMI_HASH']:
+				order_id = int(request.POST['LMI_PAYMENT_NO'])
+				### Отправим подтверждение на мыло администратору
+				HW.setData(request, order_id)
+				HW.start()
+			else:
+				messages.error(request, 'Ошибка оплаты')
+				###
+				return HttpResponseRedirect(reverse('cart.views.show'))
+	else:
+		return HttpResponseRedirect(reverse('cart.views.show'))

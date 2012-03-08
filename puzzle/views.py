@@ -133,7 +133,8 @@ def upload_file(request):
 					x1 = 0,
 					y1 = 0,
 					x2 = 0,
-					y2 = 0
+					y2 = 0,
+					status = False
 				)
 				###
 				if auth:
@@ -143,16 +144,16 @@ def upload_file(request):
 				###
 				p.save()
 				###
-				json = {'error':0, 'message':'Файл успешно загружен', 'id':p.id,}
+				json = {'error':0, 'message':u'Файл успешно загружен', 'id':p.id,}
 			else:
-				json = {'error':1, 'message':"Ошибка: %s" % img.error, 'id':'',}
+				json = {'error':1, 'message':u"Ошибка: %s" % img.error, 'id':'',}
 		else:
-			json = {'error':1, 'message':"Ошибка: Загрузите правильное изображение", 'id':'',}
+			json = {'error':1, 'message':u"Ошибка: Загрузите правильное изображение", 'id':'',}
 	###
 	return HttpResponse(simplejson.dumps(json))
 
 def delete_file(request):
-	json = {'error':1, 'message':'Нет такого изображения'}
+	json = {'error':1, 'message':u'Нет такого изображения'}
 	###
 	if request.is_ajax():
 		try:
@@ -170,12 +171,16 @@ def delete_file(request):
 		p = Puzzle.objects.filter(q)
 		###
 		if p.exists():
-			p = p[0]
-			di.delImg(p.img)
-			p.delete()
+			p = Puzzle.objects.get(q)
 			###
-			json['message'] = 'Изображение удалено'
-			json['error'] = 0
+			if p.status:
+				json['message'] = u'По изображениям сформирован заказ - удаление невозможно'
+			else:
+				di.delImg(p.img)
+				p.delete()
+				###
+				json['message'] = u'Изображение удалено'
+				json['error'] = 0
 	###
 	return HttpResponse(simplejson.dumps(json))
 
@@ -208,16 +213,16 @@ def option(request):
 				form.save()
 				###
 				if send_data['to_cart'] == 0:
-					messages.success(request, 'Параметры изображения сохранены')
+					messages.success(request, u'Параметры изображения сохранены')
 				elif send_data['to_cart'] == 1:
 					if request.CART.add(p.id, 2, auth):
-						messages.success(request, 'Параметры сохранены, а изображение добавлено в корзину')
+						messages.success(request, u'Параметры сохранены, а изображение добавлено в корзину')
 					else:
-						messages.success(request, 'Параметры сохранены, а изображение уже ранее было добавлено в корзину')
+						messages.success(request, u'Параметры сохранены, а изображение уже ранее было добавлено в корзину')
 					###
 					return HttpResponseRedirect(reverse('cart.views.show'))
 			else:
-				messages.error(request, 'Не верно выбраны параметры изображения')
+				messages.error(request, u'Не верно выбраны параметры изображения')
 		else:
 			form = PuzzleForm(instance=p)
 			di.effect(p.img, p.img_effect)

@@ -100,7 +100,7 @@
 									<a href="/puzzle/option/?id={{ opt.id }}">Изменить</a>
 									<br />
 									<br />
-									<a href="/cart/del/?id={{ opt.char_id }}&t=2" >Удалить</a>
+									<a href="/cart/del/?id={{ opt.id }}&t=2" >Удалить</a>
 								</td>
 								<td valign="middle" align="center">
 									<a href="/puzzle/option/?id={{ opt.id }}">
@@ -210,11 +210,11 @@
 				{% if total > 0 %}
 					<table width="100%" style="margin-top: 30px;">
 						<tr>
-							<td align="center" class="list_cart_total">Сумма к оплате: {{ total }} тенге</td>
+							<td align="center" class="list_cart_total">Сумма: {{ total }} тенге</td>
 						</tr>
 						<tr>
 							<td align="center" class="list_cart_total">
-								<input type="button" onclick="document.location='{{ to_url }}';" value="К оплате" />
+								<input type="button" onclick="document.location='{{ to_url }}';" value="Заказать" />
 							</td>
 						</tr>
 					</table>

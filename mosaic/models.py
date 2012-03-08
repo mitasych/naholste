@@ -59,4 +59,5 @@ class Mosaic(models.Model):
 	f_6 = models.CharField(u'Изображение 6', max_length=32, blank=True, default='')
 	f_7 = models.CharField(u'Изображение 7', max_length=32, blank=True, default='')
 	f_8 = models.CharField(u'Изображение 8', max_length=32, blank=True, default='')
+	status = models.BooleanField(u'Статус', default=False)
 	created = models.DateTimeField(u'Создан', auto_now=True)

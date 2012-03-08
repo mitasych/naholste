@@ -103,7 +103,8 @@ def create(request):
 				table_type = send_data['table_type'],
 				img_size = s,
 				img_effect = 1,
-				qty = 1			
+				qty = 1,
+				status = False
 			)
 			###
 			if auth:
@@ -118,7 +119,7 @@ def create(request):
 	return HttpResponseRedirect(reverse(REDIRECT))
 
 def delete_file(request):
-	json = {'error':1, 'message':'Нет такого изображения'}
+	json = {'error':1, 'message':u'Нет такого изображения'}
 	###
 	if request.is_ajax():
 		try:
@@ -136,25 +137,28 @@ def delete_file(request):
 		p = Mosaic.objects.filter(q)
 		###
 		if p.exists():
-			p = p[0]
+			p = Mosaic.objects.get(q)
 			###
-			if p.table_type == 1:
-				len_size = 9
-			if p.table_type == 2:
-				len_size = 7
-			if p.table_type == 3:
-				len_size = 7
-			###
-			for i in xrange(len_size):
-				v = getattr(p, 'f_%s' % i)
+			if p.status:
+				json['message'] = u'По изображениям сформирован заказ - удаление невозможно'
+			else:
+				if p.table_type == 1:
+					len_size = 9
+				if p.table_type == 2:
+					len_size = 7
+				if p.table_type == 3:
+					len_size = 7
 				###
-				if not v == '':
-					di.delImg(v)
-			###
-			p.delete()
-			###
-			json['message'] = 'Изображение удалено'
-			json['error'] = 0
+				for i in xrange(len_size):
+					v = getattr(p, 'f_%s' % i)
+					###
+					if not v == '':
+						di.delImg(v)
+				###
+				p.delete()
+				###
+				json['message'] = u'Изображение удалено'
+				json['error'] = 0
 	###
 	return HttpResponse(simplejson.dumps(json))
 
@@ -186,16 +190,16 @@ def option(request):
 				form.save()
 				###
 				if send_data['to_cart'] == 0:
-					messages.success(request, 'Параметры изображения сохранены')
+					messages.success(request, u'Параметры изображения сохранены')
 				elif send_data['to_cart'] == 1:
 					if request.CART.add(p.id, 3, auth):
-						messages.success(request, 'Параметры сохранены, а изображение добавлено в корзину')
+						messages.success(request, u'Параметры сохранены, а изображение добавлено в корзину')
 					else:
-						messages.success(request, 'Параметры сохранены, а изображение уже ранее было добавлено в корзину')
+						messages.success(request, u'Параметры сохранены, а изображение уже ранее было добавлено в корзину')
 					###
 					return HttpResponseRedirect(reverse('cart.views.show'))
 			else:
-				messages.error(request, 'Не верно выбраны параметры изображения')
+				messages.error(request, u'Не верно выбраны параметры изображения')
 		else:
 			form = MosaicForm(instance=p)
 			###
@@ -229,7 +233,7 @@ def option(request):
 	return render(request, 'mosaic_option.html', data)
 
 def upload_file(request):
-	json = {'error':1, 'message':"Ошибка: Не найдена опция", 'url':'',}
+	json = {'error':1, 'message':u"Ошибка: Не найдена опция", 'url':'',}
 	###
 	try:
 		opt_id = int(request.GET.get('id', 0))
@@ -277,13 +281,13 @@ def upload_file(request):
 					###
 					url = ''.join([MEDIA_URL, MEDIA_URL_FILES, DIR_THUMBS, char_id, '.', IMG_EXT])
 					###
-					json = {'error':0, 'message':'Файл успешно загружен', 'url':url,}
+					json = {'error':0, 'message':u'Файл успешно загружен', 'url':url,}
 				else:
-					json = {'error':1, 'message':"Ошибка: %s" % img.error, 'url':'',}
+					json = {'error':1, 'message':u"Ошибка: %s" % img.error, 'url':'',}
 			else:
-				json = {'error':1, 'message':"Ошибка: Ошибка отправки исходных данных", 'url':'',}
+				json = {'error':1, 'message':u"Ошибка: Ошибка отправки исходных данных", 'url':'',}
 		else:
-			json = {'error':1, 'message':"Ошибка: Загрузите правильное изображение", 'url':'',}
+			json = {'error':1, 'message':u"Ошибка: Загрузите правильное изображение", 'url':'',}
 	###
 	return HttpResponse(simplejson.dumps(json))
 

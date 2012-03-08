@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+	<div class="main"><h1 style="margin-bottom: 0px;">Выберите вид оплаты</h1></div>
+	<div class="container_24">
+		<div class="wrapper">
+			<center>
+				<table width="100%">
+					<tr>
+						<td align="center" width="33%">
+							<form action="{{ web_action }}" method="post" id="web_money_form">
+								{{ web_form.as_p }}
+							</form>
+							<script type="text/javascript">
+								function WebMoney() {
+									$('#web_money_form').submit();
+								}
+							</script>
+							<a href="javascript: WebMoney();">
+								<img src="/static/images/webmoney.jpg" alt="" />
+							</a>
+						</td>
+						<td align="center" width="33%">
+							КИВИ
+						</td>
+						<td align="center" width="33%">
+							{% if kzcom_mess %}
+								Error: {{ kzcom_mess }}
+							{% else %}
+								<form name="SendOrder" method="post" action="{{ kzcom_action }}">
+									{{ kzcom_form.as_p }}
+									 <input type="submit" name="GotoPay"  value="Оплатить" >
+								</form>
+							{% endif %}
+						</td>
+					</tr>
+				</table>
+			</center>
+		</div>
+	</div>
+{% endblock %}

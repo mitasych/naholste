@@ -3,11 +3,10 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: localhost
--- Время создания: Фев 23 2012 г., 11:27
+-- Время создания: Мар 08 2012 г., 09:35
 -- Версия сервера: 5.5.8
 -- Версия PHP: 5.3.5
 
-SET FOREIGN_KEY_CHECKS=0;
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
 
@@ -26,7 +25,7 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 -- Структура таблицы `account_userprofile`
 --
 
-CREATE TABLE `account_userprofile` (
+CREATE TABLE IF NOT EXISTS `account_userprofile` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
   `auth_key` varchar(50) NOT NULL,
@@ -52,7 +51,7 @@ INSERT INTO `account_userprofile` (`id`, `user_id`, `auth_key`, `address`, `name
 -- Структура таблицы `auth_group`
 --
 
-CREATE TABLE `auth_group` (
+CREATE TABLE IF NOT EXISTS `auth_group` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(80) NOT NULL,
   PRIMARY KEY (`id`),
@@ -70,7 +69,7 @@ CREATE TABLE `auth_group` (
 -- Структура таблицы `auth_group_permissions`
 --
 
-CREATE TABLE `auth_group_permissions` (
+CREATE TABLE IF NOT EXISTS `auth_group_permissions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `group_id` int(11) NOT NULL,
   `permission_id` int(11) NOT NULL,
@@ -91,7 +90,7 @@ CREATE TABLE `auth_group_permissions` (
 -- Структура таблицы `auth_message`
 --
 
-CREATE TABLE `auth_message` (
+CREATE TABLE IF NOT EXISTS `auth_message` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
   `message` longtext NOT NULL,
@@ -110,7 +109,7 @@ CREATE TABLE `auth_message` (
 -- Структура таблицы `auth_permission`
 --
 
-CREATE TABLE `auth_permission` (
+CREATE TABLE IF NOT EXISTS `auth_permission` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
   `content_type_id` int(11) NOT NULL,
@@ -204,7 +203,7 @@ INSERT INTO `auth_permission` (`id`, `name`, `content_type_id`, `codename`) VALU
 -- Структура таблицы `auth_user`
 --
 
-CREATE TABLE `auth_user` (
+CREATE TABLE IF NOT EXISTS `auth_user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(30) NOT NULL,
   `first_name` varchar(30) NOT NULL,
@@ -225,8 +224,8 @@ CREATE TABLE `auth_user` (
 --
 
 INSERT INTO `auth_user` (`id`, `username`, `first_name`, `last_name`, `email`, `password`, `is_staff`, `is_active`, `is_superuser`, `last_login`, `date_joined`) VALUES
-(1, 'aries.ua@gmail.com', '', '', 'aries.ua@gmail.com', 'sha1$d0bcd$9bbf973b02708ff46813b005f6f00ad505c19ad8', 1, 1, 1, '2012-02-19 18:35:34', '2011-12-09 10:00:59'),
-(2, 'aries.forum@gmail.com', '', '', 'aries.forum@gmail.com', 'sha1$72e79$fc2e36ea86668febe872ca776ae4504b33359300', 0, 1, 0, '2012-02-22 11:39:35', '2011-12-09 10:02:30');
+(1, 'aries.ua@gmail.com', '', '', 'aries.ua@gmail.com', 'sha1$d0bcd$9bbf973b02708ff46813b005f6f00ad505c19ad8', 1, 1, 1, '2012-03-01 20:32:51', '2011-12-09 10:00:59'),
+(2, 'aries.forum@gmail.com', '', '', 'aries.forum@gmail.com', 'sha1$72e79$fc2e36ea86668febe872ca776ae4504b33359300', 0, 1, 0, '2012-03-02 10:10:26', '2011-12-09 10:02:30');
 
 -- --------------------------------------------------------
 
@@ -234,7 +233,7 @@ INSERT INTO `auth_user` (`id`, `username`, `first_name`, `last_name`, `email`, `
 -- Структура таблицы `auth_user_groups`
 --
 
-CREATE TABLE `auth_user_groups` (
+CREATE TABLE IF NOT EXISTS `auth_user_groups` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
   `group_id` int(11) NOT NULL,
@@ -255,7 +254,7 @@ CREATE TABLE `auth_user_groups` (
 -- Структура таблицы `auth_user_user_permissions`
 --
 
-CREATE TABLE `auth_user_user_permissions` (
+CREATE TABLE IF NOT EXISTS `auth_user_user_permissions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
   `permission_id` int(11) NOT NULL,
@@ -276,7 +275,7 @@ CREATE TABLE `auth_user_user_permissions` (
 -- Структура таблицы `cart_order`
 --
 
-CREATE TABLE `cart_order` (
+CREATE TABLE IF NOT EXISTS `cart_order` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) DEFAULT NULL,
   `nouser` varchar(32) NOT NULL,
@@ -286,6 +285,7 @@ CREATE TABLE `cart_order` (
   `email` varchar(100) NOT NULL,
   `name` varchar(255) NOT NULL,
   `phone` varchar(50) NOT NULL,
+  `status` tinyint(1) NOT NULL,
   `created` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `cart_order_403f60f` (`user_id`)
@@ -302,7 +302,7 @@ CREATE TABLE `cart_order` (
 -- Структура таблицы `cart_orderoption`
 --
 
-CREATE TABLE `cart_orderoption` (
+CREATE TABLE IF NOT EXISTS `cart_orderoption` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `order_id` int(11) NOT NULL,
   `type_id` int(11) NOT NULL,
@@ -333,7 +333,7 @@ CREATE TABLE `cart_orderoption` (
 -- Структура таблицы `common_frames`
 --
 
-CREATE TABLE `common_frames` (
+CREATE TABLE IF NOT EXISTS `common_frames` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
   `img` varchar(150) NOT NULL,
@@ -357,7 +357,7 @@ INSERT INTO `common_frames` (`id`, `name`, `img`, `price`) VALUES
 -- Структура таблицы `common_packaging`
 --
 
-CREATE TABLE `common_packaging` (
+CREATE TABLE IF NOT EXISTS `common_packaging` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
   `img` varchar(150) NOT NULL,
@@ -380,7 +380,7 @@ INSERT INTO `common_packaging` (`id`, `name`, `img`, `price`) VALUES
 -- Структура таблицы `common_stretch`
 --
 
-CREATE TABLE `common_stretch` (
+CREATE TABLE IF NOT EXISTS `common_stretch` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
   `descr` varchar(255) NOT NULL,
@@ -404,7 +404,7 @@ INSERT INTO `common_stretch` (`id`, `name`, `descr`, `koef`, `defrow`) VALUES
 -- Структура таблицы `crop_crop`
 --
 
-CREATE TABLE `crop_crop` (
+CREATE TABLE IF NOT EXISTS `crop_crop` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) DEFAULT NULL,
   `nouser` varchar(32) NOT NULL,
@@ -420,6 +420,7 @@ CREATE TABLE `crop_crop` (
   `y1` int(11) NOT NULL,
   `x2` int(11) NOT NULL,
   `y2` int(11) NOT NULL,
+  `status` tinyint(1) NOT NULL,
   `created` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `crop_crop_403f60f` (`user_id`),
@@ -440,7 +441,7 @@ CREATE TABLE `crop_crop` (
 -- Структура таблицы `crop_cropsize`
 --
 
-CREATE TABLE `crop_cropsize` (
+CREATE TABLE IF NOT EXISTS `crop_cropsize` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
   `price` double NOT NULL,
@@ -474,7 +475,7 @@ INSERT INTO `crop_cropsize` (`id`, `name`, `price`, `width`, `height`, `defsize`
 -- Структура таблицы `django_admin_log`
 --
 
-CREATE TABLE `django_admin_log` (
+CREATE TABLE IF NOT EXISTS `django_admin_log` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `action_time` datetime NOT NULL,
   `user_id` int(11) NOT NULL,
@@ -589,7 +590,7 @@ INSERT INTO `django_admin_log` (`id`, `action_time`, `user_id`, `content_type_id
 -- Структура таблицы `django_content_type`
 --
 
-CREATE TABLE `django_content_type` (
+CREATE TABLE IF NOT EXISTS `django_content_type` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
   `app_label` varchar(100) NOT NULL,
@@ -634,7 +635,7 @@ INSERT INTO `django_content_type` (`id`, `name`, `app_label`, `model`) VALUES
 -- Структура таблицы `django_flatpage`
 --
 
-CREATE TABLE `django_flatpage` (
+CREATE TABLE IF NOT EXISTS `django_flatpage` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `url` varchar(100) NOT NULL,
   `title` varchar(200) NOT NULL,
@@ -659,7 +660,7 @@ INSERT INTO `django_flatpage` (`id`, `url`, `title`, `content`, `enable_comments
 -- Структура таблицы `django_flatpage_sites`
 --
 
-CREATE TABLE `django_flatpage_sites` (
+CREATE TABLE IF NOT EXISTS `django_flatpage_sites` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `flatpage_id` int(11) NOT NULL,
   `site_id` int(11) NOT NULL,
@@ -682,7 +683,7 @@ INSERT INTO `django_flatpage_sites` (`id`, `flatpage_id`, `site_id`) VALUES
 -- Структура таблицы `django_session`
 --
 
-CREATE TABLE `django_session` (
+CREATE TABLE IF NOT EXISTS `django_session` (
   `session_key` varchar(40) NOT NULL,
   `session_data` longtext NOT NULL,
   `expire_date` datetime NOT NULL,
@@ -702,9 +703,11 @@ INSERT INTO `django_session` (`session_key`, `session_data`, `expire_date`) VALU
 ('5a44398dda47abe879294fe1abd862bc', 'NjIwMGVjOTgwMmQxMmNiYTNiNTk3ZjJjYzhmNzE2YmVlN2MwZTQ5YTqAAn1xAShVEl9hdXRoX3Vz\nZXJfYmFja2VuZHECVSlkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZHED\nVQ1fYXV0aF91c2VyX2lkcQSKAQF1Lg==\n', '2012-02-07 22:39:15'),
 ('6f89bf7bb050c67fdc272d1e2d45da3b', 'OGM1NjExOWU0NjQxOWVlZmU3NmYwMzMyNDVkMTc2NjM0MmZkNjQzMDqAAn1xAShVEl9hdXRoX3Vz\nZXJfYmFja2VuZHECVSlkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZHED\nVQ1fYXV0aF91c2VyX2lkcQSKAQJ1Lg==\n', '2012-02-05 14:25:25'),
 ('a466c1eae6d26889928b4d362c5e50e0', 'Nzg1NGZhZjI2YzFlMjU2YjUyNjM2YWE1YTM5MTA4NzBkMDEzNmM0MTqAAn1xAVUEY2FydHECXXED\ncy4=\n', '2012-02-28 10:19:43'),
+('a90c1d174181c71cc52fa4f1cb306a2a', 'M2EzZDBiZDNhNzhhMmRkMDk4YzA5YjkyMzBjNzJlNjFiNzQyMzk0NTqAAn1xAShVBGNhcnRxAl1x\nA1UNX2F1dGhfdXNlcl9pZHEEigECVRJfYXV0aF91c2VyX2JhY2tlbmRxBVUpZGphbmdvLmNvbnRy\naWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmRxBlUFb3JkZXJxB4oBBXUu\n', '2012-03-22 10:33:46'),
 ('c4b7315883161ef1eaa9c45f582b8d0c', 'MDFkZjE0ZDQ2MzhmY2YwYmU2M2ZjNTY4MjA5NGI4ZDU5NzhiZGVkOTqAAn1xAVUEY2FydHECXXED\nKH1xBChVBm9wdF9pZHEFWCAAAAA5MThkNzJjM2FkMDQzODM1OGQ1MjUyYmM5NGFkNDI5OXEGVQNy\nZWdxB4hVB3R5cGVfaWRxCEsBdX1xCShVBm9wdF9pZHEKWCAAAAA3MTEzYzRhNDgyMGIzZmIyNjZm\nMGQwNjExNzAzYjc3M3ELVQNyZWdxDIhVB3R5cGVfaWRxDUsCdX1xDihVBm9wdF9pZHEPSwFVA3Jl\nZ3EQiFUHdHlwZV9pZHERSwN1fXESKFUGb3B0X2lkcRNYIAAAADYwZjViYTVmODE3YWY2NmE5YWNm\nYWJkNDE1NzhmNTU0cRRVA3JlZ3EViFUHdHlwZV9pZHEWSwF1fXEXKFUGb3B0X2lkcRhYIAAAADEy\nMjNjNTM3YjdkYzI1MmQ3YzAyM2JlODQzMGJhODUzcRlVA3JlZ3EaiFUHdHlwZV9pZHEbSwF1fXEc\nKFUGb3B0X2lkcR1YIAAAADE3ZTdmMjY2OTUzYmQ3MTlmOTQyZDFjMThjNjRlOTlkcR5VA3JlZ3Ef\niFUHdHlwZV9pZHEgSwF1fXEhKFUGb3B0X2lkcSJLAVUDcmVncSOJVQd0eXBlX2lkcSRLA3V9cSUo\nVQZvcHRfaWRxJlggAAAANmE1MDdjMGVlODI1ZTZmZTU3ZTJmNTE5YmU4ZDMyYWFxJ1UDcmVncSiJ\nVQd0eXBlX2lkcSlLAXV9cSooVQZvcHRfaWRxK1ggAAAAY2IzOGEzZWY1NzdiYzljZTc4MTFiN2Zm\nYThiMjc0NTlxLFUDcmVncS2JVQd0eXBlX2lkcS5LAnVlcy4=\n', '2012-02-19 09:38:05'),
 ('f61b0696ac60492fe5b028ad5f185d73', 'NWQ4ZjViMTZmMjA5MmI2ZTVmOWM4ZjMyZWRiMjlkZjEwZWQ2N2FkMTqAAn1xAShVCnRlc3Rjb29r\naWVxAlUGd29ya2VkcQNVEl9hdXRoX3VzZXJfYmFja2VuZHEEVSlkamFuZ28uY29udHJpYi5hdXRo\nLmJhY2tlbmRzLk1vZGVsQmFja2VuZHEFVQ1fYXV0aF91c2VyX2lkcQaKAQJ1Lg==\n', '2011-12-24 12:51:31'),
-('fd47239d8b5d82e2b576c43f3c9fcc01', 'OGM1NjExOWU0NjQxOWVlZmU3NmYwMzMyNDVkMTc2NjM0MmZkNjQzMDqAAn1xAShVEl9hdXRoX3Vz\nZXJfYmFja2VuZHECVSlkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZHED\nVQ1fYXV0aF91c2VyX2lkcQSKAQJ1Lg==\n', '2012-01-11 17:45:49');
+('fd47239d8b5d82e2b576c43f3c9fcc01', 'OGM1NjExOWU0NjQxOWVlZmU3NmYwMzMyNDVkMTc2NjM0MmZkNjQzMDqAAn1xAShVEl9hdXRoX3Vz\nZXJfYmFja2VuZHECVSlkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZHED\nVQ1fYXV0aF91c2VyX2lkcQSKAQJ1Lg==\n', '2012-01-11 17:45:49'),
+('fff1a7c42843a17756c84a4e552dd973', 'MDkyOGM3ODQwNmNkMzRmMzBmYjliYTNiMjAyOWQ5N2FjZDg1OTA1NjqAAn1xAShVEl9hdXRoX3Vz\nZXJfYmFja2VuZHECVSlkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZHED\nVQ1fYXV0aF91c2VyX2lkcQSKAQJVBGNhcnRxBV1xBlUFb3JkZXJxB4oBAnUu\n', '2012-03-13 10:17:59');
 
 -- --------------------------------------------------------
 
@@ -712,7 +715,7 @@ INSERT INTO `django_session` (`session_key`, `session_data`, `expire_date`) VALU
 -- Структура таблицы `django_site`
 --
 
-CREATE TABLE `django_site` (
+CREATE TABLE IF NOT EXISTS `django_site` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `domain` varchar(100) NOT NULL,
   `name` varchar(50) NOT NULL,
@@ -732,7 +735,7 @@ INSERT INTO `django_site` (`id`, `domain`, `name`) VALUES
 -- Структура таблицы `mosaic_mosaic`
 --
 
-CREATE TABLE `mosaic_mosaic` (
+CREATE TABLE IF NOT EXISTS `mosaic_mosaic` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) DEFAULT NULL,
   `nouser` varchar(32) NOT NULL,
@@ -751,6 +754,7 @@ CREATE TABLE `mosaic_mosaic` (
   `f_6` varchar(32) NOT NULL,
   `f_7` varchar(32) NOT NULL,
   `f_8` varchar(32) NOT NULL,
+  `status` tinyint(1) NOT NULL,
   `created` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `mosaic_mosaic_403f60f` (`user_id`),
@@ -770,7 +774,7 @@ CREATE TABLE `mosaic_mosaic` (
 -- Структура таблицы `mosaic_mosaicsize`
 --
 
-CREATE TABLE `mosaic_mosaicsize` (
+CREATE TABLE IF NOT EXISTS `mosaic_mosaicsize` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
   `price` double NOT NULL,
@@ -804,7 +808,7 @@ INSERT INTO `mosaic_mosaicsize` (`id`, `name`, `price`, `width`, `height`, `defs
 -- Структура таблицы `puzzle_puzzle`
 --
 
-CREATE TABLE `puzzle_puzzle` (
+CREATE TABLE IF NOT EXISTS `puzzle_puzzle` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) DEFAULT NULL,
   `nouser` varchar(32) NOT NULL,
@@ -819,6 +823,7 @@ CREATE TABLE `puzzle_puzzle` (
   `y1` int(11) NOT NULL,
   `x2` int(11) NOT NULL,
   `y2` int(11) NOT NULL,
+  `status` tinyint(1) NOT NULL,
   `created` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `puzzle_puzzle_403f60f` (`user_id`),
@@ -839,7 +844,7 @@ CREATE TABLE `puzzle_puzzle` (
 -- Структура таблицы `puzzle_puzzlesize`
 --
 
-CREATE TABLE `puzzle_puzzlesize` (
+CREATE TABLE IF NOT EXISTS `puzzle_puzzlesize` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
   `img` varchar(150) NOT NULL,
@@ -964,4 +969,3 @@ ALTER TABLE `puzzle_puzzle`
   ADD CONSTRAINT `img_stretch_id_refs_id_a88c608` FOREIGN KEY (`img_stretch_id`) REFERENCES `common_stretch` (`id`),
   ADD CONSTRAINT `packaging_id_refs_id_1d4661ec` FOREIGN KEY (`packaging_id`) REFERENCES `common_packaging` (`id`),
   ADD CONSTRAINT `user_id_refs_id_304c482e` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`);
-SET FOREIGN_KEY_CHECKS=1;

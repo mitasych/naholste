@@ -21,11 +21,13 @@ class Order(models.Model):
 	email = models.EmailField(u'Емаил', max_length=100, blank=False, editable=False)
 	name = models.CharField(u'Имя', max_length=255, blank=False, default='', editable=False)
 	phone = models.CharField(u'Телефон', max_length=50, blank=False, default='', editable=False)
+	status = models.BooleanField(u'Статус', default=False)
 	created = models.DateTimeField(u'Создан', auto_now=True, editable=False)
 
 	class Meta:
 		verbose_name = u'Список заказов'
 		verbose_name_plural = u'Список заказов'
+		ordering = ['status', '-created']
 
 	def __unicode__(self):
 		return u'№%s' % (self.id,)
@@ -50,6 +52,7 @@ class OrderOption(models.Model):
 	class Meta:
 		verbose_name = u'Опции заказа'
 		verbose_name_plural = u'Опции заказа'
+		ordering = ['type_id', 'id']
 
 	def __unicode__(self):
 		return self.options
