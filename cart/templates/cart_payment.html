@@ -15,6 +15,10 @@
 								function WebMoney() {
 									$('#web_money_form').submit();
 								}
+								///
+								function KKB() {
+									$('#SendOrder').submit();
+								}
 							</script>
 							<a href="javascript: WebMoney();">
 								<img src="/static/images/webmoney.jpg" alt="" />
@@ -27,10 +31,13 @@
 							{% if kzcom_mess %}
 								Error: {{ kzcom_mess }}
 							{% else %}
-								<form name="SendOrder" method="post" action="{{ kzcom_action }}">
+								<form id="SendOrder" name="SendOrder" method="post" action="{{ kzcom_action }}">
 									{{ kzcom_form.as_p }}
-									 <input type="submit" name="GotoPay"  value="Оплатить" >
+									 <input type="hidden" name="GotoPay"  value="Оплатить" >
 								</form>
+								<a href="javascript: KKB();">
+									<img src="/static/images/kkb.jpg" alt="" />
+								</a>
 							{% endif %}
 						</td>
 					</tr>
