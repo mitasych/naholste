@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<script src="http://api-maps.yandex.ru/1.1/index.xml?key=ANkSV08BAAAA5jyZAwIAphroj2zO4aJVU_EKVnLdulgE7zIAAAAAAAAAAAC8XRX-f03F9mwBJ3vPNxKV9vxDpA==" type="text/javascript"></script>
+<script type="text/javascript">
+	window.onload = function () {
+		var map = new YMaps.Map(document.getElementById("YMapsID"));
+		map.setCenter(new YMaps.GeoPoint(76.969109,43.251552), 16);
+		map.addControl(new YMaps.TypeControl());       
+		map.addControl(new YMaps.ToolBar());           
+		map.addControl(new YMaps.Zoom()); 
+		
+		var placemark = new YMaps.Placemark(new YMaps.GeoPoint(76.969109,43.251552));
+		placemark.description = "улица Кабанбай батыра, 1";
+		map.addOverlay(placemark);
+	}
+</script>
+
+	<div class="main"><h1>Контактная информация</h1></div>
+	<div class="container_24">
+		<div class="wrapper">
+
+			<article class="grid_8 text2">
+                <div class="border indent-bot">
+					<div id="YMapsID"></div>
+                </div>
+                <strong>Lorem ipsum dolor amet consectetur</strong><br>
+                vestibulum ut risus vitae commodo pharetra nullam consequat scelerisque urna, sed sollicitu- din elit lobortis varius. Suspendisse ac venenatis velit. In laoreet urna quis arcu accumsan egestas. Duis tempor, nibh in varius auctor, metus felis malesuada dui, sed pellentesque risus quam vitae urna. In hac habitasse platea
+            </article>
+            <article class="grid_11 prefix_1">
+                <form id="contact-form" action="/contacts/" method="post">{% csrf_token %}
+					{{ form.non_field_errors }}
+                    <div class="success"> Contact form submitted! We will be in touch soon.</div>
+                    <fieldset>
+                        <label class="name">
+							{{ form.subject.errors }}
+                            <input id="id_subject" type="text" name="subject" maxlength="100" value="Тема:">
+                            <span class="error">*Введите корректную тему, пожалуйста.</span>
+                        </label>
+                        <label class="email">
+							{{ form.sender.errors }}
+							<input type="text" name="sender" id="id_sender" value="Ваш e-mail:">
+                            <span class="error">*Введите корректный e-mail адрес, пожалуйста.</span>
+                            <span class="empty">*Это поле не может быть пустым.</span>
+                        </label>
+                        <label class="your_phone">
+                            <input type="text" name="phone" id="id_phone" value="Телефон:">
+                        </label>
+                        <label class="message">
+							{{ form.message.errors }}
+							<textarea id="id_message" rows="10" cols="40" name="message">Сообщение:</textarea>
+                            <span class="error">*Слишком короткое сообщение.</span>
+                            <span class="empty">*Это поле не может быть пустым.</span>
+                        </label>
+                        <label>Отправить Вам копию?
+							<input type="checkbox" name="cc_myself" id="id_cc_myself" disabled="disabled" />
+						</label>
+                        <div class="btns"><a class="button" data-type="reset">очистить</a><a class="button" onclick="document.getElementById('contact-form').submit()">отправить</a></div>
+                    </fieldset>
+                </form>
+            </article>
+			<script type="text/javascript">
+				$('#id_sender').blur(function() {
+					if($(this).val() != ''){
+						 $('#id_cc_myself').removeAttr("disabled");
+					}
+					else{
+						 $('#id_cc_myself').attr("disabled", "disabled");
+					}
+				});
+			</script>
+		</div>
+	</div>
+
+{% endblock %}

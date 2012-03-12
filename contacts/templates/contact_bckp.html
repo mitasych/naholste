@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+	<div class="main"><h1>Форма контактов</h1></div>
+	<div class="container_24">
+		<div class="wrapper">
+
+			<form action="/contacts/" method="post">
+			{{ form.non_field_errors }}
+				<table>
+					<tr>
+						<td>
+							Тема
+						</td>
+						<td>
+							{{ form.subject.errors }}
+							{{ form.subject }}
+						</td>
+					</tr>	
+					<tr>
+						<td>
+							Сообщение
+						</td>
+						<td>
+							{{ form.message.errors }}
+							{{ form.message }}
+						</td>
+					</tr>	
+					<tr>
+						<td>
+							Ваш E-mail
+						</td>
+						<td>
+							{{ form.sender.errors }}
+							{{ form.sender }}
+						</td>
+					</tr>	
+					<tr>
+						<td>
+							Отправить копию?
+						</td>
+						<td>
+							{{ form.cc_myself.errors }}
+							{{ form.cc_myself }}
+						</td>
+					</tr>	
+					<tr>
+						<td>
+							
+						</td>
+						<td>
+							<input type="submit" value="Отправить" />
+						</td>
+					</tr>	
+				</table>
+			</form>
+		</div>
+	</div>
+
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+	<div class="main"><h1>Галерея</h1></div>
+	<div class="container_24">
+		<div class="wrapper">
+			{% for i in images %}
+				<div class="gallery-item">
+					<div class="image-wrapper">
+						<a href = /gallery/crop/?img={{ i.img }}>
+							<img src="{{ MEDIA_URL }}{{ i.img }}" />
+						</a>
+					</div>
+					<div class="item-title">
+						<a href = /gallery/crop/?img={{ i.img }}>
+							{{ i.name }}
+						</a>
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+		<script type="text/javascript">
+			$(window).load(function() {
+				var max_size = 200;
+				$(".gallery-item img").each(function() {
+				  if ($(this).height() > $(this).width()) {
+				    var h = max_size;
+				    var w = Math.ceil($(this).width() / $(this).height() * max_size);
+				  } else {
+					  
+				    var w = max_size;
+				    var h = Math.ceil($(this).height() / $(this).width() * max_size);
+				  }
+				  var mar_top = (200 - h) / 2;
+				  //var mar_left = (200 - w) / 2;
+				  $(this).css({ "height": h, "width": w, "margin-top":  mar_top, "display": "inline"});
+				});
+			});
+		</script>
+	</div>
+{% endblock %}
