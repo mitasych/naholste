@@ -11,12 +11,34 @@ TYPE_CHOICES = (
 	(3, u'Коллаж'),
 )
 
+class Shiping(models.Model):
+
+	name = models.CharField(u'Название', max_length=100, blank=False)
+	price = models.FloatField(u'Сумма', blank=False)
+	sort_order = models.IntegerField(u'Сортировка', blank=False, default=0)
+	defrow = models.BooleanField(u'Город по умолчанию', default=False)
+
+	def __unicode__(self):
+		return u'%s - %.2f' % (self.name, self.price)
+
+	class Meta:
+		verbose_name = u'Доставка'
+		verbose_name_plural = u'Доставка'
+		ordering = ['sort_order', 'name']
+
+	def save(self):
+		if self.defrow:
+			Shiping.objects.all().update(defrow=False)
+		###
+		super(Shiping, self).save()
+
 class Order(models.Model):
 
 	user = models.ForeignKey(User, blank=True, null=True, verbose_name=u'Пользователь')
 	nouser = models.CharField(u'Гость', blank=True, default='', max_length=32)
 	price = models.FloatField(u'Общая сумма', blank=False, editable=False, default=0)
-	shiping_price = models.FloatField(u'Доставка', blank=False, editable=False, default=0)
+	shiping = models.ForeignKey(Shiping, blank=True, null=True, verbose_name=u'Доставка')
+	shiping_price = models.FloatField(u'Сумма доставки', blank=False, editable=False, default=0)
 	address = models.CharField(u'Адрес доставки', max_length=255, blank=False, default='', editable=False)
 	email = models.EmailField(u'Емаил', max_length=100, blank=False, editable=False)
 	name = models.CharField(u'Имя', max_length=255, blank=False, default='', editable=False)

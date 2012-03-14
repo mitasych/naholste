@@ -24,6 +24,17 @@ class CartMiddleware(object):
 					request.CART.set_order(order)
 			except:
 				pass
+		###
+		shiping = request.session.get('shiping', None)
+		###
+		if shiping is not None:
+			try:
+				shiping = int(shiping)
+				###
+				if shiping > 0:
+					request.CART.set_shiping(shiping)
+			except:
+				pass
 
 	def process_response(self, request, response):
 		if hasattr(request, 'CART'):
@@ -37,8 +48,16 @@ class CartMiddleware(object):
 			###
 			if order is not None:
 				request.session['order'] = order.id
+			###
+			shiping = request.CART.get_shiping()
+			###
+			if shiping is not None:
+				request.session['shiping'] = shiping.id
 		else:
 			if hasattr(request, 'session'):
 				request.session['order'] = None
+			###
+			if hasattr(request, 'session'):
+				request.session['shiping'] = None
 		###
 		return response

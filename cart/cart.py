@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 
 from django.contrib.sites.models import Site
-from collage.cart.models import Order
+from collage.cart.models import Order, Shiping
 
 class Cart(object):
 
 	data = []
 	domain = ''
 	order = None
+	shiping = None
 
 	def __init__(self, data):
 		self.domain = Site.objects.get_current().name
@@ -71,5 +72,14 @@ class Cart(object):
 	def get_order(self):
 		if Order.objects.filter(pk=self.order).exists():
 			return Order.objects.get(pk=self.order)
+		else:
+			return None
+
+	def set_shiping(self, shiping_id=0):
+		self.shiping = shiping_id
+
+	def get_shiping(self):
+		if Shiping.objects.filter(pk=self.shiping).exists():
+			return Shiping.objects.get(pk=self.shiping)
 		else:
 			return None

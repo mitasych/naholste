@@ -5,10 +5,11 @@
 	<div class="container_24">
 		<div class="wrapper">
 			<div class="list_cart">
-				<center>
-					<p><input type="radio" checked="checked"> Доставка курьером</p>
-					<p><input type="button" onclick="document.location='/cart/order/';" value="Далее" /></p> 
-				</center>
+				<form action="" method="post">
+					{% csrf_token %}
+					{{ form.as_p }}
+					<p><input type="submit" value="Далее" /></p>
+				</form> 
 			</div>
 		</div>
 	</div>

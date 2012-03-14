@@ -6,6 +6,10 @@ import os
 from PIL import Image
 from math import floor
 
+t = tuple((k, 'name - %s'% k) for k in xrange(10))
+
+print t
+
 
 www = [
 	'1',

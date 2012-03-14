@@ -5,7 +5,12 @@ from settings import *
 from django import forms
 from django.forms.util import ErrorList
 from django.core.exceptions import ValidationError
+from django.forms.widgets import RadioSelect
+
 from collage.account.forms import AuthorizationForm
+from collage.cart.models import Shiping
+
+SHIPING_CHOICE = tuple((s.id, u'%s - %.02f тенге' % (s.name, s.price)) for s in Shiping.objects.all())
 
 def valid_phone(val):
 	if not re.compile(r"^[\d\-\(\)\s]*$").match(val):
@@ -68,3 +73,6 @@ class AuthCartForm(AuthorizationForm):
 			errors_on_separate_row = False
 		)
 	
+class ShipingForm(forms.Form):
+
+	shiping = forms.ChoiceField(label='', widget=RadioSelect(), required=True, choices=SHIPING_CHOICE)

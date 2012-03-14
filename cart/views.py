@@ -21,8 +21,9 @@ from collage.common.decorators import reload, reload_data
 from collage.crop.models import CropSize, Crop
 from collage.puzzle.models import PuzzleSize, Puzzle
 from collage.mosaic.models import MosaicSize, Mosaic
-from collage.cart.models import Order, OrderOption
-from collage.cart.forms import OrderForm, AuthCartForm
+from collage.cart.models import Order, OrderOption, Shiping
+from collage.cart.forms import OrderForm, AuthCartForm, ShipingForm
+from collage.cart.decorators import choice_shiping
 
 from collage.crop.views import DataImg as Dic
 from collage.puzzle.views import DataImg as Dip
@@ -278,7 +279,7 @@ class OrderFiles(object):
 
 	zipf = ''
 
-	def __init__(self, order_id=0, options=[]):
+	def __init__(self, order_id=0, options=[], order=None):
 		order_pth = '/'.join([ORDERS_DIR, str(order_id)])
 		order_crop = '/'.join([order_pth, 'crop'])
 		order_puzzle = '/'.join([order_pth, 'puzzle'])
@@ -286,6 +287,23 @@ class OrderFiles(object):
 		###
 		if not os.path.isdir(order_pth):
 			os.makedirs(order_pth)
+		###
+		with open('/'.join([order_pth, 'order.txt']), 'w') as f:
+			txt = '\n'.join([
+				u'Емаил - %s' % order.email,
+				u'Адрес - %s' % order.address,
+				u'Телефон - %s' % order.phone,
+				u'Заказчик - %s' % order.name,
+				u'Доставка - %s' % order.shiping.__unicode__(),
+				u'Сумма доставки - %.2f' % order.shiping_price,
+				u'Общая сумма - %.2f' % order.price,
+			])
+			###
+			s = unicode(txt).encode('utf-8') 
+			###
+			f.write(s)
+			###
+			f.close()
 		###
 		for o in options:
 			if o.type_id == 1:
@@ -417,7 +435,7 @@ class HiddenWork(threading.Thread):
 				if not order.status:
 					options = OrderOption.objects.order_by('type_id').filter(order=order)
 					### Формируем данные для админа
-					of = OrderFiles(self.order_id, options)
+					of = OrderFiles(self.order_id, options, order)
 					###
 					crop_option = []
 					puzzle_option = []
@@ -555,8 +573,36 @@ def log_in(request):
 	return render(request, 'cart_login.html', data)
 
 def shiping(request):
-	return render(request, 'cart_shiping.html', {})
+	if request.method == 'POST':
+		form = ShipingForm(request.POST)
+		###
+		if form.is_valid():
+			send_data = form.cleaned_data
+			###
+			try:
+				request.CART.set_shiping(int(send_data['shiping']))
+			except:
+				pass
+		###
+		return HttpResponseRedirect(reverse('cart.views.order'))
+	###
+	shiping = request.CART.get_shiping()
+	###
+	if shiping is None:
+		shiping = Shiping.objects.get(defrow=True)
+		shiping_id = shiping.id
+	else:
+		shiping_id = shiping.id
+	###
+	data = {
+		'shiping':Shiping.objects.all(),
+		'shiping_id':shiping_id,
+		'form':ShipingForm(initial={'shiping':shiping_id})
+	}
+	###
+	return render(request, 'cart_shiping.html', data)
 
+@choice_shiping()
 def order(request):
 	dic = Dic()
 	dip = Dip()
@@ -564,6 +610,8 @@ def order(request):
 	user = request.user
 	auth = (user.is_authenticated() and user.is_active) and True or False
 	is_create = False
+	###
+	shiping = request.CART.get_shiping()
 	###
 	cd = CropData(request)
 	crop_option = cd.get()
@@ -574,7 +622,8 @@ def order(request):
 	md = MosaicData(request)
 	mosaic_option = md.get()
 	###
-	total = cd.total + pd.total + md.total
+	summ = cd.total + pd.total + md.total
+	total = summ + shiping.price
 	###
 	if (len(crop_option) == 0) and (len(puzzle_option) == 0) and (len(mosaic_option) == 0):
 		messages.error(request, 'Ваша корзина пуста')
@@ -591,7 +640,8 @@ def order(request):
 			###
 			order = Order.objects.create(
 				price = total,
-				shiping_price = 0,
+				shiping = shiping,
+				shiping_price = shiping.price,
 				address = send_data['address'],
 				email = send_data['email'],
 				name = send_data['name'],
@@ -697,15 +747,19 @@ def order(request):
 		'crop_option':crop_option,
 		'puzzle_option':puzzle_option,
 		'mosaic_option':mosaic_option,
-		'total':total,
+		'shiping':'%.2f' % shiping.price,
+		'summ':'%.2f' % summ,
+		'total':'%.2f' % total,
 	}
 	###
 	return render(request, 'cart_order.html', data)
 
+@choice_shiping()
 def payment(request):
 	user = request.user
 	auth = (user.is_authenticated() and user.is_active) and True or False
 	###
+	shiping = request.CART.get_shiping()
 	order = request.CART.get_order()
 	###
 	if order is None:
