@@ -37,4 +37,3 @@ class CropForm(forms.ModelForm):
 class UploadForm(forms.Form):
 	
 	file = forms.ImageField(widget=forms.FileInput(attrs={}), label='Изображение')
-

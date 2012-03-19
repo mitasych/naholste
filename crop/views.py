@@ -94,6 +94,13 @@ class DataImg(object):
 		###
 		return ret
 
+def upload_progress(request):
+	data = request.session.get('progressbar', None)
+	###
+	if data is None: data = {'stop':1}
+	###
+	return HttpResponse(simplejson.dumps(data))
+
 @reload(Crop)
 def upload(request):
 	user = request.user
@@ -104,6 +111,8 @@ def upload(request):
 	data = {
 		'form':UploadForm(),
 		'thumbs':list(Crop.objects.filter(q)),
+		'upload_message':u'Изображение загружено, выполняется пост обработка на сервере...',
+		'timer':TIMER_UPLOAD_PROGRESS,
 	}
 	###
 	return render(request, 'crop_upload.html', data)
@@ -146,7 +155,7 @@ def upload_file(request):
 				###
 				p.save()
 				###
-				json = {'error':0, 'message':u'Файл успешно загружен', 'id':p.id,}
+				json = {'error':0, 'message':u'Изображение обработано', 'id':p.id,}
 			else:
 				json = {'error':1, 'message':u"Ошибка: %s" % img.error, 'id':'',}
 		else:

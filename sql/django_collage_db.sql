@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: localhost
--- Время создания: Мар 08 2012 г., 09:35
+-- Время создания: Мар 19 2012 г., 08:22
 -- Версия сервера: 5.5.8
 -- Версия PHP: 5.3.5
 
@@ -117,7 +117,7 @@ CREATE TABLE IF NOT EXISTS `auth_permission` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `content_type_id` (`content_type_id`,`codename`),
   KEY `auth_permission_1bb8f392` (`content_type_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=100 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=109 ;
 
 --
 -- Дамп данных таблицы `auth_permission`
@@ -195,7 +195,16 @@ INSERT INTO `auth_permission` (`id`, `name`, `content_type_id`, `codename`) VALU
 (96, 'Can delete Список размеров и цен', 32, 'delete_mosaicsize'),
 (97, 'Can add mosaic', 33, 'add_mosaic'),
 (98, 'Can change mosaic', 33, 'change_mosaic'),
-(99, 'Can delete mosaic', 33, 'delete_mosaic');
+(99, 'Can delete mosaic', 33, 'delete_mosaic'),
+(100, 'Can add Альбомы', 34, 'add_album'),
+(101, 'Can change Альбомы', 34, 'change_album'),
+(102, 'Can delete Альбомы', 34, 'delete_album'),
+(103, 'Can add Изображение', 35, 'add_images'),
+(104, 'Can change Изображение', 35, 'change_images'),
+(105, 'Can delete Изображение', 35, 'delete_images'),
+(106, 'Can add Доставка', 36, 'add_shiping'),
+(107, 'Can change Доставка', 36, 'change_shiping'),
+(108, 'Can delete Доставка', 36, 'delete_shiping');
 
 -- --------------------------------------------------------
 
@@ -224,8 +233,8 @@ CREATE TABLE IF NOT EXISTS `auth_user` (
 --
 
 INSERT INTO `auth_user` (`id`, `username`, `first_name`, `last_name`, `email`, `password`, `is_staff`, `is_active`, `is_superuser`, `last_login`, `date_joined`) VALUES
-(1, 'aries.ua@gmail.com', '', '', 'aries.ua@gmail.com', 'sha1$d0bcd$9bbf973b02708ff46813b005f6f00ad505c19ad8', 1, 1, 1, '2012-03-01 20:32:51', '2011-12-09 10:00:59'),
-(2, 'aries.forum@gmail.com', '', '', 'aries.forum@gmail.com', 'sha1$72e79$fc2e36ea86668febe872ca776ae4504b33359300', 0, 1, 0, '2012-03-02 10:10:26', '2011-12-09 10:02:30');
+(1, 'aries.ua@gmail.com', '', '', 'aries.ua@gmail.com', 'sha1$d0bcd$9bbf973b02708ff46813b005f6f00ad505c19ad8', 1, 1, 1, '2012-03-13 17:13:09', '2011-12-09 10:00:59'),
+(2, 'aries.forum@gmail.com', '', '', 'aries.forum@gmail.com', 'sha1$72e79$fc2e36ea86668febe872ca776ae4504b33359300', 0, 1, 0, '2012-03-17 08:51:36', '2011-12-09 10:02:30');
 
 -- --------------------------------------------------------
 
@@ -280,6 +289,7 @@ CREATE TABLE IF NOT EXISTS `cart_order` (
   `user_id` int(11) DEFAULT NULL,
   `nouser` varchar(32) NOT NULL,
   `price` double NOT NULL,
+  `shiping_id` int(11) DEFAULT NULL,
   `shiping_price` double NOT NULL,
   `address` varchar(255) NOT NULL,
   `email` varchar(100) NOT NULL,
@@ -288,13 +298,19 @@ CREATE TABLE IF NOT EXISTS `cart_order` (
   `status` tinyint(1) NOT NULL,
   `created` datetime NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `cart_order_403f60f` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  KEY `cart_order_403f60f` (`user_id`),
+  KEY `shiping_id` (`shiping_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
 
 --
 -- Дамп данных таблицы `cart_order`
 --
 
+INSERT INTO `cart_order` (`id`, `user_id`, `nouser`, `price`, `shiping_id`, `shiping_price`, `address`, `email`, `name`, `phone`, `status`, `created`) VALUES
+(1, 2, '', 10, NULL, 0, 'Кирова 222, кв 56', 'aries.forum@gmail.com', 'Готовский Дмитрий', '56-83-23', 0, '2012-03-08 12:41:48'),
+(2, 2, '', 53, NULL, 0, 'Кирова 222, кв 56', 'aries.forum@gmail.com', 'Готовский Дмитрий', '56-83-23', 0, '2012-03-14 09:14:38'),
+(3, 2, '', 54, NULL, 0, 'Кирова 222, кв 56', 'aries.forum@gmail.com', 'Готовский Дмитрий', '56-83-23', 0, '2012-03-14 09:27:48'),
+(4, 2, '', 56, 4, 15, 'Кирова 222, кв 56', 'aries.forum@gmail.com', 'Готовский Дмитрий', '56-83-23', 0, '2012-03-14 09:35:25');
 
 -- --------------------------------------------------------
 
@@ -320,12 +336,41 @@ CREATE TABLE IF NOT EXISTS `cart_orderoption` (
   `options` longtext NOT NULL,
   PRIMARY KEY (`id`),
   KEY `cart_orderoption_7cc8fcf5` (`order_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
 
 --
 -- Дамп данных таблицы `cart_orderoption`
 --
 
+INSERT INTO `cart_orderoption` (`id`, `order_id`, `type_id`, `price`, `img`, `f_0`, `f_1`, `f_2`, `f_3`, `f_4`, `f_5`, `f_6`, `f_7`, `f_8`, `options`) VALUES
+(1, 2, 1, 41, '50621df2101636757766b5f57589c972', '', '', '', '', '', '', '', '', '', 'Натяжка - Стандартная натяжка\nОриентация - Книжная\nРазмер - 40x30 см\nЭффекты - Черно-белое\nРамка - A052-1299\nУпаковка - gold\nВерхняя координата X - 506\nВерхняя координата Y - 0\nНижняя координата X - 1405\nНижняя координата Y - 1200\nКоличество - 1\nЦена - 41.0\nСумма - 41.0'),
+(2, 3, 1, 41, '50621df2101636757766b5f57589c972', '', '', '', '', '', '', '', '', '', 'Натяжка - Стандартная натяжка\nОриентация - Книжная\nРазмер - 40x30 см\nЭффекты - Черно-белое\nРамка - A052-1299\nУпаковка - gold\nВерхняя координата X - 506\nВерхняя координата Y - 0\nНижняя координата X - 1405\nНижняя координата Y - 1200\nКоличество - 1\nЦена - 41.0\nСумма - 41.0'),
+(3, 4, 1, 41, '50621df2101636757766b5f57589c972', '', '', '', '', '', '', '', '', '', 'Натяжка - Стандартная натяжка\nОриентация - Книжная\nРазмер - 40x30 см\nЭффекты - Черно-белое\nРамка - A052-1299\nУпаковка - gold\nВерхняя координата X - 506\nВерхняя координата Y - 0\nНижняя координата X - 1405\nНижняя координата Y - 1200\nКоличество - 1\nЦена - 41.0\nСумма - 41.0');
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `cart_shiping`
+--
+
+CREATE TABLE IF NOT EXISTS `cart_shiping` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL,
+  `price` double NOT NULL,
+  `sort_order` int(11) NOT NULL,
+  `defrow` tinyint(1) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
+
+--
+-- Дамп данных таблицы `cart_shiping`
+--
+
+INSERT INTO `cart_shiping` (`id`, `name`, `price`, `sort_order`, `defrow`) VALUES
+(1, 'Алматы', 10, 0, 1),
+(2, 'Астана', 12, 0, 0),
+(3, 'Караганда', 13, 0, 0),
+(4, 'Шымкент', 15, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -487,7 +532,7 @@ CREATE TABLE IF NOT EXISTS `django_admin_log` (
   PRIMARY KEY (`id`),
   KEY `django_admin_log_403f60f` (`user_id`),
   KEY `django_admin_log_1bb8f392` (`content_type_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=119 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=128 ;
 
 --
 -- Дамп данных таблицы `django_admin_log`
@@ -582,7 +627,16 @@ INSERT INTO `django_admin_log` (`id`, `action_time`, `user_id`, `content_type_id
 (115, '2012-02-19 19:09:53', 1, 32, '9', '12x16 см', 1, ''),
 (116, '2012-02-19 19:10:17', 1, 32, '10', '16x20 см', 1, ''),
 (117, '2012-02-19 19:10:46', 1, 32, '11', '24x30 см', 1, ''),
-(118, '2012-02-19 19:11:08', 1, 32, '12', '28x35 см', 1, '');
+(118, '2012-02-19 19:11:08', 1, 32, '12', '28x35 см', 1, ''),
+(119, '2012-03-12 17:19:01', 1, 9, '1', '/about/ -- О нас', 2, 'Изменен sites.'),
+(120, '2012-03-12 17:19:08', 1, 9, '2', '/faq/ -- Вопросы и ответы', 2, 'Изменен sites.'),
+(121, '2012-03-12 17:19:15', 1, 9, '3', '/faq/pay/ -- Доставка и оплата', 2, 'Изменен sites.'),
+(122, '2012-03-13 12:01:19', 1, 36, '1', 'Алматы', 1, ''),
+(123, '2012-03-13 12:02:04', 1, 36, '2', 'Астана', 1, ''),
+(124, '2012-03-13 12:02:19', 1, 36, '3', 'Караганда', 1, ''),
+(125, '2012-03-13 12:02:58', 1, 36, '4', 'Шымкент', 1, ''),
+(126, '2012-03-13 17:14:14', 1, 36, '2', 'Астана - 12.00', 2, 'Изменен defrow.'),
+(127, '2012-03-13 17:14:34', 1, 36, '1', 'Алматы - 10.00', 2, 'Изменен defrow.');
 
 -- --------------------------------------------------------
 
@@ -597,7 +651,7 @@ CREATE TABLE IF NOT EXISTS `django_content_type` (
   `model` varchar(100) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `app_label` (`app_label`,`model`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=34 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=37 ;
 
 --
 -- Дамп данных таблицы `django_content_type`
@@ -627,7 +681,10 @@ INSERT INTO `django_content_type` (`id`, `name`, `app_label`, `model`) VALUES
 (30, 'Фото на холсте - Список размеров и цен', 'crop', 'cropsize'),
 (31, 'crop', 'crop', 'crop'),
 (32, 'Список размеров и цен', 'mosaic', 'mosaicsize'),
-(33, 'mosaic', 'mosaic', 'mosaic');
+(33, 'mosaic', 'mosaic', 'mosaic'),
+(34, 'Альбомы', 'gallery', 'album'),
+(35, 'Изображение', 'gallery', 'images'),
+(36, 'Доставка', 'cart', 'shiping');
 
 -- --------------------------------------------------------
 
@@ -645,14 +702,16 @@ CREATE TABLE IF NOT EXISTS `django_flatpage` (
   `registration_required` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `django_flatpage_a4b49ab` (`url`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
 
 --
 -- Дамп данных таблицы `django_flatpage`
 --
 
 INSERT INTO `django_flatpage` (`id`, `url`, `title`, `content`, `enable_comments`, `template_name`, `registration_required`) VALUES
-(1, '/about/', 'О сайте', 'COMING SOON...', 0, '', 0);
+(1, '/about/', 'О нас', '<p>\r\n	Интернет магазин &laquo;NaHolste.kz&raquo; работает на базе Центра Широкоформатной Печати &laquo;Мегапринт&raquo; - <a href="http://www.megaprint.kz" target="_blank">www.megaprint.kz&nbsp;</a></p>\r\n<div>\r\n	&laquo;Мегапринт&raquo; работает на рынке наружной рекламы с 2003 года.</div>\r\n<div>\r\n	&nbsp;</div>\r\n<div>\r\n	Мы имеем огромный опыт работы в сфере наружной рекламы и широкоформатной печати.</div>\r\n<div>\r\n	&nbsp;</div>\r\n<div>\r\n	Печать картин производится японскими высококачественными широкоформатными принтерами &laquo;Roland&raquo;.</div>\r\n<div>\r\n	&nbsp;</div>\r\n<div>\r\n	Наши дизайнеры проведут всю работу, связанную с цветовой коррекцией изображения.</div>\r\n', 0, '', 0),
+(2, '/faq/', 'Вопросы и ответы', '<p>\r\n	Вопросы и ответы</p>\r\n', 0, '', 0),
+(3, '/faq/pay/', 'Доставка и оплата', '<p>\r\n	Доставка и оплата</p>\r\n', 0, '', 0);
 
 -- --------------------------------------------------------
 
@@ -668,14 +727,16 @@ CREATE TABLE IF NOT EXISTS `django_flatpage_sites` (
   UNIQUE KEY `flatpage_id` (`flatpage_id`,`site_id`),
   KEY `django_flatpage_sites_21210108` (`flatpage_id`),
   KEY `django_flatpage_sites_6223029` (`site_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
 
 --
 -- Дамп данных таблицы `django_flatpage_sites`
 --
 
 INSERT INTO `django_flatpage_sites` (`id`, `flatpage_id`, `site_id`) VALUES
-(1, 1, 1);
+(2, 1, 1),
+(3, 2, 1),
+(4, 3, 1);
 
 -- --------------------------------------------------------
 
@@ -698,13 +759,20 @@ CREATE TABLE IF NOT EXISTS `django_session` (
 INSERT INTO `django_session` (`session_key`, `session_data`, `expire_date`) VALUES
 ('2421f59fbe417f724e4c0a576314b751', 'OGM1NjExOWU0NjQxOWVlZmU3NmYwMzMyNDVkMTc2NjM0MmZkNjQzMDqAAn1xAShVEl9hdXRoX3Vz\nZXJfYmFja2VuZHECVSlkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZHED\nVQ1fYXV0aF91c2VyX2lkcQSKAQJ1Lg==\n', '2012-01-01 15:20:55'),
 ('30cda988e696cbed383c8629fcbb4e91', 'YzE3MmE3ZDJkYTcwY2NjMWIzMzE0MDY3MWFmMGI4YjI5M2YwODZjNjqAAn1xAShVEl9hdXRoX3Vz\nZXJfYmFja2VuZHECVSlkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZHED\nVQ1fYXV0aF91c2VyX2lkcQSKAQJVBGNhcnRxBV1xBnUu\n', '2012-02-28 09:22:23'),
+('41c57cb22977c6ae86dc7aa288635962', 'Nzg1NGZhZjI2YzFlMjU2YjUyNjM2YWE1YTM5MTA4NzBkMDEzNmM0MTqAAn1xAVUEY2FydHECXXED\ncy4=\n', '2012-03-31 08:51:36'),
 ('43794e334b27d0e457007bfaecce8e07', 'OGM1NjExOWU0NjQxOWVlZmU3NmYwMzMyNDVkMTc2NjM0MmZkNjQzMDqAAn1xAShVEl9hdXRoX3Vz\nZXJfYmFja2VuZHECVSlkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZHED\nVQ1fYXV0aF91c2VyX2lkcQSKAQJ1Lg==\n', '2012-01-17 13:31:55'),
 ('5863793c76fc020da2356b718a5d8d8b', 'YjQwYjUzMzc4MWE0OGU2ZmY3YTM2YTVhNTRmNWVlY2FjNjdmY2I5MTqAAn1xAShVBGNhcnRxAl1x\nA1UNX2F1dGhfdXNlcl9pZHEEigECVRJfYXV0aF91c2VyX2JhY2tlbmRxBVUpZGphbmdvLmNvbnRy\naWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmRxBnUu\n', '2012-03-08 12:22:42'),
 ('5a44398dda47abe879294fe1abd862bc', 'NjIwMGVjOTgwMmQxMmNiYTNiNTk3ZjJjYzhmNzE2YmVlN2MwZTQ5YTqAAn1xAShVEl9hdXRoX3Vz\nZXJfYmFja2VuZHECVSlkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZHED\nVQ1fYXV0aF91c2VyX2lkcQSKAQF1Lg==\n', '2012-02-07 22:39:15'),
 ('6f89bf7bb050c67fdc272d1e2d45da3b', 'OGM1NjExOWU0NjQxOWVlZmU3NmYwMzMyNDVkMTc2NjM0MmZkNjQzMDqAAn1xAShVEl9hdXRoX3Vz\nZXJfYmFja2VuZHECVSlkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZHED\nVQ1fYXV0aF91c2VyX2lkcQSKAQJ1Lg==\n', '2012-02-05 14:25:25'),
+('70987a4e3ad332cff9d378e8a7d78677', 'Nzg1NGZhZjI2YzFlMjU2YjUyNjM2YWE1YTM5MTA4NzBkMDEzNmM0MTqAAn1xAVUEY2FydHECXXED\ncy4=\n', '2012-03-31 08:45:27'),
+('918f4b7701a97240336649021549adb7', 'Nzg1NGZhZjI2YzFlMjU2YjUyNjM2YWE1YTM5MTA4NzBkMDEzNmM0MTqAAn1xAVUEY2FydHECXXED\ncy4=\n', '2012-03-31 08:43:22'),
+('9689d9289d6fedd5154b7cac01d5b1c7', 'Nzg1NGZhZjI2YzFlMjU2YjUyNjM2YWE1YTM5MTA4NzBkMDEzNmM0MTqAAn1xAVUEY2FydHECXXED\ncy4=\n', '2012-03-31 08:51:21'),
+('98d638b06a51afc6a36d6567df2a5059', 'MzI1OWRmMTM0ZjQyZTc5NTM1YTVkZTkwNjA4N2NmYjZiMDU1N2MxMDqAAn1xAS4=\n', '2012-03-27 12:38:08'),
+('9e6d76ac93812e3821ab5ff3497adf6a', 'MmRlNTczMjQ5ZTkyMTllZjI3YTgxNGUyZDllZmYzOWFhMjA5N2EwZjqAAn1xAShVBGNhcnRxAl1x\nA1ULcHJvZ3Jlc3NiYXJxBE51Lg==\n', '2012-04-02 09:19:08'),
 ('a466c1eae6d26889928b4d362c5e50e0', 'Nzg1NGZhZjI2YzFlMjU2YjUyNjM2YWE1YTM5MTA4NzBkMDEzNmM0MTqAAn1xAVUEY2FydHECXXED\ncy4=\n', '2012-02-28 10:19:43'),
-('a90c1d174181c71cc52fa4f1cb306a2a', 'M2EzZDBiZDNhNzhhMmRkMDk4YzA5YjkyMzBjNzJlNjFiNzQyMzk0NTqAAn1xAShVBGNhcnRxAl1x\nA1UNX2F1dGhfdXNlcl9pZHEEigECVRJfYXV0aF91c2VyX2JhY2tlbmRxBVUpZGphbmdvLmNvbnRy\naWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmRxBlUFb3JkZXJxB4oBBXUu\n', '2012-03-22 10:33:46'),
+('acea9fc00081a76a18439b25ef190c34', 'Nzg1NGZhZjI2YzFlMjU2YjUyNjM2YWE1YTM5MTA4NzBkMDEzNmM0MTqAAn1xAVUEY2FydHECXXED\ncy4=\n', '2012-03-31 08:43:08'),
 ('c4b7315883161ef1eaa9c45f582b8d0c', 'MDFkZjE0ZDQ2MzhmY2YwYmU2M2ZjNTY4MjA5NGI4ZDU5NzhiZGVkOTqAAn1xAVUEY2FydHECXXED\nKH1xBChVBm9wdF9pZHEFWCAAAAA5MThkNzJjM2FkMDQzODM1OGQ1MjUyYmM5NGFkNDI5OXEGVQNy\nZWdxB4hVB3R5cGVfaWRxCEsBdX1xCShVBm9wdF9pZHEKWCAAAAA3MTEzYzRhNDgyMGIzZmIyNjZm\nMGQwNjExNzAzYjc3M3ELVQNyZWdxDIhVB3R5cGVfaWRxDUsCdX1xDihVBm9wdF9pZHEPSwFVA3Jl\nZ3EQiFUHdHlwZV9pZHERSwN1fXESKFUGb3B0X2lkcRNYIAAAADYwZjViYTVmODE3YWY2NmE5YWNm\nYWJkNDE1NzhmNTU0cRRVA3JlZ3EViFUHdHlwZV9pZHEWSwF1fXEXKFUGb3B0X2lkcRhYIAAAADEy\nMjNjNTM3YjdkYzI1MmQ3YzAyM2JlODQzMGJhODUzcRlVA3JlZ3EaiFUHdHlwZV9pZHEbSwF1fXEc\nKFUGb3B0X2lkcR1YIAAAADE3ZTdmMjY2OTUzYmQ3MTlmOTQyZDFjMThjNjRlOTlkcR5VA3JlZ3Ef\niFUHdHlwZV9pZHEgSwF1fXEhKFUGb3B0X2lkcSJLAVUDcmVncSOJVQd0eXBlX2lkcSRLA3V9cSUo\nVQZvcHRfaWRxJlggAAAANmE1MDdjMGVlODI1ZTZmZTU3ZTJmNTE5YmU4ZDMyYWFxJ1UDcmVncSiJ\nVQd0eXBlX2lkcSlLAXV9cSooVQZvcHRfaWRxK1ggAAAAY2IzOGEzZWY1NzdiYzljZTc4MTFiN2Zm\nYThiMjc0NTlxLFUDcmVncS2JVQd0eXBlX2lkcS5LAnVlcy4=\n', '2012-02-19 09:38:05'),
+('f437e0a96e2db6298383a79c365c908b', 'Nzg0MGYyYWU5ZWE4NGM2OTBlYjM3ZDA1MjE2NmI1MWM4NDYyZDgyODqAAn1xAShVB3NoaXBpbmdx\nAooBBFUNX2F1dGhfdXNlcl9pZHEDigECVQRjYXJ0cQRdcQVVC3Byb2dyZXNzYmFycQZOVRJfYXV0\naF91c2VyX2JhY2tlbmRxB1UpZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tl\nbmRxCFUFb3JkZXJxCYoBBHUu\n', '2012-04-01 15:16:48'),
 ('f61b0696ac60492fe5b028ad5f185d73', 'NWQ4ZjViMTZmMjA5MmI2ZTVmOWM4ZjMyZWRiMjlkZjEwZWQ2N2FkMTqAAn1xAShVCnRlc3Rjb29r\naWVxAlUGd29ya2VkcQNVEl9hdXRoX3VzZXJfYmFja2VuZHEEVSlkamFuZ28uY29udHJpYi5hdXRo\nLmJhY2tlbmRzLk1vZGVsQmFja2VuZHEFVQ1fYXV0aF91c2VyX2lkcQaKAQJ1Lg==\n', '2011-12-24 12:51:31'),
 ('fd47239d8b5d82e2b576c43f3c9fcc01', 'OGM1NjExOWU0NjQxOWVlZmU3NmYwMzMyNDVkMTc2NjM0MmZkNjQzMDqAAn1xAShVEl9hdXRoX3Vz\nZXJfYmFja2VuZHECVSlkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZHED\nVQ1fYXV0aF91c2VyX2lkcQSKAQJ1Lg==\n', '2012-01-11 17:45:49'),
 ('fff1a7c42843a17756c84a4e552dd973', 'MDkyOGM3ODQwNmNkMzRmMzBmYjliYTNiMjAyOWQ5N2FjZDg1OTA1NjqAAn1xAShVEl9hdXRoX3Vz\nZXJfYmFja2VuZHECVSlkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZHED\nVQ1fYXV0aF91c2VyX2lkcQSKAQJVBGNhcnRxBV1xBlUFb3JkZXJxB4oBAnUu\n', '2012-03-13 10:17:59');
@@ -728,6 +796,62 @@ CREATE TABLE IF NOT EXISTS `django_site` (
 
 INSERT INTO `django_site` (`id`, `domain`, `name`) VALUES
 (1, '127.0.0.1:8000', '127.0.0.1:8000');
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `gallery_album`
+--
+
+CREATE TABLE IF NOT EXISTS `gallery_album` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `img` varchar(150) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=18 ;
+
+--
+-- Дамп данных таблицы `gallery_album`
+--
+
+INSERT INTO `gallery_album` (`id`, `img`, `name`) VALUES
+(1, 'albums/Abstrakcii1.jpg', 'Абстракции1'),
+(2, 'albums/vodnyi_mir.jpg', 'водный мир'),
+(3, 'albums/gorodskie_panoramy.jpg', 'городские панорамы'),
+(4, 'albums/zhivotnyi_mir.jpg', 'животный мир'),
+(5, 'albums/zakat.jpg', 'закат'),
+(6, 'albums/zima.jpg', 'зима'),
+(7, 'albums/kapelka.jpg', 'капелька росы'),
+(8, 'albums/krasota_prirody.jpg', 'красота природы'),
+(9, 'albums/leto.jpg', 'лето'),
+(10, 'albums/mir_romashek.jpg', 'мир ромашек'),
+(11, 'albums/nochnoy_gorod.jpg', 'ночной город'),
+(12, 'albums/osen.jpg', 'осень'),
+(13, 'albums/prodykty.jpg', 'продукты'),
+(14, 'albums/tekstury.jpg', 'текстура'),
+(15, 'albums/tropicheskiy_ray.jpg', 'тропический рай'),
+(16, 'albums/furnitura_interiera.jpg', 'фурнитура интерьера'),
+(17, 'albums/cvetochnyi_ray.jpg', 'цветочный рай');
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `gallery_images`
+--
+
+CREATE TABLE IF NOT EXISTS `gallery_images` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `album_id` int(11) NOT NULL,
+  `img` varchar(150) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `gallery_images_1293c648` (`album_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+--
+-- Дамп данных таблицы `gallery_images`
+--
+
 
 -- --------------------------------------------------------
 
@@ -950,6 +1074,12 @@ ALTER TABLE `django_admin_log`
 ALTER TABLE `django_flatpage_sites`
   ADD CONSTRAINT `flatpage_id_refs_id_3f17b0a6` FOREIGN KEY (`flatpage_id`) REFERENCES `django_flatpage` (`id`),
   ADD CONSTRAINT `site_id_refs_id_4e3eeb57` FOREIGN KEY (`site_id`) REFERENCES `django_site` (`id`);
+
+--
+-- Ограничения внешнего ключа таблицы `gallery_images`
+--
+ALTER TABLE `gallery_images`
+  ADD CONSTRAINT `album_id_refs_id_2e2e3bbf` FOREIGN KEY (`album_id`) REFERENCES `gallery_album` (`id`);
 
 --
 -- Ограничения внешнего ключа таблицы `mosaic_mosaic`

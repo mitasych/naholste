@@ -2,24 +2,106 @@
 {% load list_crop_thumb %}
 
 {% block content %}
+	<script src="/static/js/jquery.progressbar.js" type="text/javascript"></script>
+
 	{% view_step 1 %}
 	<div class="main"><h1>Загрузить фотографию</h1></div>
 	<div class="container_24">
 		<div class="wrapper">
 			<div class="uploadphoto">
-				<form id="upload_form" action="" method="post" enctype="multipart/form-data">             
+				<form id="form_upload" action="" method="post" enctype="multipart/form-data">             
 					{% csrf_token %}
 					<table>
 						<tr>
-							<td>{{ form.file }}</td>
+							<td>{{ form }}</td>
 						</tr>
 					</table>
 				</form>
 				
-				<div id="progress" class="progress">
-					<img src="/static/images/loader2.gif" alt="" />
-					&nbsp;&nbsp;&nbsp;Загружаю изображение...
+				<div id="upload_progress">
+					<span class="progressBar" id="uploadprogressbar">0%</span>
 				</div>
+				
+				<script type="text/javascript">
+					$(document).ready(function() {
+						$("#uploadprogressbar").progressBar({
+							boxImage:'/static/images/jqprogressbar/progressbar.gif',
+							barImage:{
+								0:  '/static/images/jqprogressbar/progressbg_red.gif',
+								30: '/static/images/jqprogressbar/progressbg_orange.gif',
+								70: '/static/images/jqprogressbar/progressbg_green.gif'
+							}
+						});
+					});
+					///
+					function startProgressBarUpdate() {
+						$("#uploadprogressbar").fadeIn();
+						///
+						if (g_progress_intv != 0) {
+							clearInterval(g_progress_intv);
+						}
+						///
+						g_progress_intv = setInterval(function() {
+							$.getJSON("/crop/upload_progress/", function(data) {
+								if (data.stop == 1) {
+									$("#uploadprogressbar").progressBar(100);
+									///
+									clearInterval(g_progress_intv);
+									///
+									g_progress_intv = 0;
+									///
+									var div_mess = getHtmlDiv();
+									///
+									jQuery("#messages").html(div_mess.replace(':class', 'success').replace(':text', '{{ upload_message }}'));
+									jQuery("#messages").show();
+									///
+									return;
+								}
+								///
+								var percentage = Math.floor(100 * parseInt(data.uploaded) / parseInt(data.length));
+								///
+								$("#uploadprogressbar").progressBar(percentage);
+							});
+						}, {{ timer }});
+					}
+					///
+					function showRequest(formData, jqForm, options) {
+						g_progress_intv = 0;
+						///
+						startProgressBarUpdate();
+						///
+						return true;
+					}
+					///
+					function showResponse(response) {
+						var div_mess = getHtmlDiv();
+						///
+						if (response.error == 0) {
+							jQuery("#messages").html(div_mess.replace(':class', 'success').replace(':text', response.message));
+							jQuery("#messages").show();
+							///
+							document.location = '/crop/option?id='+response.id;
+						}
+						else {
+							jQuery("#messages").html(div_mess.replace(':class', 'error').replace(':text', response.message));
+							jQuery("#messages").show();
+						}
+						///
+						jQuery("#progress").hide();
+						jQuery("#upload_form").show();
+					}
+					///
+					$('#form_upload input[type="file"]').change(function() {
+						var options = {
+							dataType:'json',
+							url:'/crop/uploadfile/',
+							beforeSubmit:showRequest,
+							success:showResponse
+						};
+						///
+						$('#form_upload').ajaxSubmit(options);
+					});
+				</script>
 			</div>
 
 			<div class="thumb_list">
@@ -43,9 +125,4 @@
 			</div>
 		</div>
 	</div>
-	<script type="text/javascript">
-		$('#upload_form input[type="file"]').change(function() {
-		  setUpload();
-		});
-	</script>
 {% endblock %}

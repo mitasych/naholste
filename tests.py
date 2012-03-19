@@ -6,6 +6,10 @@ import os
 from PIL import Image
 from math import floor
 
+chunk_size = 64 * 2 ** 10
+
+print chunk_size
+
 t = tuple((k, 'name - %s'% k) for k in xrange(10))
 
 print t
