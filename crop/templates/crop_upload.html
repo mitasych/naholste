@@ -34,6 +34,8 @@
 						});
 					});
 					///
+					SHOW_STOP_MESSAGE = true;
+					///
 					function startProgressBarUpdate() {
 						$("#uploadprogressbar").fadeIn();
 						///
@@ -43,24 +45,29 @@
 						///
 						g_progress_intv = setInterval(function() {
 							$.getJSON("/crop/upload_progress/", function(data) {
-								if (data.stop == 1) {
-									$("#uploadprogressbar").progressBar(100);
+								if (SHOW_STOP_MESSAGE) {
+									if (data.stop == 1) {
+										$("#uploadprogressbar").progressBar(100);
+										///
+										clearInterval(g_progress_intv);
+										///
+										g_progress_intv = 0;
+										///
+										var div_mess = getHtmlDiv();
+										///
+										jQuery("#messages").html(div_mess.replace(':class', 'success').replace(':text', '{{ upload_message }}'));
+										jQuery("#messages").show();
+										///
+										return;
+									}
 									///
-									clearInterval(g_progress_intv);
+									var percentage = Math.floor(100 * parseInt(data.uploaded) / parseInt(data.length));
 									///
-									g_progress_intv = 0;
-									///
-									var div_mess = getHtmlDiv();
-									///
-									jQuery("#messages").html(div_mess.replace(':class', 'success').replace(':text', '{{ upload_message }}'));
-									jQuery("#messages").show();
-									///
-									return;
+									$("#uploadprogressbar").progressBar(percentage);
 								}
-								///
-								var percentage = Math.floor(100 * parseInt(data.uploaded) / parseInt(data.length));
-								///
-								$("#uploadprogressbar").progressBar(percentage);
+								else {
+									clearInterval(g_progress_intv);
+								}
 							});
 						}, {{ timer }});
 					}
@@ -83,12 +90,11 @@
 							document.location = '/crop/option?id='+response.id;
 						}
 						else {
+							SHOW_STOP_MESSAGE = false;
+							///
 							jQuery("#messages").html(div_mess.replace(':class', 'error').replace(':text', response.message));
 							jQuery("#messages").show();
 						}
-						///
-						jQuery("#progress").hide();
-						jQuery("#upload_form").show();
 					}
 					///
 					$('#form_upload input[type="file"]').change(function() {

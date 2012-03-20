@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 import datetime
 import cPickle as pickle
 
@@ -202,9 +203,9 @@ class CropImg(BaseImg):
 			if ((dpi[0] >= self.min_d) and (dpi[1] >= self.min_d)):
 				is_valid = True
 			else:
-				self.error = "Изображение низкого качества. Загрузите изображение больше чем %s dpi" % (self.min_d,)
+				self.error = u'Изображение низкого качества. Загрузите изображение больше чем %s dpi' % (self.min_d,)
 		else:
-			self.error = "Изображение должно быть больше чем %sx%s" % (self.min_w, self.min_h)
+			self.error = u'Изображение должно быть больше чем %sx%s' % (self.min_w, self.min_h)
 		###
 		return is_valid
 
