@@ -259,12 +259,14 @@
 					</div>
 
 					<div id="step_opt_2" style="display: none;">
-						<div class="optButton" id="b6">Рамка</div>
-							<div class="optContent" id="c6">
-								{% autoescape off %}
-									{{ form.frame }}
-								{% endautoescape %}
-							</div>
+						<div style="display: none;">
+							<div class="optButton" id="b6">Рамка</div>
+								<div class="optContent" id="c6">
+									{% autoescape off %}
+										{{ form.frame }}
+									{% endautoescape %}
+								</div>
+						</div>
 						<div class="optButton" id="b7">Упаковка</div>
 							<div class="optContent" id="c7">
 								{% autoescape off %}
