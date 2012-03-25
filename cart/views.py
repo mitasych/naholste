@@ -22,7 +22,7 @@ from collage.common.decorators import reload, reload_data
 from collage.crop.models import CropSize, Crop
 from collage.puzzle.models import PuzzleSize, Puzzle
 from collage.mosaic.models import MosaicSize, Mosaic
-from collage.cart.models import Order, OrderOption, Shiping
+from collage.cart.models import Order, OrderOption, Shiping, Currency
 from collage.cart.forms import OrderForm, AuthCartForm, ShipingForm
 from collage.cart.decorators import choice_shiping
 
@@ -832,8 +832,10 @@ def payment(request):
 			else:
 				kzcom_mess = Signed_Order_B64
 			### Webmoney
+			currency = Currency.objects.get(defrow=True)
+			###
 			initial = {
-				'LMI_PAYMENT_AMOUNT':order.price,
+				'LMI_PAYMENT_AMOUNT':float(order.price) * float(currency.factor),
 				'LMI_PAYMENT_DESC':'Оплата по заказу №%s' % order.id,
 				'LMI_PAYMENT_NO':order.id,
 			}
