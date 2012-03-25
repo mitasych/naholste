@@ -1,9 +1,38 @@
 # -*- coding: utf-8 -*-
 from django import forms
 from django.contrib import admin
-from collage.cart.models import Shiping
+from collage.cart.models import Shiping, Currency, ShipingType, Countries, Cities
+
+class CitiesForm(forms.ModelForm):
+	
+	class Meta:
+		model = Cities
+
+class CountriesForm(forms.ModelForm):
+	
+	class Meta:
+		model = Countries
+
+class ShipingTypeForm(forms.ModelForm):
+	
+	class Meta:
+		model = ShipingType
+
+class CurrencyForm(forms.ModelForm):
+	
+	class Meta:
+		model = Currency
+
+	def clean_factor(self):
+		factor = float(self.cleaned_data['factor'])
+		###
+		if factor <= 0:
+			raise forms.ValidationError(u'Коэффициент должн быть больше нуля')
+		else:
+			return factor
 
 class ShipingForm(forms.ModelForm):
+	
 	class Meta:
 		model = Shiping
 
@@ -15,11 +44,51 @@ class ShipingForm(forms.ModelForm):
 		else:
 			return self.cleaned_data['price']
 
+class CitiesAdmin(admin.ModelAdmin):
+	
+	form = CitiesForm
+	fieldsets = (
+		(u'Описание', {'fields': ('country', 'name',)}),
+	)
+	list_display = ('name', 'country',)
+	ordering = ('country', 'name',)
+
+class CountriesAdmin(admin.ModelAdmin):
+	
+	form = CountriesForm
+	fieldsets = (
+		(u'Описание', {'fields': ('name',)}),
+	)
+	list_display = ('name',)
+	ordering = ('name',)
+
+class ShipingTypeAdmin(admin.ModelAdmin):
+	
+	form = ShipingTypeForm
+	fieldsets = (
+		(u'Описание', {'fields': ('name',)}),
+	)
+	list_display = ('name',)
+
+class CurrencyAdmin(admin.ModelAdmin):
+	
+	form = CurrencyForm
+	fieldsets = (
+		(u'Описание', {'fields': ('name', 'code', 'factor', 'defrow')}),
+	)
+	list_display = ('name', 'code', 'factor', 'defrow')
+
 class ShipingAdmin(admin.ModelAdmin):
+	
 	form = ShipingForm
 	fieldsets = (
-		(u'Описание', {'fields': ('name', 'price', 'sort_order', 'defrow')}),
+		(u'Описание', {'fields': ('shiping_type', 'country', 'city', 'price',)}),
 	)
-	list_display = ('name', 'price', 'sort_order', 'defrow')
+	list_display = ('shiping_type', 'country', 'city', 'price',)
+	ordering = ['country', 'city']
 
+admin.site.register(Cities, CitiesAdmin)
+admin.site.register(Countries, CountriesAdmin)
+admin.site.register(ShipingType, ShipingTypeAdmin)
 admin.site.register(Shiping, ShipingAdmin)
+admin.site.register(Currency, CurrencyAdmin)

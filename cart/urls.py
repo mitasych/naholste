@@ -8,6 +8,7 @@ urlpatterns = patterns('',
 	(r'^cart/login/$', 'cart.views.log_in'),
 	(r'^cart/order/$', 'cart.views.order'),
 	(r'^cart/payment/$', 'cart.views.payment'),
+	(r'^cart/shiping_price/$', 'cart.views.shiping_price'),
 	(r'^payment/kzcom/notify/$', 'cart.views.kzcom'),
 	(r'^payment/webmoney/notify/$', 'cart.views.webmoney'),
 )

@@ -6,7 +6,8 @@ import threading
 import hashlib
 
 from collage.cart.settings import *
-from django.http import HttpResponseRedirect, HttpRequest
+from django.http import HttpResponseRedirect, HttpRequest, HttpResponse
+from django.utils import simplejson
 from django.shortcuts import render
 from django.template import RequestContext, loader
 from django.core.urlresolvers import reverse
@@ -573,34 +574,81 @@ def log_in(request):
 	return render(request, 'cart_login.html', data)
 
 def shiping(request):
+	shiping = request.CART.get_shiping()
+	###
+	initial = {
+		'shiping_type':0,
+		'country':0,
+		'city':0,
+	}
+	###
 	if request.method == 'POST':
 		form = ShipingForm(request.POST)
 		###
 		if form.is_valid():
 			send_data = form.cleaned_data
 			###
-			try:
-				request.CART.set_shiping(int(send_data['shiping']))
-			except:
-				pass
-		###
-		return HttpResponseRedirect(reverse('cart.views.order'))
-	###
-	shiping = request.CART.get_shiping()
-	###
-	if shiping is None:
-		shiping = Shiping.objects.get(defrow=True)
-		shiping_id = shiping.id
+			if Shiping.objects.filter(shiping_type=send_data['shiping_type'], country=send_data['country'], city=send_data['city']).exists():
+				shiping = Shiping.objects.get(shiping_type=send_data['shiping_type'], country=send_data['country'], city=send_data['city'])
+				###
+				request.CART.set_shiping(shiping.id)
+				###
+				return HttpResponseRedirect(reverse('cart.views.order'))
+			###
+			initial = {
+				'shiping_type':send_data['shiping_type'].id,
+				'country':send_data['country'].id,
+				'city':send_data['city'].id,
+			}
 	else:
-		shiping_id = shiping.id
+		initial = None
+		###
+		if shiping is not None:
+			initial = {
+				'shiping_type':shiping.shiping_type.id,
+				'country':shiping.country.id,
+				'city':shiping.city.id,
+			}
+		###
+		form = ShipingForm(initial=initial)
+		###
+		if initial is None:
+			initial = {
+				'shiping_type':0,
+				'country':0,
+				'city':0,
+			}
 	###
 	data = {
-		'shiping':Shiping.objects.all(),
-		'shiping_id':shiping_id,
-		'form':ShipingForm(initial={'shiping':shiping_id})
+		'form':form,
+		'initial':initial,
 	}
 	###
 	return render(request, 'cart_shiping.html', data)
+
+def shiping_price(request):
+	if request.is_ajax():
+		data = {
+			'price': 0.00,
+			'price_format': '',
+			'message': u'Доставка по указанным данным отсутствует, укажите другие параметры',
+		}
+		###
+		shiping_type = request.GET.get('st', None)
+		country = request.GET.get('cn', None)
+		city = request.GET.get('ct', None)
+		###
+		if (shiping_type and country and city):
+			if Shiping.objects.filter(shiping_type=shiping_type, country=country, city=city).exists():
+				shiping = Shiping.objects.get(shiping_type=shiping_type, country=country, city=city)
+				###
+				data['price'] = shiping.price
+				data['price_format'] = '%.2f тенге' % shiping.price
+				data['message'] = u'Доставка:'
+		###
+		return HttpResponse(simplejson.dumps(data))
+	else:
+		return HttpResponseRedirect(reverse('cart.views.show'))
 
 @choice_shiping()
 def order(request):

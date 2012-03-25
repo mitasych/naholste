@@ -2,6 +2,7 @@
 
 import datetime
 import random
+#import logging
 
 from md5 import md5
 
@@ -20,6 +21,9 @@ from collage.common.helpers import CropImg
 from collage.common.models import Frames, Packaging
 from collage.crop.models import CropSize, Crop, Stretch, TYPE_CHOISES, EFFECT_CHOISES
 from collage.crop.forms import CropForm, UploadForm, SIZE_INIT, STRETCH_INIT
+
+#L = logging.getLogger('logview.debug')
+#L.debug(request)
 
 class DataImg(object):
 

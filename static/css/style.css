@@ -908,3 +908,29 @@ div#spot-middle{
 .main_middle_block.right p, .main_middle_block.right div{
 	margin-left: 40px;
 }
+
+.list_shiping {
+	width: 600px;
+}
+
+.list_shiping select {
+	width: 100%;
+	height: 22px;
+}
+
+.list_shiping td, .list_shiping th {
+	padding: 6px 4px 6px 4px;
+	vertical-align: middle;
+}
+
+.list_shiping th {
+	text-align: right;
+}
+
+.list_shiping .required {
+	color: #E90000 !important;
+}
+
+.shiping_price {
+	font-weight:bold;
+}

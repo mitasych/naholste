@@ -2,6 +2,7 @@
 
 from collage.mosaic.settings import *
 from django.db import models
+from smart_selects.db_fields import ChainedForeignKey 
 from django.contrib.auth.models import User
 from collage.common.models import Frames, Packaging
 
@@ -11,27 +12,84 @@ TYPE_CHOICES = (
 	(3, u'Коллаж'),
 )
 
-class Shiping(models.Model):
-
-	name = models.CharField(u'Название', max_length=100, blank=False)
-	price = models.FloatField(u'Сумма', blank=False)
-	sort_order = models.IntegerField(u'Сортировка', blank=False, default=0)
-	defrow = models.BooleanField(u'Город по умолчанию', default=False)
+class Countries(models.Model):
+	
+	name = models.CharField(u'Страна', max_length=100, blank=False)
 
 	def __unicode__(self):
-		return u'%s - %.2f' % (self.name, self.price)
+		return self.name
+
+	class Meta:
+		verbose_name = u'Страны'
+		verbose_name_plural = u'Страны'
+		ordering = ['name',]
+
+class Cities(models.Model):
+
+	country = models.ForeignKey(Countries, blank=False, verbose_name=u'Страна')
+	name = models.CharField(u'Город', max_length=100, blank=False)
+
+	def __unicode__(self):
+		return self.name
+
+	class Meta:
+		verbose_name = u'Города'
+		verbose_name_plural = u'Города'
+		ordering = ('country', 'name',)
+
+class ShipingType(models.Model):
+	
+	name = models.CharField(u'Название типа доставки', max_length=100, blank=False)
+
+	def __unicode__(self):
+		return self.name
+
+	class Meta:
+		verbose_name = u'Тип доставки'
+		verbose_name_plural = u'Тип доставки'
+		ordering = ['name',]
+
+class Currency(models.Model):
+
+	name = models.CharField(u'Название валюты', max_length=100, blank=False)
+	code = models.CharField(u'Код валюты', max_length=100, blank=False)
+	factor = models.FloatField(u'Коэффициент', blank=False)
+	defrow = models.BooleanField(u'Валюта по умолчанию для платежей', default=False)
+
+	def __unicode__(self):
+		return '%.4f' % self.factor
+
+	class Meta:
+		verbose_name = u'Валюта'
+		verbose_name_plural = u'Валюта'
+		ordering = ['name',]
+
+	def save(self):
+		if self.defrow:
+			Currency.objects.all().update(defrow=False)
+		###
+		super(Currency, self).save()
+
+class Shiping(models.Model):
+
+	shiping_type = models.ForeignKey(ShipingType, blank=False, verbose_name=u'Тип доставки')
+	country = models.ForeignKey(Countries, blank=False, verbose_name=u'Страна')
+	city = ChainedForeignKey(
+		Cities, 
+		chained_field="country",
+		chained_model_field="country", 
+		show_all=False, 
+		auto_choose=True
+	)
+	price = models.FloatField(u'Сумма', blank=False)
+
+	def __unicode__(self):
+		return u'%s - %s - %s' % (self.shiping_type, self.city, self.price,)
 
 	class Meta:
 		verbose_name = u'Доставка'
 		verbose_name_plural = u'Доставка'
-		ordering = ['sort_order', 'name']
-
-	def save(self):
-		if self.defrow:
-			Shiping.objects.all().update(defrow=False)
-		###
-		super(Shiping, self).save()
-
+		
 class Order(models.Model):
 
 	user = models.ForeignKey(User, blank=True, null=True, verbose_name=u'Пользователь')

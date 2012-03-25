@@ -5,3 +5,4 @@ README
 /settings.py
 *.pyc
 /apps/*
+/logs/*

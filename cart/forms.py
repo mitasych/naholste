@@ -6,11 +6,10 @@ from django import forms
 from django.forms.util import ErrorList
 from django.core.exceptions import ValidationError
 from django.forms.widgets import RadioSelect
+from smart_selects.form_fields import ChainedModelChoiceField
 
 from collage.account.forms import AuthorizationForm
-from collage.cart.models import Shiping
-
-SHIPING_CHOICE = tuple((s.id, u'%s - %.02f тенге' % (s.name, s.price)) for s in Shiping.objects.all())
+from collage.cart.models import ShipingType, Countries, Cities
 
 def valid_phone(val):
 	if not re.compile(r"^[\d\-\(\)\s]*$").match(val):
@@ -75,4 +74,16 @@ class AuthCartForm(AuthorizationForm):
 	
 class ShipingForm(forms.Form):
 
-	shiping = forms.ChoiceField(label='', widget=RadioSelect(), required=True, choices=SHIPING_CHOICE)
+	shiping_type = forms.ModelChoiceField(label=u'Тип доставки', queryset=ShipingType.objects.all(), empty_label=u'Не выбрано', required=True)
+	country = forms.ModelChoiceField(label=u'Страна', queryset=Countries.objects.all(), empty_label=u'Не выбрано', required=True)
+	city = ChainedModelChoiceField(
+		app_name = 'cart',
+		model_name = 'Cities',
+		chain_field = 'country',
+		model_field = 'country',
+		show_all = False,
+		auto_choose = True,
+		required = True,
+		label = u'Город',
+		empty_label=u'Не выбрано'
+	)
