@@ -8,7 +8,7 @@ domain = Site.objects.get_current().name
 LMI_PAYMENT_NO = ''
 
 # Номер вашего кошелька в WebMoney, например R12345678900
-LMI_PAYEE_PURSE = ''
+LMI_PAYEE_PURSE = 'Z326284314133'
 
 # URL вашей страницы, на которую покупатель попадет после оплаты в системе WebMoney в случае успешной операции
 LMI_SUCCESS_URL = ''.join(['http://', domain, '/payment/webmoney/notify/'])
@@ -26,4 +26,4 @@ LMI_FAIL_METHOD = '1'
 FORM_ACTION = 'https://merchant.webmoney.ru/lmi/payment.asp'
 
 # Секретный ключ
-SECRET_KEY = ''
+SECRET_KEY = 'jhff8fkldj'

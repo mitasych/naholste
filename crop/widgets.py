@@ -5,6 +5,7 @@ from django.template import Context, loader
 from itertools import chain
 from django.utils.html import escape, conditional_escape
 from django.utils.encoding import force_unicode
+from collage.crop.models import CropSize
 
 class ChoiceSize(Widget):
 
@@ -24,6 +25,8 @@ class ChoiceSize(Widget):
 		self.data = self.choices = list(choices)
 
 	def render(self, name='', value='', attrs=None, choices=()):
+		self.data = self.choices = list(CropSize.objects.all())
+		###
 		self.after = []
 		self.f_name = name
 		###

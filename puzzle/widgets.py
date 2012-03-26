@@ -7,6 +7,7 @@ from django.utils.html import escape, conditional_escape
 from django.utils.encoding import force_unicode
 
 from collage.common.settings import STATIC_URL, MEDIA_URL
+from collage.puzzle.models import PuzzleSize
 
 class ChoiceSize(Widget):
 
@@ -28,6 +29,8 @@ class ChoiceSize(Widget):
 		self.data = self.choices = list(choices)
 
 	def render(self, name='', value='', attrs=None, choices=()):
+		self.data = self.choices = list(PuzzleSize.objects.all())
+		###
 		self.after = []
 		self.f_name = name
 		self.css_sel = u'frame_item_select left'
