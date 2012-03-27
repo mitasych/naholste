@@ -10,6 +10,7 @@ class PayForm(forms.Form):
 	LMI_PAYMENT_DESC = forms.CharField(widget=forms.HiddenInput(), initial='')
 	LMI_PAYMENT_NO = forms.CharField(widget=forms.HiddenInput(), initial='')
 	LMI_PAYEE_PURSE = forms.CharField(widget=forms.HiddenInput(), initial=LMI_PAYEE_PURSE)
+	LMI_RESULT_URL = forms.CharField(widget=forms.HiddenInput(), initial=LMI_RESULT_URL)
 	LMI_SUCCESS_URL = forms.CharField(widget=forms.HiddenInput(), initial=LMI_SUCCESS_URL)
 	LMI_SUCCESS_METHOD = forms.CharField(widget=forms.HiddenInput(), initial=LMI_SUCCESS_METHOD)
 	LMI_FAIL_URL = forms.CharField(widget=forms.HiddenInput(), initial=LMI_FAIL_URL)

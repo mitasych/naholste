@@ -10,5 +10,7 @@ urlpatterns = patterns('',
 	(r'^cart/payment/$', 'cart.views.payment'),
 	(r'^cart/shiping_price/$', 'cart.views.shiping_price'),
 	(r'^payment/kzcom/notify/$', 'cart.views.kzcom'),
-	(r'^payment/webmoney/notify/$', 'cart.views.webmoney'),
+	(r'^payment/webmoney/$', 'cart.views.webmoney'),
+	(r'^payment/success/$', 'cart.views.success'),
+	(r'^payment/fail/$', 'cart.views.fail'),
 )

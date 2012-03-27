@@ -900,33 +900,44 @@ def kzcom(request):
 	return HttpResponseRedirect(reverse('cart.views.show'))
 
 def webmoney(request):
-	if request.method == 'POST':
-		if not request.POST or request.POST.get('LMI_PREREQUEST', None):
-			return HttpResponseRedirect(reverse('cart.views.show'))
-		else:
-			string_to_sign = ''.join([
-				request.POST['LMI_PAYEE_PURSE'],
-				request.POST['LMI_PAYMENT_AMOUNT'],
-				request.POST['LMI_PAYMENT_NO'],
-				request.POST['LMI_MODE'],
-				request.POST['LMI_SYS_INVS_NO'],
-				request.POST['LMI_SYS_TRANS_NO'],
-				request.POST['LMI_SYS_TRANS_DATE'],
-				SECRET_KEY,
-				request.POST['LMI_PAYER_PURSE'],
-				request.POST['LMI_PAYER_WM']
-			])
-			###
-			sign = hashlib.md5(string_to_sign).hexdigest().upper()
-			###
-			if sign == request.POST['LMI_HASH']:
-				order_id = int(request.POST['LMI_PAYMENT_NO'])
-				### Отправим подтверждение на мыло администратору
-				HW.setData(request, order_id)
-				HW.start()
-			else:
-				messages.error(request, 'Ошибка оплаты')
-				###
-				return HttpResponseRedirect(reverse('cart.views.show'))
+	if not request.POST or request.POST.get('LMI_PREREQUEST', None):
+		return HttpResponse('YES')
 	else:
-		return HttpResponseRedirect(reverse('cart.views.show'))
+		string_to_sign = ''.join([
+			request.POST['LMI_PAYEE_PURSE'],
+			request.POST['LMI_PAYMENT_AMOUNT'],
+			request.POST['LMI_PAYMENT_NO'],
+			request.POST['LMI_MODE'],
+			request.POST['LMI_SYS_INVS_NO'],
+			request.POST['LMI_SYS_TRANS_NO'],
+			request.POST['LMI_SYS_TRANS_DATE'],
+			SECRET_KEY,
+			request.POST['LMI_PAYER_PURSE'],
+			request.POST['LMI_PAYER_WM'],
+		])
+		###
+		sign = hashlib.md5(string_to_sign).hexdigest().upper()
+		###
+		if sign == request.POST['LMI_HASH']:
+			order_id = int(request.POST['LMI_PAYMENT_NO'])
+			### Отправим подтверждение на мыло администратору
+			HW.setData(request, order_id)
+			HW.start()
+			###
+			return HttpResponse('YES')
+		else:
+			return HttpResponse('NO')
+
+def success(request):
+	data = {'txt':u'Ваш заказ успешно оплачен',}
+	###
+	messages.success(request, data['txt'])
+	###
+	return render(request, 'cart_notify.html', data)
+
+def fail(request):
+	data = {'txt':u'Ошибка оплаты заказа',}
+	###
+	messages.error(request, data['txt'])
+	###
+	return render(request, 'cart_notify.html', data)
