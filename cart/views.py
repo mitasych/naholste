@@ -835,7 +835,7 @@ def payment(request):
 			currency = Currency.objects.get(defrow=True)
 			###
 			initial = {
-				'LMI_PAYMENT_AMOUNT':float(order.price) * float(currency.factor),
+				'LMI_PAYMENT_AMOUNT':'%.2f' % (float(order.price) * float(currency.factor),),
 				'LMI_PAYMENT_DESC':'Оплата по заказу №%s' % order.id,
 				'LMI_PAYMENT_NO':order.id,
 			}
