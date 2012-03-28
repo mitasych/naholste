@@ -1,12 +1,21 @@
 {% extends 'base.html' %}
 
 {% block content %}
-	<div class="main"><h1 style="margin-bottom: 0px;">Выберите вид оплаты</h1></div>
+	<div class="main"><h1 style="margin-bottom: 0px;">Страница всякой фигни</h1></div>
 	<div class="container_24">
 		<div class="wrapper">
-			TESTING PAGE
-			<br />
-			{{ r }}
+			<form action="http://127.0.0.1:8000/payment/webmoney/" method="post">
+				<p><input type="text" name="LMI_PAYEE_PURSE" value="1" /></p>
+				<p><input type="text" name="LMI_PAYMENT_AMOUNT" value="1" /></p>
+				<p><input type="text" name="LMI_PAYMENT_NO" value="1000" /></p>
+				<p><input type="text" name="LMI_MODE" value="1" /></p>
+				<p><input type="text" name="LMI_SYS_INVS_NO" value="1" /></p>
+				<p><input type="text" name="LMI_SYS_TRANS_NO" value="1" /></p>
+				<p><input type="text" name="LMI_SYS_TRANS_DATE" value="1" /></p>
+				<p><input type="text" name="LMI_PAYER_PURSE" value="1" /></p>
+				<p><input type="text" name="LMI_PAYER_WM" value="1" /></p>
+				<p><input type="submit" value="Submit" /></p>
+			</form>
 		</div>
 	</div>
 {% endblock %}

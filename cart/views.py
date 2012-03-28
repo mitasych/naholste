@@ -836,7 +836,7 @@ def payment(request):
 			###
 			initial = {
 				'LMI_PAYMENT_AMOUNT':'%.2f' % (float(order.price) * float(currency.factor),),
-				'LMI_PAYMENT_DESC':'Оплата по заказу №%s' % order.id,
+				'LMI_PAYMENT_DESC':'Payment order #%s' % order.id,
 				'LMI_PAYMENT_NO':order.id,
 			}
 			###
@@ -941,3 +941,8 @@ def fail(request):
 	messages.error(request, data['txt'])
 	###
 	return render(request, 'cart_notify.html', data)
+
+def test(request):
+	data = {}
+	###
+	return render(request, 'cart_test.html', data)

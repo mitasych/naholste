@@ -9,6 +9,7 @@
 					<tr>
 						<td align="center" width="33%">
 							<form action="{{ web_action }}" method="post" id="web_money_form">
+								{% csrf_token %}
 								{{ web_form.as_p }}
 							</form>
 							<script type="text/javascript">

@@ -13,4 +13,5 @@ urlpatterns = patterns('',
 	(r'^payment/webmoney/$', 'cart.views.webmoney'),
 	(r'^payment/success/$', 'cart.views.success'),
 	(r'^payment/fail/$', 'cart.views.fail'),
+	(r'^payment/test/$', 'cart.views.test'),
 )
