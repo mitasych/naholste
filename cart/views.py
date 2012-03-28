@@ -16,6 +16,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.core.mail import EmailMessage
+from django.views.decorators.csrf import  csrf_exempt
 
 from collage.account.models import UserProfile
 from collage.common.decorators import reload, reload_data
@@ -899,6 +900,7 @@ def kzcom(request):
 	###
 	return HttpResponseRedirect(reverse('cart.views.show'))
 
+@csrf_exempt
 def webmoney(request):
 	if not request.POST or request.POST.get('LMI_PREREQUEST', None):
 		return HttpResponse('YES')
