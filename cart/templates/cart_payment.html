@@ -19,13 +19,23 @@
 								function KKB() {
 									$('#SendOrder').submit();
 								}
+								///
+								function Qiwi() {
+									$('#QiwiOrder').submit();
+								}
 							</script>
 							<a href="javascript: WebMoney();">
 								<img src="/static/images/webmoney.jpg" alt="" />
 							</a>
 						</td>
 						<td align="center" width="33%">
-							КИВИ
+							<form id="QiwiOrder" name="QiwiOrder" method="post" action="/payment/qiwi/">
+								{% csrf_token %}
+								{{ qiwi_form.as_p }}
+							</form>
+							<a href="javascript: Qiwi();">
+								<img src="/static/images/qiwi.png" alt="" />
+							</a>
 						</td>
 						<td align="center" width="33%">
 							{% if kzcom_mess %}

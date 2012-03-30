@@ -54,7 +54,6 @@ class Currency(models.Model):
 	name = models.CharField(u'Название валюты', max_length=100, blank=False)
 	code = models.CharField(u'Код валюты', max_length=100, blank=False)
 	factor = models.FloatField(u'Коэффициент', blank=False)
-	defrow = models.BooleanField(u'Валюта по умолчанию для платежей', default=False)
 
 	def __unicode__(self):
 		return '%.4f' % self.factor
@@ -63,12 +62,6 @@ class Currency(models.Model):
 		verbose_name = u'Валюта'
 		verbose_name_plural = u'Валюта'
 		ordering = ['name',]
-
-	def save(self):
-		if self.defrow:
-			Currency.objects.all().update(defrow=False)
-		###
-		super(Currency, self).save()
 
 class Shiping(models.Model):
 

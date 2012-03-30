@@ -4,6 +4,7 @@ import os
 import shutil
 import threading
 import hashlib
+import datetime
 
 from collage.cart.settings import *
 from django.http import HttpResponseRedirect, HttpRequest, HttpResponse
@@ -36,6 +37,10 @@ from collage.payment.kzcom.settings import FORM_ACTION as kzcom_action
 
 from collage.payment.webmoney.forms import PayForm as webform
 from collage.payment.webmoney.settings import FORM_ACTION as web_action, SECRET_KEY
+
+from collage.payment.qiwi.forms import QiwiForm
+from django_qiwi import get_status_text
+from django_qiwi.soap.client import Client as QiwiClient
 
 class Id2Name(object):
 
@@ -833,7 +838,7 @@ def payment(request):
 			else:
 				kzcom_mess = Signed_Order_B64
 			### Webmoney
-			currency = Currency.objects.get(defrow=True)
+			currency = Currency.objects.get(code='USD')
 			###
 			initial = {
 				'LMI_PAYMENT_AMOUNT':'%.2f' % (float(order.price) * float(currency.factor),),
@@ -842,20 +847,75 @@ def payment(request):
 			}
 			###
 			web_form = webform(initial=initial)
+			### QIWI
+			initial = None
+			###
+			if auth:
+				up = UserProfile.objects.get(user=user.id)
+				###
+				initial = {
+					'phone':up.phone,
+				}
+			###
+			qiwi_form = QiwiForm(initial=initial)
 			###
 			data = {
 				### Казахи
 				'kzcom_mess':kzcom_mess,
 				'kzcom_form':kzcom_form,
 				'kzcom_action':kzcom_action,
-				###
+				### Webmoney
 				'web_form':web_form,
 				'web_action':web_action,
+				### Qiwi
+				'qiwi_form':qiwi_form,
 			}
 			###
 			response = render(request, 'cart_payment.html', data)
 	###
 	return response
+
+def qiwi(request):
+	response = None
+	###
+	if request.method == 'POST':
+		form = QiwiForm(request.POST)
+		###
+		if form.is_valid():
+			send_data = form.cleaned_data
+			###
+			order = request.CART.get_order()
+			###
+			if order is not None:
+				if not order.status:
+					client = QiwiClient()
+					###
+					currency = Currency.objects.get(code='RUB')
+					###
+					code = client.createBill(
+						phone = send_data['phone'],
+						amount = float(order.price) * float(currency.factor),
+						comment = 'Payment order #%s' % order.id,
+						txn = order.id,
+						lifetime = datetime.datetime.now() + datetime.timedelta(1),
+					)
+					###
+					if code in [0, 50]:
+						messages.success(request, u'Заказ номер №%s создан в платежной системе QIWI. Пожалуйста оплатите.' % order.id)
+					else:
+						messages.error(request, u'Ошибка создание платежа. Ошибка: %s' % get_status_text(code))
+						###
+						response = HttpResponseRedirect(reverse('cart.views.payment'))
+		else:
+			messages.error(request, u'Не верно указан номер телефона')
+			###
+			response = HttpResponseRedirect(reverse('cart.views.payment'))
+	###
+	return response is None and HttpResponseRedirect(reverse('cart.views.show')) or response
+
+def qiwi_result(request):
+	print request
+	return HttpResponse('QIWI')
 
 def kzcom(request):
 	#r = '<document><bank name="Kazkommertsbank JSC"><customer name="Ucaf Test Maest" mail="SeFrolov@kkb.kz" phone=""><merchant cert_id="00C182B189" name="test merch"><order order_id="0706172110" amount="1000" currency="398"><department merchant_id="92056001" amount="1000"/></order></merchant><merchant_sign type="RSA"/></customer><customer_sign type="RSA"/><results timestamp="2006-07-06 17:21:50"><payment merchant_id="92056001" amount="1000" reference="618704198173" approval_code="447753" response_code="00"/></results></bank><bank_sign cert_id="00C18327E8" type="SHA/RSA">xjJwgeLAyWssZr3/gS7TI/xaajoF3USk0B/ZfLv6SYyY/3H8tDHUiyGcV7zDO5+rINwBoTn7b9BrnO/kvQfebIhHbDlCSogz2cB6Qa2ELKAGqs8aDZDekSJ5dJrgmFT6aTfgFgnZRmadybxTMHGR6cn8ve4m0TpQuaPMQmKpxTI=</bank_sign ></document>'

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django import forms
 from django.contrib import admin
+from django.db.models import Q
 from collage.cart.models import Shiping, Currency, ShipingType, Countries, Cities
 
 class CitiesForm(forms.ModelForm):
@@ -30,6 +31,16 @@ class CurrencyForm(forms.ModelForm):
 			raise forms.ValidationError(u'Коэффициент должн быть больше нуля')
 		else:
 			return factor
+
+	def clean_code(self):
+		code = self.cleaned_data['code']
+		###
+		q = self.instance.id is None and Q(code=code) or Q(~Q(id=self.instance.id), code=code)
+		###
+		if Currency.objects.filter(q).exists():
+			raise forms.ValidationError(u'Код валюты не уникальный')
+		else:
+			return code
 
 class ShipingForm(forms.ModelForm):
 	
@@ -74,9 +85,9 @@ class CurrencyAdmin(admin.ModelAdmin):
 	
 	form = CurrencyForm
 	fieldsets = (
-		(u'Описание', {'fields': ('name', 'code', 'factor', 'defrow')}),
+		(u'Описание', {'fields': ('name', 'code', 'factor')}),
 	)
-	list_display = ('name', 'code', 'factor', 'defrow')
+	list_display = ('name', 'code', 'factor')
 
 class ShipingAdmin(admin.ModelAdmin):
 	
