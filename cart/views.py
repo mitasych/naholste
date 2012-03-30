@@ -5,6 +5,7 @@ import shutil
 import threading
 import hashlib
 import datetime
+import logging
 
 from collage.cart.settings import *
 from django.http import HttpResponseRedirect, HttpRequest, HttpResponse
@@ -41,6 +42,9 @@ from collage.payment.webmoney.settings import FORM_ACTION as web_action, SECRET_
 from collage.payment.qiwi.forms import QiwiForm
 from django_qiwi import get_status_text
 from django_qiwi.soap.client import Client as QiwiClient
+
+L = logging.getLogger('logview.debug')
+#L.debug(request)
 
 class Id2Name(object):
 
@@ -914,7 +918,7 @@ def qiwi(request):
 	return response is None and HttpResponseRedirect(reverse('cart.views.show')) or response
 
 def qiwi_result(request):
-	print request
+	L.debug(request)
 	return HttpResponse('QIWI')
 
 def kzcom(request):
