@@ -17,6 +17,8 @@ urlpatterns = patterns('',
 	###
 	url(r'^$', 'common.views.index'),
 	###
+	url(r'^google4d8d225d5b28f671\.html$', 'common.views.google_verif'),
+	###
 	url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
 	url(r'^favicon\.ico$', RedirectView.as_view(url='/media/favicon.ico')),
 	###
