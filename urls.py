@@ -17,6 +17,10 @@ urlpatterns = patterns('',
 	###
 	url(r'^$', 'common.views.index'),
 	###
+	url(r'', include('socauth.urls')),
+	###
+	url(r'', include('social_auth.urls')),
+	###
 	url(r'^google4d8d225d5b28f671\.html$', 'common.views.google_verif'),
 	###
 	url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),

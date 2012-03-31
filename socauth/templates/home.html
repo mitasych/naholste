@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block script %}
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+<script src="https://browserid.org/include.js" type="text/javascript"></script>
+{% endblock %}
+
+{% block heading %}Login using any of the following methods{% endblock %}
+
+{% block content %}
+	<div class="main">
+		<h1 style="margin-bottom: 0px;">Авторизация с помощью OpenID</h1>
+	</div>
+	<div class="container_24">
+		<div class="wrapper">
+			<div>
+			  <a rel="nofollow" href="/login/google-oauth2/">Google</a>
+			</div>
+		</div>
+	</div>
+{% endblock %}
