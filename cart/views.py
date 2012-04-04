@@ -6,6 +6,9 @@ import threading
 import hashlib
 import datetime
 import logging
+import re
+
+from md5 import md5
 
 from collage.cart.settings import *
 from django.http import HttpResponseRedirect, HttpRequest, HttpResponse
@@ -506,6 +509,11 @@ class HiddenWork(threading.Thread):
 
 HW = HiddenWork()
 
+def _getSecretKeyByTxn(txn):
+	return md5(
+		str(txn) + md5(QIWI_PASSWORD).hexdigest().upper()
+	).hexdigest().upper()
+
 def show(request):
 	user = request.user
 	###
@@ -917,10 +925,61 @@ def qiwi(request):
 	###
 	return response is None and HttpResponseRedirect(reverse('cart.views.show')) or response
 
+@csrf_exempt
 def qiwi_result(request):
-	L.debug(request)
-	return HttpResponse('QIWI')
+	rst = 150
+	if request.method == 'POST':
+		for k in request.POST:
+			rst = 150
+			###
+			r_lg = re.compile(r'<login>(.*?)</login>', re.DOTALL)
+			r_pwd = re.compile(r'<password>(.*?)</password>', re.DOTALL)
+			r_txn = re.compile(r'<txn>(.*?)</txn>', re.DOTALL)
+			r_st = re.compile(r'<status>(.*?)</status>', re.DOTALL)
+			###
+			for _rst in r_st.findall(request.POST[k]):
+				try:
+					rst = int(_rst)
+				except:
+					pass
+			###
+			rlg = ''
+			for _rlg in r_lg.findall(request.POST[k]):
+				rlg = _rlg
+			###
+			rpwd = ''
+			for _rpwd in r_pwd.findall(request.POST[k]):
+				rpwd = _rpwd
+			###
+			txn = 0
+			for rtxn in r_txn.findall(request.POST[k]):
+				try:
+					txn = int(rtxn)
+				except:
+					pass
+			###
+			if rst in [60,]:
+				if txn > 0:
+					local_pwd = _getSecretKeyByTxn(txn)
+					###
+					if ((rlg == QIWI_LOGIN) and (local_pwd == rpwd)):
+						HW.setData(request, txn)
+						HW.start()
+						rst = 0
+						###
+						L.debug(u'QIWI - Successfull from order #%s' % (txn,))
+					else:
+						L.debug(u'QIWI - Error autorization from order #%s' % (txn,))
+				else:
+					L.debug(u'QIWI - Error order #%s' % (txn,))
+			elif rst in [150, 160, 161]:
+				L.debug(u'QIWI - Error "%s" from order #%s' % (get_status_text(rst), txn))
+	###
+	xml = '<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns1="http://client.ishop.mw.ru/"><SOAP-ENV:Body><ns1:updateBillResponse><updateBillResult>%s</updateBillResult></ns1:updateBillResponse></SOAP-ENV:Body></SOAP-ENV:Envelope>' % rst
+	###
+	return HttpResponse(xml, content_type='text/xml')
 
+@csrf_exempt
 def kzcom(request):
 	#r = '<document><bank name="Kazkommertsbank JSC"><customer name="Ucaf Test Maest" mail="SeFrolov@kkb.kz" phone=""><merchant cert_id="00C182B189" name="test merch"><order order_id="0706172110" amount="1000" currency="398"><department merchant_id="92056001" amount="1000"/></order></merchant><merchant_sign type="RSA"/></customer><customer_sign type="RSA"/><results timestamp="2006-07-06 17:21:50"><payment merchant_id="92056001" amount="1000" reference="618704198173" approval_code="447753" response_code="00"/></results></bank><bank_sign cert_id="00C18327E8" type="SHA/RSA">xjJwgeLAyWssZr3/gS7TI/xaajoF3USk0B/ZfLv6SYyY/3H8tDHUiyGcV7zDO5+rINwBoTn7b9BrnO/kvQfebIhHbDlCSogz2cB6Qa2ELKAGqs8aDZDekSJ5dJrgmFT6aTfgFgnZRmadybxTMHGR6cn8ve4m0TpQuaPMQmKpxTI=</bank_sign ></document>'
 	#r = '<response order_id="123456"><error type="system" time="21.01.2001 21:12:60" code="00">Error Message</error><session id="1234654656545"/></response>'
@@ -990,8 +1049,12 @@ def webmoney(request):
 			HW.setData(request, order_id)
 			HW.start()
 			###
+			L.debug(u'WEBMONEY - Successfull from order #%s' % (order_id,))
+			###
 			return HttpResponse('YES')
 		else:
+			L.debug(u'WEBMONEY - Error from order #%s' % (order_id,))
+			###
 			return HttpResponse('NO')
 
 def success(request):

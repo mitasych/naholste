@@ -11,7 +11,7 @@ class QiwiForm(forms.Form):
 	def clean_phone(self):
 		phone = self.cleaned_data['phone']
 		###
-		if not re.compile(r"^[\d\-\(\)\s]*$").match(phone):
+		if not re.compile(r"^[\+\d\-\(\)\s]*$").match(phone):
 			raise forms.ValidationError(u'Некорректные символы. Допустимы "0-9", "-", пробел и "()"')
 		else:
 			return phone
